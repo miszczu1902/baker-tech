@@ -1,10 +1,10 @@
-package pl.p.lodz.it.baker.tech.bakertech;
+package pl.lodz.p.it.bakertech;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class BakertechApplicationTests {
+class BakerTechApplicationTests {
 
 	@Test
 	void contextLoads() {

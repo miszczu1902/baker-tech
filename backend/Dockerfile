@@ -1,9 +1,10 @@
-FROM maven:3.8.4-openjdk-17-slim
+FROM maven:3.8.4-openjdk-17-slim AS builder
+WORKDIR /bakertech-api
+COPY pom.xml .
+COPY src ./src
+RUN mvn package -DskipTests=true
 
-RUN apt-get update && \
-    apt-get install -y docker
-
-COPY  target/bakertech-0.0.1-SNAPSHOT.jar "baker-tech.jar"
-
-EXPOSE 8080
-CMD ["java", "-jar", "baker-tech.jar"]
+FROM openjdk:17
+WORKDIR /bakertech-api
+COPY --from=builder /bakertech-api/target/*.jar bakertech-api.jar
+ENTRYPOINT ["java", "-jar", "bakertech-api.jar"]

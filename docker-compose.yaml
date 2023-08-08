@@ -59,7 +59,6 @@ services:
       - ./frontend/tsconfig.json:/tsconfig.json
       - ./frontend/public:/public
       - ./frontend/src:/src
-      - ./frontend/nginx/nginx.conf:/etc/nginx/nginx.conf
     command: >
       bash -c "npm install
       && npm run start"

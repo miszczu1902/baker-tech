@@ -6,5 +6,4 @@ RUN mvn package -DskipTests=true
 
 FROM openjdk:17
 WORKDIR /bakertech-api
-COPY --from=builder /bakertech-api/target/*.jar bakertech-api.jar
-ENTRYPOINT ["java", "-jar", "bakertech-api.jar"]
+ENTRYPOINT ["mvn", "spring-boot:run"]

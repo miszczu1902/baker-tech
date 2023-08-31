@@ -18,7 +18,7 @@ services:
       interval: 30s
       timeout: 10s
       retries: 5
-    restart: always
+    restart: on-failure
 
   bakertech-api:
     image: maven:3.8.4-openjdk-17-slim
@@ -29,9 +29,10 @@ services:
     command: >
       bash -c "cd bakertech-api 
       && mvn package -DskipTests=true 
-      && java -jar /bakertech-api/target/bakertech-api.jar"
+      && java -jar $JVM_ARGS /bakertech-api/target/bakertech-api.jar"
     ports:
       - "8080:8080"
+      - "9009:9009"
     networks:
       bakertech-network:
         ipv4_address: 172.25.0.3
@@ -48,7 +49,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    restart: always
+    restart: no
+
 
   bakertech-frontend:
     image: node:20.2.0
@@ -79,7 +81,7 @@ services:
     depends_on:
       bakertech-api:
         condition: service_healthy
-    restart: always
+    restart: no
 
 networks:
   bakertech-network:

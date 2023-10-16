@@ -3,7 +3,4 @@ WORKDIR /bakertech-api
 COPY pom.xml .
 COPY src ./src
 RUN mvn package -DskipTests=true
-
-FROM openjdk:17
-WORKDIR /bakertech-api
 ENTRYPOINT ["mvn", "spring-boot:run"]

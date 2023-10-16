@@ -1,0 +1,24 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="BakerTechApplication - Local" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <envs>
+      <env name="CLIENT_ID" value="bakertech" />
+      <env name="CLIENT_PASSWORD" value="l0pkoW2RuTFkq8ZE5HOmL07RzRJ83yax" />
+      <env name="CORS_PATTERN" value="http://localhost" />
+      <env name="DATABASE_URL" value="jdbc:postgresql://localhost:5432/bakertech" />
+      <env name="ISSUER_URI" value="http://localhost:9990/auth/realms/BakerTech" />
+      <env name="JWK_SET_URI" value="http://localhost:9990/auth/realms/BakerTech/protocol/openid-connect/certs" />
+      <env name="KEYCLOAK_URL" value="http://localhost:9990/auth" />
+      <env name="POSTGRES_DB" value="bakertech" />
+      <env name="POSTGRES_PASSWORD" value="jvSIKuPUqAg41LFBMDQUx22M6yWclfe9" />
+      <env name="POSTGRES_USER" value="bakertech" />
+      <env name="AUTH_URI" value="http://localhost:8080/api/auth" />
+    </envs>
+    <module name="bakertech" />
+    <projectPathOnTarget name="projectPathOnTarget" value="/backend" />
+    <target name="@@@LOCAL@@@" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="pl.lodz.p.it.bakertech.BakerTechApplication" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

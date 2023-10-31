@@ -1,0 +1,112 @@
+@import url("https://fonts.googleapis.com/css?family=Roboto");
+
+@import "../styles/consts.scss";
+
+@import "./components/navigation/navigation";
+@import "./components/contaniers/dataContainer";
+@import "./components/buttons/basicButton";
+@import "./components/buttons/arrows";
+@import "./components/progressBar/progressBar";
+@import "./components/registration/registrtation";
+@import "./components/feedback/feedback";
+
+body {
+  font-family: $font-family;
+  background-color: $primary-background-color;
+  padding: 0;
+  margin: 0;
+  color: $primary-text-color;
+}
+
+.Mui-focused {
+  color: $primary-color !important;
+}
+
+.input-internal-autofill-selected {
+  color: $primary-color !important;
+}
+
+.MuiInput-root:after {
+  border-bottom: 2px solid $primary-color !important;
+}
+
+.default-container {
+  width: 100vw !important;
+  min-height: 100vh !important;
+  margin: 0;
+  padding: 0;
+  background: url("../assets/landing-page-bg.jpg");
+}
+
+.default-navbar {
+  background-color: $secondary-color;
+  width: 100vw !important;
+  padding: 1vh 0 1vh 0;
+  display: flex;
+}
+
+.default-navbar-logo {
+  width: 50% !important;
+  min-height: 10vh !important;
+  max-height: 30vh !important;
+  margin: 0 !important;
+  font-weight: bolder;
+  text-align: left;
+  color: $primary-color;
+  float: left;
+}
+
+.logo {
+  margin: 0 !important;
+  scale: 0.8;
+  vertical-align: middle;
+  font-size: 20pt;
+  justify-content: center;
+  font-weight: bolder;
+  color: $primary-color;
+  cursor: pointer;
+}
+
+.default-navbar-section {
+  width: 50% !important;
+  float: left;
+  text-align: right;
+  vertical-align: center;
+  margin: auto !important;
+}
+
+.default-languages {
+  height: auto !important;
+}
+
+.language-flag {
+  width: 5vh;
+  height: auto;
+  margin: 0 1vw 0 1vh;
+  cursor: pointer;
+}
+
+.landing-background {
+  clear: both;
+  width: 100% !important;
+  min-height: 70vh !important;
+  max-height: 90vh !important;
+  margin: auto !important;
+  background-size: cover;
+}
+
+.landing-container {
+  display: flex;
+  width: 100% !important;
+  height: 100%;
+  text-align: center !important;
+  justify-content: center !important;
+  align-items: center !important;
+  flex-wrap: wrap;
+  vertical-align: center;
+  color: $secondary-text-color;
+}
+
+.landing-text {
+  width: 100% !important;
+}

@@ -11,7 +11,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import static pl.lodz.p.it.bakertech.validation.Messages.invalidClientName;
+import static pl.lodz.p.it.bakertech.validation.Messages.invalidCompanyName;
 
 @Constraint(validatedBy = {})
 @Retention(RetentionPolicy.RUNTIME)
@@ -19,8 +19,8 @@ import static pl.lodz.p.it.bakertech.validation.Messages.invalidClientName;
 @ReportAsSingleViolation
 @NotNull
 @Size(min = 2, max = 64)
-public @interface ClientName {
-    String message() default invalidClientName;
+public @interface CompanyName {
+    String message() default invalidCompanyName;
 
     Class<?>[] groups() default {};
 

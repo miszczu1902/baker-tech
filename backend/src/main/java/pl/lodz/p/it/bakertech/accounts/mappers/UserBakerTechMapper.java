@@ -24,7 +24,7 @@ public class UserBakerTechMapper {
                         registerClientDTO.personalData().phoneNumber()
                 ),
                 true,
-                registerClientDTO.clientName(),
+                registerClientDTO.companyName(),
                 new Address(
                         registerClientDTO.address().street(),
                         registerClientDTO.address().streetNumber(),

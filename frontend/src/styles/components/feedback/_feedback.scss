@@ -1,0 +1,29 @@
+.css-1t1j96h-MuiPaper-root-MuiDialog-paper {
+  border-radius: 15px !important;
+  background-color: $secondary-background-color;
+}
+.css-bdhsul-MuiTypography-root-MuiDialogTitle-root {
+  font-family: $font-family !important;
+  border-radius: 15px !important;
+  border-top: 1.5vw solid $primary-color !important;
+  text-align: center !important;
+  color: $primary-text-color !important;
+  font-weight: bold !important;
+}
+
+.css-qfso29-MuiTypography-root-MuiDialogContentText-root {
+  font-weight: normal !important;
+  color: $primary-text-color !important;
+}
+
+.css-knqc4i-MuiDialogActions-root {
+  text-align: center !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.css-1e6y48t-MuiButtonBase-root-MuiButton-root {
+  font-family: $font-family !important;
+  color: $primary-color !important;
+  font-weight: bold !important;
+}

@@ -6,7 +6,7 @@ public record RegisterClientDTO(
         @Username String username,
         @Password String password,
         @Email String email,
-        @ClientName String clientName,
+        @CompanyName String companyName,
         @Language String language,
         AddressDTO address,
         BillingDetailsDTO billingDetails,

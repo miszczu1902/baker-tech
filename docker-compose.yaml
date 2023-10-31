@@ -80,36 +80,36 @@ services:
         condition: service_healthy
     restart: no
 
-  bakertech-frontend:
-    image: node:20.2.0
-    container_name: bakertech-frontend
-    volumes:
-      - ./frontend/package.json:/package.json
-      - ./frontend/package-lock.json:/package-lock.json
-      - ./frontend/tsconfig.json:/tsconfig.json
-      - ./frontend/public:/public
-      - ./frontend/src:/src
-    command: >
-      bash -c "npm install
-      && npm run start"
-    ports:
-      - "3000:3000"
-    networks:
-      bakertech-network:
-        ipv4_address: 172.25.0.2
-    extra_hosts:
-      - "api:172.25.0.3"
-    env_file:
-      - env/variables.env
-    healthcheck:
-      test: [ "CMD-SHELL", "curl 127.0.0.1:3000" ]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-    depends_on:
-      bakertech-api:
-        condition: service_healthy
-    restart: no
+#  bakertech-frontend:
+#    image: node:20.2.0
+#    container_name: bakertech-frontend
+#    volumes:
+#      - ./frontend/package.json:/package.json
+#      - ./frontend/package-lock.json:/package-lock.json
+#      - ./frontend/tsconfig.json:/tsconfig.json
+#      - ./frontend/public:/public
+#      - ./frontend/src:/src
+#    command: >
+#      bash -c "npm install
+#      && npm run start"
+#    ports:
+#      - "3000:3000"
+#    networks:
+#      bakertech-network:
+#        ipv4_address: 172.25.0.2
+#    extra_hosts:
+#      - "api:172.25.0.3"
+#    env_file:
+#      - frontend/src/.env
+#    healthcheck:
+#      test: [ "CMD-SHELL", "curl 127.0.0.1:3000" ]
+#      interval: 30s
+#      timeout: 10s
+#      retries: 5
+#    depends_on:
+#      bakertech-api:
+#        condition: service_healthy
+#    restart: no
 
 networks:
   bakertech-network:

@@ -1,0 +1,63 @@
+{
+  "landingPage": {
+    "register": "Zarejestruj",
+    "login": "Zaloguj",
+    "altBackground": "Tlo"
+  },
+  "buttons": {
+    "next": "Dalej",
+    "submit": "Wyślij"
+  },
+  "alerts": {
+    "agree": "Zatwierdź",
+    "disagree": "Zamknij",
+    "title": "Potwierdź wykonanie operacji",
+    "confirmMessage": "Czy na pewno chcesz zatwierdzić operację?"
+  },
+  "validation": {
+    "invalid": {
+      "username": "Nieporawna nazwa użytkownika",
+      "password": "Hasło nie spełnia wymagań",
+      "email": "Adres email nie spełnia wymagań",
+      "companyName": "Pole nazwa zakładu jest niepoprawnie wypełniona",
+      "postalCode": "Niepoprawny kod pocztowy",
+      "city": "Pole miasto jest niepoprawnie wypełnione",
+      "street": "Pole ulica jest niepoprawnie wypełnione",
+      "streetNumber": "Niepoprawny numer ulicy",
+      "phoneNumber": "Niepoprawny numer NIP",
+      "nip": "Niepoprawny numer NIP",
+      "regon": "Niepoprawny numer REGON",
+      "firstname": "Pole imię jest niepoprawnie wypełnione",
+      "lastname": "Pole nazwisko jest niepoprawnie wypełnione",
+      "language": "Wybrany język jest niepoprawny",
+      "license": "Niepoprawny numer licencji"
+    },
+    "violation": "Żądanie zawiera naruszenia ograniczeń"
+  },
+  "object": {
+    "notFound": "Nie znaleziono obiektu",
+    "notUnique": "Próba utworzenia nieunikalnego obiektu"
+  },
+  "error": {
+    "internalServer": "Wenwnętrzny problem serwera",
+    "unauthorized": "Problem z autoryzajcą",
+    "forbidden": "Brak uprawnień do zasobu"
+  },
+  "registration": {
+    "register": "Zarejestruj",
+    "username": "Nazwa użytkownika",
+    "password": "Hasło",
+    "email": "Adres email",
+    "companyName": "Nazwa zakładu",
+    "defaultLanguage": "Domyślny język",
+    "firstname": "Imię",
+    "lastname": "Nazwisko",
+    "phoneNumber": "Nr telefonu",
+    "street": "Ulica",
+    "streetNumber": "Numer ulicy/lokalu",
+    "postalCode": "Kod pocztowy",
+    "city": "Miasto",
+    "nip": "NIP",
+    "regon": "REGON"
+  }
+}

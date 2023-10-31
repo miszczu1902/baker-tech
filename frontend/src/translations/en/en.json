@@ -1,0 +1,63 @@
+{
+  "landingPage": {
+    "register": "Register",
+    "login": "Login",
+    "altBackground": "Tlo"
+  },
+  "buttons": {
+    "next": "Next",
+    "submit": "Submit"
+  },
+  "alerts": {
+    "agree": "Confirm",
+    "disagree": "Close",
+    "title": "Confirm operation execution",
+    "confirmMessage": "Are you sure to confirm operation?"
+  },
+  "validation": {
+    "invalid": {
+      "username": "Incorrect username",
+      "password": "Incorrect password",
+      "email": "Incorrect email",
+      "companyName": "Incorrect company name",
+      "postalCode": "Incorrect postal code",
+      "city": "Incorrect city field",
+      "street": "Incorrect street field",
+      "streetNumber": "Incorrect street number",
+      "phoneNumber": "Incorrect phone number",
+      "nip": "Incorrect NIP number",
+      "regon": "Incorrect REGON number",
+      "firstname": "Incorrect firstname field",
+      "lastname": "Incorrect lastname field",
+      "language": "Incorrect language selected",
+      "license": "Incorrect license"
+    },
+    "violation": "The request contains restriction violations"
+  },
+  "object": {
+    "notFound": "Object not found",
+    "notUnique": "Object not unique"
+  },
+  "error": {
+    "internalServer": "Internal server error",
+    "unauthorized": "Problem with authorization",
+    "forbidden": "No permission to resource"
+  },
+  "registration": {
+    "register": "Register",
+    "username": "Username",
+    "password": "Password",
+    "email": "Email",
+    "companyName": "Company name",
+    "defaultLanguage": "Default language",
+    "firstname": "Firstname",
+    "lastname": "Surname",
+    "phoneNumber": "Phone number",
+    "street": "Street",
+    "streetNumber": "Street/Local number",
+    "postalCode": "Postal code",
+    "city": "City",
+    "nip": "NIP",
+    "regon": "REGON"
+  }
+}

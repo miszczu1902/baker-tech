@@ -180,7 +180,7 @@ create table if not exists public.client
         primary key
         constraint fkex05cqwnf2x5bajsnjw3blyvl
             references public.access_level,
-    client_name        varchar(64) not null
+    company_name        varchar(64) not null
         unique
 );
 

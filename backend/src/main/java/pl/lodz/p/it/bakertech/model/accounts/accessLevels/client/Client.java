@@ -6,7 +6,7 @@ import pl.lodz.p.it.bakertech.model.accounts.Account;
 import pl.lodz.p.it.bakertech.model.accounts.PersonalData;
 import pl.lodz.p.it.bakertech.model.accounts.accessLevels.AccessLevel;
 import pl.lodz.p.it.bakertech.security.Roles;
-import pl.lodz.p.it.bakertech.validation.constraint.ClientName;
+import pl.lodz.p.it.bakertech.validation.constraint.CompanyName;
 
 @Getter
 @NoArgsConstructor
@@ -19,9 +19,9 @@ import pl.lodz.p.it.bakertech.validation.constraint.ClientName;
         })
 @DiscriminatorValue(Roles.CLIENT)
 public class Client extends AccessLevel {
-    @ClientName
-    @Column(name = "client_name", unique = true, nullable = false)
-    private String clientName;
+    @CompanyName
+    @Column(name = "company_name", unique = true, nullable = false)
+    private String companyName;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id", nullable = false, referencedColumnName = "id")
@@ -31,9 +31,9 @@ public class Client extends AccessLevel {
     @JoinColumn(name = "billing_details_id", nullable = false, referencedColumnName = "id")
     private BillingDetails billingDetails;
 
-    public Client(Account account, PersonalData personalData, boolean isActive, String clientName, Address address, BillingDetails billingDetails) {
+    public Client(Account account, PersonalData personalData, boolean isActive, String companyName, Address address, BillingDetails billingDetails) {
         super(account, personalData, isActive);
-        this.clientName = clientName;
+        this.companyName = companyName;
         this.address = address;
         this.billingDetails = billingDetails;
     }

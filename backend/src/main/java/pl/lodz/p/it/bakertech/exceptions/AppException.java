@@ -39,6 +39,6 @@ public class AppException extends ResponseStatusException {
     }
 
     public static AppException createKeycloakException(final Throwable cause) {
-        return new KeycloakException(HttpStatus.INTERNAL_SERVER_ERROR, Messages.keycloakError, cause);
+        return new KeycloakException(HttpStatus.INTERNAL_SERVER_ERROR, Messages.internalServerError, cause);
     }
 }

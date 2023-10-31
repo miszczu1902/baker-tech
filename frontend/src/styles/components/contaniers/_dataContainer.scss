@@ -1,0 +1,30 @@
+.data-container-main {
+  width: 70vw !important;
+  height: auto !important;
+  background-color: $secondary-background-color !important;
+  text-align: center !important;
+  align-self: center !important;
+  align-items: center !important;
+  margin: auto !important;
+  margin-top: 5vh !important;
+  border-radius: 15px !important;
+  border-top: 1.5vw solid $primary-color !important;
+  padding: 0 1vw 1vh 1vw !important;
+  display: grid !important;
+}
+
+.data-container-row {
+  margin: auto;
+  margin-bottom: 5vh !important;
+  width: 60vw !important;
+  border-bottom: 0.1vh solid $primary-background-color;
+  text-align: left;
+  justify-content: space-between;
+}
+
+.data-container-buttons {
+  width: 100% !important;
+  text-align: center;
+  justify-content: space-between;
+  vertical-align: center !important;
+}

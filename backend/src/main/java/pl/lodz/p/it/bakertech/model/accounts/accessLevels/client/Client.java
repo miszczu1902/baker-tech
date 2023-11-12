@@ -6,7 +6,7 @@ import pl.lodz.p.it.bakertech.model.accounts.Account;
 import pl.lodz.p.it.bakertech.model.accounts.PersonalData;
 import pl.lodz.p.it.bakertech.model.accounts.accessLevels.AccessLevel;
 import pl.lodz.p.it.bakertech.security.Roles;
-import pl.lodz.p.it.bakertech.validation.constraint.CompanyName;
+import pl.lodz.p.it.bakertech.validation.constraint.accounts.CompanyName;
 
 @Getter
 @NoArgsConstructor

@@ -6,6 +6,5 @@ import org.springframework.stereotype.Component;
 public class Groups {
     public static final String ADMINISTRATORS = "Administrators";
     public static final String SERVICEMEN = "Servicemen";
-    public static final String MANAGERS = "Managers";
     public static final String CLIENTS = "Clients";
 }

@@ -27,4 +27,8 @@ public class Messages {
     public static final String invalidLastname = "validation.invalid.lastname";
     public static final String invalidLanguage = "validation.invalid.language";
     public static final String invalidLicense = "validation.invalid.license";
+    public static final String invalidOrderDuration = "validation.invalid.duration";
+    public static final String invalidOrderDescription = "validation.invalid.orderDescription";
+    public static final String invalidDeviceName = "validation.invalid.deviceName";
+    public static final String invalidSerialNumber = "validation.invalid.serialNumber";
 }

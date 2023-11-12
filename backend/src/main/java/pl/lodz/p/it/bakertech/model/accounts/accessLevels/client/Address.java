@@ -7,10 +7,10 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import pl.lodz.p.it.bakertech.common.AbstractEntity;
-import pl.lodz.p.it.bakertech.validation.constraint.City;
-import pl.lodz.p.it.bakertech.validation.constraint.PostalCode;
-import pl.lodz.p.it.bakertech.validation.constraint.Street;
-import pl.lodz.p.it.bakertech.validation.constraint.StreetNumber;
+import pl.lodz.p.it.bakertech.validation.constraint.accounts.City;
+import pl.lodz.p.it.bakertech.validation.constraint.accounts.PostalCode;
+import pl.lodz.p.it.bakertech.validation.constraint.accounts.Street;
+import pl.lodz.p.it.bakertech.validation.constraint.accounts.StreetNumber;
 
 @Getter
 @AllArgsConstructor

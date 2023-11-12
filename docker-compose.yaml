@@ -14,8 +14,8 @@ services:
     env_file:
       - env/db.env
     volumes:
-      - ./backend/db/init.sql:/init.sql
-      - ./backend/db/init_keycloak.sql:/init_keycloak.sql
+      - ./backend/db/init.sql:/home/init.sql
+      - ./backend/db/init_keycloak.sql:/home/init_keycloak.sql
       - ./backend/db/init_structure.sh:/docker-entrypoint-initdb.d/init_structure.sh
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U bakertech" ]
@@ -26,7 +26,7 @@ services:
 
   keycloak:
     container_name: keycloak
-    image: quay.io/keycloak/keycloak:legacy
+    image: quay.io/keycloak/keycloak:22.0.5
     networks:
       bakertech-network:
         ipv4_address: 172.25.0.5
@@ -37,8 +37,10 @@ services:
       - env/keycloak.env
     ports:
       - "9990:8080"
+    command: >
+      start-dev
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:8080/auth/realms/master" ]
+      test: cat /proc/net/tcp | grep '00000000:1F90 00000000:0000' || exit 1
       interval: 30s
       timeout: 10s
       retries: 5
@@ -47,7 +49,7 @@ services:
         condition: service_healthy
 
   bakertech-api:
-    image: maven:3.8.4-openjdk-17-slim
+    image: jelastic/maven:3.9.5-openjdk-21
     container_name: bakertech-api
     volumes:
       - ./backend/pom.xml:/bakertech-api/pom.xml
@@ -80,36 +82,36 @@ services:
         condition: service_healthy
     restart: no
 
-#  bakertech-frontend:
-#    image: node:20.2.0
-#    container_name: bakertech-frontend
-#    volumes:
-#      - ./frontend/package.json:/package.json
-#      - ./frontend/package-lock.json:/package-lock.json
-#      - ./frontend/tsconfig.json:/tsconfig.json
-#      - ./frontend/public:/public
-#      - ./frontend/src:/src
-#    command: >
-#      bash -c "npm install
-#      && npm run start"
-#    ports:
-#      - "3000:3000"
-#    networks:
-#      bakertech-network:
-#        ipv4_address: 172.25.0.2
-#    extra_hosts:
-#      - "api:172.25.0.3"
-#    env_file:
-#      - frontend/src/.env
-#    healthcheck:
-#      test: [ "CMD-SHELL", "curl 127.0.0.1:3000" ]
-#      interval: 30s
-#      timeout: 10s
-#      retries: 5
-#    depends_on:
-#      bakertech-api:
-#        condition: service_healthy
-#    restart: no
+  bakertech-frontend:
+    image: node:20.2.0
+    container_name: bakertech-frontend
+    volumes:
+      - ./frontend/package.json:/package.json
+      - ./frontend/package-lock.json:/package-lock.json
+      - ./frontend/tsconfig.json:/tsconfig.json
+      - ./frontend/public:/public
+      - ./frontend/src:/src
+    command: >
+      bash -c "npm install
+      && npm run start"
+    ports:
+      - "3000:3000"
+    networks:
+      bakertech-network:
+        ipv4_address: 172.25.0.2
+    extra_hosts:
+      - "api:172.25.0.3"
+    env_file:
+      - frontend/src/.env
+    healthcheck:
+      test: [ "CMD-SHELL", "curl 127.0.0.1:3000" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    depends_on:
+      bakertech-api:
+        condition: service_healthy
+    restart: no
 
 networks:
   bakertech-network:

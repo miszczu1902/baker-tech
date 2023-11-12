@@ -1,6 +1,6 @@
 package pl.lodz.p.it.bakertech.accounts.dto;
 
-import pl.lodz.p.it.bakertech.validation.constraint.*;
+import pl.lodz.p.it.bakertech.validation.constraint.accounts.*;
 
 public record RegisterClientDTO(
         @Username String username,

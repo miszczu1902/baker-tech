@@ -8,8 +8,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import pl.lodz.p.it.bakertech.common.AbstractEntity;
-import pl.lodz.p.it.bakertech.validation.constraint.NIP;
-import pl.lodz.p.it.bakertech.validation.constraint.REGON;
+import pl.lodz.p.it.bakertech.validation.constraint.accounts.NIP;
+import pl.lodz.p.it.bakertech.validation.constraint.accounts.REGON;
 
 @Getter
 @AllArgsConstructor

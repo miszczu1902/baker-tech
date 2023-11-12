@@ -9,9 +9,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import pl.lodz.p.it.bakertech.common.AbstractEntity;
-import pl.lodz.p.it.bakertech.validation.constraint.Firstname;
-import pl.lodz.p.it.bakertech.validation.constraint.Lastname;
-import pl.lodz.p.it.bakertech.validation.constraint.PhoneNumber;
+import pl.lodz.p.it.bakertech.validation.constraint.accounts.Firstname;
+import pl.lodz.p.it.bakertech.validation.constraint.accounts.Lastname;
+import pl.lodz.p.it.bakertech.validation.constraint.accounts.PhoneNumber;
 
 @Data
 @AllArgsConstructor

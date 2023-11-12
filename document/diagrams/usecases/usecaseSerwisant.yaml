@@ -1,0 +1,36 @@
+  @startuml
+    left to right direction
+    
+    actor Serwisant as Serwisant
+    
+    rectangle {
+    usecase "Resetowanie hasła" as Resetowanie
+    usecase "Zmiana języka" as Zmiana
+    usecase "Wyświetlenie listy kont" as ListaKont
+    usecase "Wyświetlenie danych konta" as KontoDane
+    usecase "Wyświetlenie danych \n własnego konta" as Wlasne
+    usecase "Modyfikacja danych \n własnego konta" as ModWlasne
+    usecase "Wyświetlenie listy zgłoszeń" as ListaZglos
+    usecase "Wyświetlenie zgłoszenia" as ZglosPokaz
+    usecase "Wyświetlenie kolejki zgłoszen" as Kolejka
+    usecase "Wyświetlenie listy raportów" as Raporty
+    usecase "Wyświetlenie raportu" as Raport
+    usecase "Utworzenie zgłoszenia" as Zglos
+    usecase "Zmiana statusu zgłoszenia" as Status
+    }
+    Serwisant -- Resetowanie
+    Serwisant -- Zmiana
+    Serwisant -- ListaKont
+    Serwisant -- Wlasne
+    Serwisant -- ListaZglos
+    Serwisant -- Zglos
+    Serwisant -- Raporty
+    Serwisant -- Kolejka
+
+  Wlasne ..> ModWlasne: <<include>>
+  ListaZglos <.. ZglosPokaz: <<extend>>
+  Raporty <.. Raport: <<extend>>
+  ListaKont <.. KontoDane: <<extend>>
+  Zglos ..> Status: <<include>>
+  Kolejka <.. ZglosPokaz: <<extend>>
+    @enduml

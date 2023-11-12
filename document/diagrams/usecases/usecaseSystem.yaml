@@ -1,0 +1,13 @@
+@startuml
+left to right direction
+
+actor System as System
+
+rectangle {
+usecase "Modyfikacja kolejności zgłoszeń" as Modyfikacja
+usecase "Wygenerowanie raportu" as Raport
+
+}
+System -- Raport
+System -- Modyfikacja
+@enduml

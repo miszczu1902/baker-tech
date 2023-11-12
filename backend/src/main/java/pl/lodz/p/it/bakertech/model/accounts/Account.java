@@ -6,9 +6,9 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import pl.lodz.p.it.bakertech.common.AbstractEntity;
 import pl.lodz.p.it.bakertech.model.accounts.accessLevels.AccessLevel;
-import pl.lodz.p.it.bakertech.validation.constraint.Email;
-import pl.lodz.p.it.bakertech.validation.constraint.Language;
-import pl.lodz.p.it.bakertech.validation.constraint.Username;
+import pl.lodz.p.it.bakertech.validation.constraint.accounts.Email;
+import pl.lodz.p.it.bakertech.validation.constraint.accounts.Language;
+import pl.lodz.p.it.bakertech.validation.constraint.accounts.Username;
 
 import java.util.ArrayList;
 import java.util.List;

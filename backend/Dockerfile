@@ -1,4 +1,4 @@
-FROM maven:3.8.4-openjdk-17-slim AS builder
+FROM jelastic/maven:3.9.5-openjdk-21
 WORKDIR /bakertech-api
 COPY pom.xml .
 COPY src ./src

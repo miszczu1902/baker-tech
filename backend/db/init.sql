@@ -4,10 +4,6 @@ alter user bakertech_users with superuser;
 create user bakertech_business with encrypted password '5dJQNm=b';
 alter user bakertech_business with superuser;
 
-create schema if not exists keycloak;
-
-alter schema keycloak owner to bakertech;
-
 create sequence if not exists license_id_seq
     increment by 1
     start with 100000000000000
@@ -23,6 +19,14 @@ as
 $$
 select nextval('license_id_seq')
 $$;
+
+create type public.order_status as enum ('OPEN', 'IN_PROGRESS', 'FOR_SETTLEMENT', 'CLOSED');
+
+alter type public.order_status owner to bakertech;
+
+create type public.device_category as enum ('MECHANICAL', 'ELECTROMECHANICAL');
+
+alter type public.device_category owner to bakertech;
 
 create table if not exists public.account
 (
@@ -192,17 +196,6 @@ create index address_id
 
 create index billing_details_id
     on public.client (billing_details_id);
-
-create table if not exists public.manager
-(
-    id bigint not null
-        primary key
-        constraint fkgis57tqf52pk3femfmq7p3hg
-            references public.access_level
-);
-
-alter table public.manager
-    owner to bakertech;
 
 create table if not exists public.serviceman
 (

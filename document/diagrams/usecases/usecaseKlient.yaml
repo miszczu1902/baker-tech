@@ -1,0 +1,27 @@
+@startuml
+left to right direction
+  
+actor Klient as Klient
+
+rectangle {
+usecase "Resetowanie hasła" as Resetowanie
+usecase "Zmiana języka" as Zmiana
+usecase "Wyświetlenie danych własnego konta" as Wlasne
+usecase "Modyfikacja danych własnego konta" as ModWlasne
+usecase "Utworzenie zgłoszenia" as Zglos
+usecase "Wyświetlenie listy zgłoszeń" as ListaZglos
+usecase "Wyświetlenie zgłoszenia" as ZglosPokaz
+usecase "Wyświetlenie listy raportów" as Raporty
+usecase "Wyświetlenie raportu" as Raport
+}
+Klient -- Resetowanie
+Klient -- Zmiana
+Klient -- Wlasne
+Klient -- Zglos
+Klient -- ListaZglos
+Klient -- Raporty
+
+Wlasne ..> ModWlasne: <<include>>
+ListaZglos <.. ZglosPokaz: <<extend>>
+Raporty <.. Raport: <<extend>>
+@enduml

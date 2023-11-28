@@ -2,6 +2,7 @@ package pl.lodz.p.it.bakertech.model.accounts.accessLevels.client;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -17,6 +18,7 @@ import pl.lodz.p.it.bakertech.validation.constraint.accounts.StreetNumber;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Entity
+@Table(name = "address")
 public class Address extends AbstractEntity {
     @Street
     @Column(name = "street", nullable = false)

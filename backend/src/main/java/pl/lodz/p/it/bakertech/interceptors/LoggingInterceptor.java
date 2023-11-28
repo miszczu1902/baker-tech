@@ -6,6 +6,8 @@ import org.aspectj.lang.annotation.*;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
+import java.lang.reflect.Field;
+
 @Slf4j
 @Aspect
 @Component
@@ -28,7 +30,19 @@ public class LoggingInterceptor {
             message.append(" user: ").append(username).append(" |");
             message.append(" parameters values: ");
             for (Object param : joinPoint.getArgs()) {
-                message.append(param).append(" ");
+                if (param != null) {
+                    Field[] fields = param.getClass().getDeclaredFields();
+                    for (Field field : fields) {
+                        field.setAccessible(true);
+                        if (field.getName().equals("password")) {
+                            message.append(field.getName()).append(": ***** *** ");
+                        } else {
+                            message.append(field.getName()).append(": ").append(field.get(param)).append(" ");
+                        }
+                    }
+                } else {
+                    message.append(" ");
+                }
             }
             message.append("|");
         } catch (Exception e) {

@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import pl.lodz.p.it.bakertech.common.AbstractEntity;
 import pl.lodz.p.it.bakertech.model.accounts.accessLevels.AccessLevel;
 import pl.lodz.p.it.bakertech.validation.constraint.accounts.Email;
-import pl.lodz.p.it.bakertech.validation.constraint.accounts.Language;
 import pl.lodz.p.it.bakertech.validation.constraint.accounts.Username;
 
 import java.util.ArrayList;
@@ -38,11 +37,11 @@ public class Account extends AbstractEntity {
     @Column(name = "email", unique = true, nullable = false)
     private String email;
 
-    @Language
-    @Column(name = "language_", nullable = false, columnDefinition = "VARCHAR DEFAULT 'EN'")
-    private String language;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "language_", nullable = false)
+    private ServiceLanguage language;
 
-    public Account(String username, String email, String language) {
+    public Account(String username, String email, ServiceLanguage language) {
         this.username = username;
         this.email = email;
         this.language = language;

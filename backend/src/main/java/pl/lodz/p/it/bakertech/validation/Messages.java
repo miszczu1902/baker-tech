@@ -31,4 +31,9 @@ public class Messages {
     public static final String invalidOrderDescription = "validation.invalid.orderDescription";
     public static final String invalidDeviceName = "validation.invalid.deviceName";
     public static final String invalidSerialNumber = "validation.invalid.serialNumber";
+    public static final String invalidUnitCostOfWorkingHour = "validation.invalid.unitCost";
+    public static final String invalidCutOffDatePeriod = "validation.invalid.unitCost";
+    public static final String invalidReportTitle = "validation.invalid.reportTitle";
+    public static final String invalidBrandName = "validation.invalid.brandName";
+    public static final String invalidTotalCost = "validation.invalid.totalCost";
 }

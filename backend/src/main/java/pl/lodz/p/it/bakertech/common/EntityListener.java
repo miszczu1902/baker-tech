@@ -28,7 +28,7 @@ public class EntityListener {
     public void initCreatedBy(AbstractEntity entity) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         AccountRepository accountRepository = applicationContext.getBean(AccountRepository.class);
-        Optional.ofNullable(accountRepository.findAccountByUsername(username)).ifPresent(entity::setCreatedBy);
+//        Optional.ofNullable(accountRepository.findAccountByUsername(username)).ifPresent(entity::setCreatedBy);
         entity.setCreationDateTime(LocalDateTime.now(TIMEZONE));
     }
 
@@ -36,7 +36,7 @@ public class EntityListener {
     public void initLastModifiedBy(AbstractEntity entity) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         AccountRepository accountRepository = applicationContext.getBean(AccountRepository.class);
-        Optional.ofNullable(accountRepository.findAccountByUsername(username)).ifPresent(entity::setLastModificationBy);
+//        Optional.ofNullable(accountRepository.findAccountByUsername(username)).ifPresent(entity::setLastModificationBy);
         entity.setLastModificationDateTime(LocalDateTime.now(TIMEZONE));
     }
 }

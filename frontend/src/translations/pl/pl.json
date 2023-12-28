@@ -2,21 +2,58 @@
   "landingPage": {
     "register": "Zarejestruj",
     "login": "Zaloguj",
-    "altBackground": "Tlo"
+    "logout": "Wyloguj",
+    "altBackground": "Tło"
+  },
+  "sidebar": {
+    "currentUser": "Zalogowany jako:",
+    "currentRole": "Poziom dostępu:",
+    "switchRole": "Przełącz poziom dostępu:",
+    "accounts": "Konta",
+    "servicemen": "Serwisanci",
+    "clients": "Klienci",
+    "reports": "Raporty",
+    "queue": "Kolejka zgłoszeń",
+    "orders": "Zlecenia",
+    "order": "Utwórz zlecenie",
+    "devices": "Urządzenia",
+    "self": "Moje konto"
+  },
+  "breadcrumb": {
+    "home": "Strona główna",
+    "accounts": "Konta",
+    "self": "Moje konto",
+    "register": "Zarejestruj"
+  },
+  "tables": {
+    "search": "Szukaj",
+    "active": "Aktywny",
+    "inactive": "Nieaktywny",
+    "username": "Nazwa użytkownika",
+    "email": "Email",
+    "status": "Status",
+    "administrator": "Administratorzy",
+    "serviceman": "Serwisanci",
+    "client": "Klienci"
   },
   "buttons": {
     "next": "Dalej",
-    "submit": "Wyślij"
+    "submit": "Wyślij",
+    "mainPage": "Strona główna"
   },
   "alerts": {
     "agree": "Zatwierdź",
     "disagree": "Zamknij",
     "title": "Potwierdź wykonanie operacji",
-    "confirmMessage": "Czy na pewno chcesz zatwierdzić operację?"
+    "confirmMessage": "Czy na pewno chcesz zatwierdzić operację?",
+    "modification": "Udało się zmodyfikować dane"
+  },
+  "containers": {
+    "back": "Powrót do poprzedniej strony"
   },
   "validation": {
     "invalid": {
-      "username": "Nieporawna nazwa użytkownika",
+      "username": "Niepoprawna nazwa użytkownika",
       "password": "Hasło nie spełnia wymagań",
       "email": "Adres email nie spełnia wymagań",
       "companyName": "Pole nazwa zakładu jest niepoprawnie wypełniona",
@@ -24,13 +61,48 @@
       "city": "Pole miasto jest niepoprawnie wypełnione",
       "street": "Pole ulica jest niepoprawnie wypełnione",
       "streetNumber": "Niepoprawny numer ulicy",
-      "phoneNumber": "Niepoprawny numer NIP",
+      "phoneNumber": "Niepoprawny numer telefonu",
       "nip": "Niepoprawny numer NIP",
       "regon": "Niepoprawny numer REGON",
       "firstname": "Pole imię jest niepoprawnie wypełnione",
       "lastname": "Pole nazwisko jest niepoprawnie wypełnione",
       "language": "Wybrany język jest niepoprawny",
-      "license": "Niepoprawny numer licencji"
+      "license": "Niepoprawny numer licencji",
+      "duration": "Niepoprawny okres trwania",
+      "orderDescription": "Niepoprawny opis",
+      "deviceName": "Niepoprawna nazwa urządzenia",
+      "serialNumber": "Niepoprawny numer seryjny",
+      "unitCost": "Niepoprawny koszt jednostkowy",
+      "cutoff": "Nieprawidłowy okres daty granicznej",
+      "reportTitle": "Niepoprawny tytuł raportu",
+      "brandName": "Niepoprawna nazwa marki",
+      "totalCost": "Niepoprawna wartość kosztu jednostkowego",
+      "confirmationToken": "Niepoprawny żeton potwierdzenia"
+    },
+    "cannot" : {
+      "change": {
+        "statusSelf": "Nie można zmienić stanu konta samemu sobie",
+        "accessLevelsSelf": "Nie można zmienić poziomów dostępu samemu sobie",
+        "oneAccessLevel": "Nie można usunąć jedynego poziomu dostępu przypisanego do konta"
+      }
+    },
+    "placeholder": {
+      "username": "Niepoprawna nazwa użytkownika - od 5 do 32 znaków",
+      "password": "Hasło nie spełnia wymagań - 8 znaków, duża i mała litera, cyfra, znak specjalny",
+      "email": "Adres email nie spełnia wymagań - poprawny adres email np. nazwa123@domena.pl",
+      "companyName": "Pole nazwa zakładu jest niepoprawnie wypełniona",
+      "postalCode": "Niepoprawny kod pocztowy - Format XX-XXX, gdzie X to cyfra",
+      "city": "Pole miasto jest niepoprawnie wypełnione",
+      "street": "Pole ulica jest niepoprawnie wypełnione",
+      "streetNumber": "Niepoprawny numer ulicy",
+      "phoneNumber": "Niepoprawny numer telefonu",
+      "nip": "Niepoprawny numer NIP",
+      "regon": "Niepoprawny numer REGON",
+      "firstname": "Pole imię jest niepoprawnie wypełnione",
+      "lastname": "Pole nazwisko jest niepoprawnie wypełnione",
+      "language": "Wybrany język jest niepoprawny",
+      "license": "Niepoprawny numer licencji",
+      "confirm": "Hasła się nie zgadzają"
     },
     "violation": "Żądanie zawiera naruszenia ograniczeń"
   },
@@ -39,25 +111,55 @@
     "notUnique": "Próba utworzenia nieunikalnego obiektu"
   },
   "error": {
-    "internalServer": "Wenwnętrzny problem serwera",
-    "unauthorized": "Problem z autoryzajcą",
-    "forbidden": "Brak uprawnień do zasobu"
+    "internalServer": "Wewnętrzny problem serwera",
+    "unauthorized": "Logowanie nie powiodło się",
+    "forbidden": "Brak uprawnień do zasobu",
+    "notFound": "Nie znaleziono zasobu"
   },
   "registration": {
     "register": "Zarejestruj",
+    "username": "* Nazwa użytkownika",
+    "password": "* Hasło",
+    "email": "* Adres email",
+    "companyName": "* Nazwa zakładu",
+    "defaultLanguage": "* Domyślny język",
+    "firstname": "* Imię",
+    "lastname": "* Nazwisko",
+    "phoneNumber": "* Nr telefonu",
+    "street": "* Ulica",
+    "streetNumber": "* Numer ulicy/lokalu",
+    "postalCode": "* Kod pocztowy",
+    "city": "* Miasto",
+    "nip": "* NIP",
+    "regon": "* REGON",
+    "confirm": "* Potwierdź hasło",
+    "mandatory": "* - Pola obowiązkowe",
+    "confirmation": {
+      "passed": "Rejestracja powiodła się. Sprawdź skrzynkę pocztową w celu potwierdzenia rejestracji konta.",
+      "success": "Rejestracja zakończona pomyślnie"
+    }
+  },
+  "accounts": {
     "username": "Nazwa użytkownika",
-    "password": "Hasło",
-    "email": "Adres email",
-    "companyName": "Nazwa zakładu",
-    "defaultLanguage": "Domyślny język",
-    "firstname": "Imię",
-    "lastname": "Nazwisko",
-    "phoneNumber": "Nr telefonu",
-    "street": "Ulica",
-    "streetNumber": "Numer ulicy/lokalu",
-    "postalCode": "Kod pocztowy",
-    "city": "Miasto",
-    "nip": "NIP",
-    "regon": "REGON"
+    "email": "Email",
+    "firstname": "Imię i nazwisko",
+    "phone": "Numer telefonu",
+    "address": "Adres",
+    "license": "Numer licencji",
+    "billing": {
+      "name": "Dane rozliczeniowe",
+      "nip": "NIP",
+      "regon": "REGON"
+    },
+    "status": "Status konta",
+    "active": "Aktywne",
+    "inactive": "Nieaktywne",
+    "levels": {
+      "name": "Poziomy dostępu",
+      "administrator": "Administrator",
+      "serviceman": "Serwisant",
+      "client": "Klient",
+      "guest": "Gość"
+    }
   }
 }

@@ -1,18 +1,16 @@
 package pl.lodz.p.it.bakertech.model.service.orders;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import pl.lodz.p.it.bakertech.common.AbstractEntity;
+import lombok.*;
+import pl.lodz.p.it.bakertech.model.AbstractEntityWithId;
 import pl.lodz.p.it.bakertech.model.accounts.accessLevels.Serviceman;
 import pl.lodz.p.it.bakertech.model.accounts.accessLevels.client.Client;
 
 import java.time.LocalDate;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "orders", indexes = {
         @Index(name = "client_account_id", columnList = "client_id"),
@@ -21,7 +19,7 @@ import java.time.LocalDate;
 })
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(discriminatorType = DiscriminatorType.STRING, name = "order_type")
-public abstract class Order extends AbstractEntity {
+public abstract class Order extends AbstractEntityWithId {
     @ManyToOne
     @JoinColumn(name = "serviceman_id", referencedColumnName = "id")
     private Serviceman serviceman;
@@ -41,7 +39,7 @@ public abstract class Order extends AbstractEntity {
     private LocalDate dateOfOrderExecution;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false)
+    @Column(name = "status", nullable = false, columnDefinition = "public.order_status")
     private OrderStatus status;
 
     @Column(name = "delayed", updatable = false, nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")

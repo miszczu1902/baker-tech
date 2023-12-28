@@ -1,0 +1,63 @@
+.list-container {
+  width: 85vw !important;
+  height: auto !important;
+  background-color: $secondary-color !important;
+  text-align: center !important;
+  align-self: center !important;
+  align-items: center !important;
+  margin: auto !important;
+  margin-top: 5vh !important;
+  border-radius: 15px !important;
+  padding: 1vw 1vw 1vh 1vw !important;
+  display: grid !important;
+}
+
+.MuiCheckbox-colorPrimary {
+  color: $primary-color !important;
+}
+
+.list-header-bar {
+  width: 100% !important;
+  font-weight: bold !important;
+  justify-content: space-between !important;
+  display: inline !important;
+}
+
+.list-header {
+  font-weight: bold !important;
+  cursor: pointer !important;
+}
+
+.list-row {
+  cursor: pointer !important;
+}
+.list-row:hover {
+  background-color: $primary-color !important;
+  color: $secondary-color !important;
+}
+
+.list-header:hover {
+  border-bottom: 2px solid $primary-color !important;
+}
+
+.list-search {
+  max-width: 40% !important;
+}
+
+.list-search:active {
+  border-color: $primary-color !important;
+}
+
+.list-button {
+  color: $primary-color !important;
+  cursor: pointer !important;
+}
+.MuiPagination-root {
+  width: 50% !important;
+}
+.list-pagination {
+  display: flex !important;
+  text-align: center !important;
+  justify-content: space-between !important;
+  padding: 1vh 2vh 0 0 !important;
+}

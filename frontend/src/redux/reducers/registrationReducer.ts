@@ -1,11 +1,17 @@
 import {RegistrationData} from "../../types/registration/RegistrationData";
 import {Languages} from "../../types/Languages";
+import {
+    UPDATE_ADDRESS,
+    UPDATE_BILLING_DETAILS,
+    UPDATE_PERSONAL_DATA,
+    UPDATE_REGISTRATION_DATA
+} from "../actions/actions";
 
 const initialState: RegistrationData = {
     username: undefined,
     password: undefined,
     email: undefined,
-    defaultLanguage: Languages.pl,
+    defaultLanguage: localStorage.getItem("language") as Languages || navigator.language as Languages,
     personalData: {
         firstname: undefined,
         lastname: undefined,
@@ -25,26 +31,35 @@ const initialState: RegistrationData = {
 
 const registrationReducer = (state = initialState, action: any) => {
     switch (action.type) {
-        case 'UPDATE_REGISTRATION_DATA':
+        case UPDATE_REGISTRATION_DATA:
             return {
                 ...state,
                 ...action.payload,
             };
-        case 'UPDATE_ADDRESS':
+        case UPDATE_ADDRESS:
             return {
-                ...state.address,
-                ...action.payload,
-            }
-        case 'UPDATE_BILLING_DETAILS':
+                ...state,
+                address: {
+                    ...state.address,
+                    ...action.payload,
+                }
+            };
+        case UPDATE_BILLING_DETAILS:
             return {
-                ...state.billingDetails,
-                ...action.payload,
-            }
-        case 'UPDATE_PERSONAL_DATA':
+                ...state,
+                billingDetails: {
+                    ...state.billingDetails,
+                    ...action.payload,
+                }
+            };
+        case UPDATE_PERSONAL_DATA:
             return {
-                ...state.personalData,
-                ...action.payload,
-            }
+                ...state,
+                personalData: {
+                    ...state.personalData,
+                    ...action.payload,
+                }
+            };
         default:
             return state;
     }

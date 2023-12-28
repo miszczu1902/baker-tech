@@ -22,9 +22,87 @@
   justify-content: space-between;
 }
 
+.data-container-head-row {
+  justify-content: space-between !important;
+  display: flex !important;
+}
+
+.data-container-head-row-h2 {
+  flex: 1 !important;
+}
+
+.data-container-head-row-rest {
+  flex: 1 !important;
+  color: $primary-color !important;
+  font-weight: bold !important;
+  cursor: pointer !important;
+}
+
+.data-container-head-row-rest-arrow {
+  margin-top: 2vh !important;
+}
+
+.data-container-head-row-rest-label {
+  margin-top: -10vh !important;
+}
+
 .data-container-buttons {
   width: 100% !important;
   text-align: center;
   justify-content: space-between;
   vertical-align: center !important;
+}
+
+.data-display-element-container {
+  width: 90vw !important;
+  height: auto !important;
+  background-color: $secondary-background-color !important;
+  margin: auto !important;
+  margin-top: 5vh !important;
+  border-radius: 15px !important;
+  border-top: 1.5vw solid $primary-color !important;
+  padding: 1vh 1vw 1vh 1vw !important;
+  justify-content: space-between !important;
+  flex-direction: row !important;
+  display: flex !important;
+}
+
+.data-left-part {
+  max-width: 50% !important;
+  flex: 1 !important;
+  display: inline-block !important;
+  border-right: 1px solid $primary-background-color !important;
+}
+
+.data-right-part {
+  max-width: 50% !important;
+  flex: 1 !important;
+  border-left: 2px solid $primary-background-color !important;
+  padding-left: 1vw !important;
+  flex-direction: column !important;
+}
+
+.data-edit-row {
+  justify-content: space-between !important;
+  text-align: justify !important;
+  padding-bottom: 1vh !important;
+}
+
+.data-chip-active {
+  background-color: $confirm-color !important;
+  font-weight: bold !important;
+  margin: 0 1vw 1vh 0 !important;
+}
+
+.data-chip-inactive {
+  color: $secondary-color !important;
+  background-color: $reject-color !important;
+  margin: 0 1vw 1vh 0 !important;
+}
+
+.data-chip-neutral {
+  color: $primary-text-color !important;
+  background-color: $primary-background-color !important;
+  font-weight: bold !important;
+  margin: 0 1vw 0 0 !important;
 }

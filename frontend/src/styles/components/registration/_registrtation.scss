@@ -10,3 +10,33 @@
   justify-content: space-between;
 }
 
+.register-after {
+  width: 100vw !important;
+  min-height: 100vh !important;
+  overflow-x: hidden !important;
+  overflow-y: hidden !important;
+  display: flex !important;
+  justify-content: space-between;
+}
+
+.register-passed-left, .register-passed-right {
+  width: 50% !important;
+  color: $secondary-text-color !important;
+  place-items: center !important;
+  flex: 1 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: center !important;
+  text-align: center !important;
+}
+
+.register-passed-left {
+  background-color: $primary-color !important;
+  font-weight: bold !important;
+}
+
+.register-passed-right {
+  background: url("../../../assets/landing-page-bg.jpg");
+  font-weight: bold !important;
+}

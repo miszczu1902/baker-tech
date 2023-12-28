@@ -2,7 +2,7 @@ package pl.lodz.p.it.bakertech.model.reports;
 
 import jakarta.persistence.*;
 import lombok.*;
-import pl.lodz.p.it.bakertech.common.AbstractEntity;
+import pl.lodz.p.it.bakertech.model.AbstractEntityWithId;
 import pl.lodz.p.it.bakertech.model.accounts.accessLevels.AccessLevel;
 import pl.lodz.p.it.bakertech.validation.constraint.reports.ReportTitle;
 
@@ -11,17 +11,17 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "report", indexes = {
         @Index(name = "report_access_level_id", columnList = "access_level_id")
 })
-public class Report extends AbstractEntity {
+public class Report extends AbstractEntityWithId {
     @ManyToOne
-    @JoinColumn(name = "access_level_id", referencedColumnName = "account_id")
+    @JoinColumn(name = "access_level_id", referencedColumnName = "id")
     private AccessLevel accessLevel;
 
     @Column(name = "report_start_date", nullable = false, updatable = false)

@@ -3,12 +3,15 @@
 @import "../styles/consts.scss";
 
 @import "./components/navigation/navigation";
+@import "./components/navigation/sidebar";
 @import "./components/contaniers/dataContainer";
+@import "./components/contaniers/lists/lists";
 @import "./components/buttons/basicButton";
 @import "./components/buttons/arrows";
 @import "./components/progressBar/progressBar";
 @import "./components/registration/registrtation";
 @import "./components/feedback/feedback";
+
 
 body {
   font-family: $font-family;
@@ -32,7 +35,7 @@ body {
 
 .default-container {
   width: 100vw !important;
-  min-height: 100vh !important;
+  min-height: 85vh !important;
   margin: 0;
   padding: 0;
   background: url("../assets/landing-page-bg.jpg");
@@ -43,6 +46,7 @@ body {
   width: 100vw !important;
   padding: 1vh 0 1vh 0;
   display: flex;
+  min-height: 100% !important;
 }
 
 .default-navbar-logo {
@@ -57,7 +61,6 @@ body {
 }
 
 .logo {
-  margin: 0 !important;
   scale: 0.8;
   vertical-align: middle;
   font-size: 20pt;
@@ -109,4 +112,8 @@ body {
 
 .landing-text {
   width: 100% !important;
+}
+
+.data-container-languages {
+
 }

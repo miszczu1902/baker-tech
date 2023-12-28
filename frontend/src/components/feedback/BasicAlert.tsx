@@ -1,6 +1,7 @@
 import {Alert, Snackbar} from "@mui/material";
 import {useTranslation} from "react-i18next";
 import {ALERT_AUTOHIDE} from "../../utils/consts";
+import React from "react";
 
 export enum AlertType {
     SUCCESS = 'success',

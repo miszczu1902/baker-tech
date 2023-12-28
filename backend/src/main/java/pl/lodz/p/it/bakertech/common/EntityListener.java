@@ -7,7 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
-import pl.lodz.p.it.bakertech.accounts.repositories.AccountRepository;
+import pl.lodz.p.it.bakertech.accounts.repositories.AccountForEntityListenerRepository;
+import pl.lodz.p.it.bakertech.model.AbstractEntity;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -27,16 +28,16 @@ public class EntityListener {
     @PrePersist
     public void initCreatedBy(AbstractEntity entity) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        AccountRepository accountRepository = applicationContext.getBean(AccountRepository.class);
-//        Optional.ofNullable(accountRepository.findAccountByUsername(username)).ifPresent(entity::setCreatedBy);
+        AccountForEntityListenerRepository accountRepository = applicationContext.getBean(AccountForEntityListenerRepository.class);
+        Optional.ofNullable(accountRepository.findAccountByUsername(username)).ifPresent(entity::setCreatedBy);
         entity.setCreationDateTime(LocalDateTime.now(TIMEZONE));
     }
 
     @PreUpdate
     public void initLastModifiedBy(AbstractEntity entity) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        AccountRepository accountRepository = applicationContext.getBean(AccountRepository.class);
-//        Optional.ofNullable(accountRepository.findAccountByUsername(username)).ifPresent(entity::setLastModificationBy);
+        AccountForEntityListenerRepository accountRepository = applicationContext.getBean(AccountForEntityListenerRepository.class);
+        Optional.ofNullable(accountRepository.findAccountByUsername(username)).ifPresent(entity::setLastModificationBy);
         entity.setLastModificationDateTime(LocalDateTime.now(TIMEZONE));
     }
 }

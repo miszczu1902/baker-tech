@@ -2,17 +2,54 @@
   "landingPage": {
     "register": "Register",
     "login": "Login",
+    "logout": "Logout",
     "altBackground": "Tlo"
+  },
+  "sidebar": {
+    "currentUser": "Logged as:",
+    "currentRole": "Current access level:",
+    "switchRole": "Switch access level:",
+    "accounts": "Accounts",
+    "servicemen": "Servicemen",
+    "clients": "Clients",
+    "reports": "Reports",
+    "queue": "Order queue",
+    "orders": "Orders",
+    "order": "Create order",
+    "devices": "Devices",
+    "self": "My account"
+  },
+  "breadcrumb": {
+    "home": "Home",
+    "accounts": "Accounts",
+    "self": "My account",
+    "register": "Register"
+  },
+  "tables": {
+    "search": "Search",
+    "active": "Active",
+    "inactive": "Inactive",
+    "username": "Username",
+    "email": "Email",
+    "status": "Status",
+    "administrator": "Administrators",
+    "serviceman": "Servicemen",
+    "client": "Clients"
   },
   "buttons": {
     "next": "Next",
-    "submit": "Submit"
+    "submit": "Submit",
+    "mainPage": "Main page"
   },
   "alerts": {
     "agree": "Confirm",
     "disagree": "Close",
     "title": "Confirm operation execution",
-    "confirmMessage": "Are you sure to confirm operation?"
+    "confirmMessage": "Are you sure to confirm operation?",
+    "modification": "Data modification success"
+  },
+  "containers": {
+    "back": "Go to previous page"
   },
   "validation": {
     "invalid": {
@@ -30,7 +67,42 @@
       "firstname": "Incorrect firstname field",
       "lastname": "Incorrect lastname field",
       "language": "Incorrect language selected",
-      "license": "Incorrect license"
+      "license": "Incorrect license",
+      "duration": "Invalid duration",
+      "orderDescription": "Invalid order description",
+      "deviceName": "Invalid device name",
+      "serialNumber": "Invalid serial number",
+      "unitCost": "Invalid unit cost",
+      "cutoff": "Invalid cut off date period",
+      "reportTitle": "Invalid report title",
+      "brandName": "Invalid brand name",
+      "totalCost": "Invalid total cost value",
+      "confirmationToken": "Invalid confirmation token"
+    },
+    "cannot" : {
+      "change": {
+        "statusSelf": "Cannot change account status yourself",
+        "accessLevelsSelf": "Cannot modify access levels yourself",
+        "oneAccessLevel": "Cannot remove access level when account has only one level assigned"
+      }
+    },
+    "placeholder": {
+      "username": "Incorrect username - 5 - 32 digits",
+      "password": "Incorrect password - min. 8 digits, at least one normal and strong letter, special digit, number",
+      "email": "Incorrect email - example pattern: name123@domain.com",
+      "companyName": "Incorrect company name",
+      "postalCode": "Incorrect postal code - Format XX-XXX when X is number",
+      "city": "Incorrect city field",
+      "street": "Incorrect street field",
+      "streetNumber": "Incorrect street number",
+      "phoneNumber": "Incorrect phone number",
+      "nip": "Incorrect NIP number",
+      "regon": "Incorrect REGON number",
+      "firstname": "Incorrect firstname field",
+      "lastname": "Incorrect lastname field",
+      "language": "Incorrect language selected",
+      "license": "Incorrect license",
+      "confirm": "Password are not the same"
     },
     "violation": "The request contains restriction violations"
   },
@@ -40,24 +112,54 @@
   },
   "error": {
     "internalServer": "Internal server error",
-    "unauthorized": "Problem with authorization",
-    "forbidden": "No permission to resource"
+    "unauthorized": "Login failed",
+    "forbidden": "No permission to resource",
+    "notFound": "Resource not found"
   },
   "registration": {
     "register": "Register",
+    "username": "* Username",
+    "password": "* Password",
+    "email": "* Email",
+    "companyName": "* Company name",
+    "defaultLanguage": "* Default language",
+    "firstname": "* Firstname",
+    "lastname": "* Surname",
+    "phoneNumber": "* Phone number",
+    "street": "* Street",
+    "streetNumber": "* Street/Local number",
+    "postalCode": "* Postal code",
+    "city": "* City",
+    "nip": "* NIP",
+    "regon": "* REGON",
+    "confirm": "* Confirm password",
+    "mandatory" : "* - Mandatory fields",
+    "confirmation": {
+      "passed": "Registration passed. Please check your email to end registration process",
+      "success": "Registration was ended successful"
+    }
+  },
+  "accounts": {
     "username": "Username",
-    "password": "Password",
     "email": "Email",
-    "companyName": "Company name",
-    "defaultLanguage": "Default language",
-    "firstname": "Firstname",
-    "lastname": "Surname",
-    "phoneNumber": "Phone number",
-    "street": "Street",
-    "streetNumber": "Street/Local number",
-    "postalCode": "Postal code",
-    "city": "City",
-    "nip": "NIP",
-    "regon": "REGON"
+    "firstname": "Firstname and surname",
+    "phone": "Phone number",
+    "address": "Address",
+    "billing": {
+      "name": "Billing details",
+      "nip": "NIP",
+      "regon": "REGON"
+    },
+    "status": "Account's status",
+    "active": "Active",
+    "inactive": "Inactive",
+    "license": "License number",
+    "levels": {
+      "name": "Access levels",
+      "administrator": "Administrator",
+      "serviceman": "Serviceman",
+      "client": "Client",
+      "guest": "Guest"
+    }
   }
 }

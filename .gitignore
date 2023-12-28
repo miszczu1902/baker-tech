@@ -65,3 +65,5 @@ document/**
 
 **/out
 **/auxil
+
+**/db/init_keycloak.sql

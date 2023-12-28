@@ -1,19 +1,19 @@
 package pl.lodz.p.it.bakertech.model.service.devices;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import pl.lodz.p.it.bakertech.common.AbstractEntity;
-import pl.lodz.p.it.bakertech.validation.constraint.orders.device.Brand;
-import pl.lodz.p.it.bakertech.validation.constraint.orders.device.DeviceName;
-import pl.lodz.p.it.bakertech.validation.constraint.orders.device.SerialNumber;
+import lombok.*;
+import pl.lodz.p.it.bakertech.model.AbstractEntityWithId;
+import pl.lodz.p.it.bakertech.model.service.orders.OrderData;
+import pl.lodz.p.it.bakertech.validation.constraint.service.device.Brand;
+import pl.lodz.p.it.bakertech.validation.constraint.service.device.DeviceName;
+import pl.lodz.p.it.bakertech.validation.constraint.service.device.SerialNumber;
 
-@Data
+import java.util.Set;
+
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "device", indexes = {
         @Index(name = "unique_device_sn", columnList = "serial_number", unique = true),
@@ -22,7 +22,7 @@ import pl.lodz.p.it.bakertech.validation.constraint.orders.device.SerialNumber;
                 @UniqueConstraint(
                         name = "device_unique", columnNames = {"serial_number"})
         })
-public class Device extends AbstractEntity {
+public class Device extends AbstractEntityWithId {
     @DeviceName
     @Column(name = "device_name", nullable = false, updatable = false)
     private String deviceName;
@@ -39,6 +39,9 @@ public class Device extends AbstractEntity {
     private Boolean warrantyEnded;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "category", nullable = false, updatable = false)
+    @Column(name = "category", nullable = false, updatable = false, columnDefinition = "device_category")
     private DeviceCategory category;
+
+    @ManyToMany(mappedBy = "device")
+    private Set<OrderData> orders;
 }

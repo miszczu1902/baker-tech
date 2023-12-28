@@ -13,8 +13,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Getter
+@Setter
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "client",
         indexes = {
@@ -38,8 +38,8 @@ public class Client extends AccessLevel {
     @OneToMany(mappedBy = "client")
     private Set<Order> orders = new HashSet<>();
 
-    public Client(Account account, PersonalData personalData, boolean isActive, String companyName, Address address, BillingDetails billingDetails) {
-        super(account, personalData, isActive);
+    public Client(Account account, String companyName, Address address, BillingDetails billingDetails) {
+        super(account);
         this.companyName = companyName;
         this.address = address;
         this.billingDetails = billingDetails;

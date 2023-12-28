@@ -18,7 +18,7 @@ public class CorsConfig {
                 registry.addMapping("/**")
                         .allowedOriginPatterns(allowedOriginPatterns.toArray(String[]::new))
                         .allowedHeaders("*")
-                        .allowedMethods("GET", "PUT", "PATCH", "POST")
+                        .allowedMethods("GET", "PUT", "PATCH", "POST", "OPTIONS")
                         .exposedHeaders("*");
             }
         };

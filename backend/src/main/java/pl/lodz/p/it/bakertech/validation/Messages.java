@@ -32,8 +32,15 @@ public class Messages {
     public static final String invalidDeviceName = "validation.invalid.deviceName";
     public static final String invalidSerialNumber = "validation.invalid.serialNumber";
     public static final String invalidUnitCostOfWorkingHour = "validation.invalid.unitCost";
-    public static final String invalidCutOffDatePeriod = "validation.invalid.unitCost";
+    public static final String invalidCutOffDatePeriod = "validation.invalid.cutoff";
     public static final String invalidReportTitle = "validation.invalid.reportTitle";
     public static final String invalidBrandName = "validation.invalid.brandName";
     public static final String invalidTotalCost = "validation.invalid.totalCost";
+    public static final String invalidConfirmationToken = "validation.invalid.confirmationToken";
+
+    /* Operations */
+    public static final String cannotChangeStatusSelf = "cannot.change.statusSelf";
+    public static final String cannotChangeAccessLevelsSelf = "cannot.change.accessLevelsSelf";
+    public static final String cannotAssignAccessLevels = "cannot.change.accessLevelsSelf";
+    public static final String cannotRemoveOneAccessLevel = "cannot.remove.oneAccessLevel";
 }

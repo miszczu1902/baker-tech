@@ -1,3 +1,16 @@
 .navigation-language {
   width: auto;
 }
+
+.breadcrumb {
+  padding: 5vh 1vw 5vh 1vw !important;
+}
+
+.MuiBreadcrumbs-root {
+  color: $primary-color !important;
+  font-weight: bold !important;
+}
+
+.access-level-switches {
+  margin-left: 1vw !important;
+}

@@ -2,6 +2,8 @@ import {RequestData} from "./RequestData";
 import axios, {AxiosError, AxiosRequestConfig, InternalAxiosRequestConfig, AxiosResponse} from "axios";
 import {ErrorResponseData} from "./ErrorResponseData";
 import {API_URL, DEFAULT_TIMEOUT} from "../utils/consts";
+import store from "../redux/store";
+import {Roles} from "../security/Roles";
 
 class RequestService {
     private axiosInstance = axios.create({
@@ -9,15 +11,22 @@ class RequestService {
         timeout: DEFAULT_TIMEOUT,
     });
 
+    private static instance: RequestService;
+
     constructor() {
         this.axiosInstance.interceptors.request.use(this.requestInterceptor);
         this.axiosInstance.interceptors.response.use(this.responseSuccessInterceptor, this.responseErrorInterceptor);
+        RequestService.instance = this;
     }
 
     private requestInterceptor = (config: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {
-        // if (config.headers) {
-        //     config.headers['Authorization'] = `Bearer JWT_TOKEN`;
-        // }
+        if (config.headers) {
+            const currentUser = store.getState().currentUser;
+            config.headers['Accept-Language'] = currentUser.language;
+            if (currentUser.token && currentUser.currentRole !== Roles.GUEST) {
+                config.headers['Authorization'] = `Bearer ${currentUser.token}`;
+            }
+        }
         return config;
     };
 
@@ -36,15 +45,21 @@ class RequestService {
         }
     };
 
+    public static getInstance(): RequestService {
+        return !RequestService.instance ? new RequestService() : RequestService.instance;
+    }
+
     public async sendRequestAndGetResponse<T>(requestData: RequestData): Promise<T> {
         const config: AxiosRequestConfig = {
             method: requestData.method.toString(),
             url: requestData.endpoint,
             data: requestData.data,
-            headers: requestData.headers
+            headers: requestData.headers,
+            params: requestData.queryParams
+
         };
         return this.axiosInstance.request<T>(config)
-            .then((response) => response.data);
+            .then(response => response.data);
     }
 }
 

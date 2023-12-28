@@ -1,18 +1,36 @@
-import {MenuItem, Select} from "@mui/material";
+import {Checkbox, ListItemText, MenuItem, Select} from "@mui/material";
+import React from "react";
 
-const ContainerSelect = () => {
-    return (<div>
-        <Select
-            labelId="demo-simple-select-standard-label"
-            id="demo-simple-select-standard"
-            value={"AAA"}
-            onChange={() => console.log("A")}
-            label="Age"
+interface ContainerSelectProps {
+    value: string[],
+    onChange?: () => void,
+    label: string,
+    multiple: boolean,
+    renderValue?: () => string
+    values: string[],
+    checkedCondition?: boolean
+}
+
+const ContainerSelect: React.FC<ContainerSelectProps> = ({value,
+                                                             onChange,
+                                                             label,
+                                                             multiple,
+                                                             renderValue,
+                                                             values}) => {
+
+   return <Select
+            value={value}
+            onChange={onChange}
+            label={label}
+            multiple={multiple}
+            renderValue={renderValue}
         >
-            <MenuItem value={10}>Ten</MenuItem>
-            <MenuItem value={20}>Twenty</MenuItem>
-            <MenuItem value={30}>Thirty</MenuItem>
-        </Select>
-    </div>);
+       {values.map(itemValue =>
+           <MenuItem>
+               <Checkbox value={itemValue}/>
+               <ListItemText primary={itemValue}/>
+           </MenuItem>
+       )}
+        </Select>;
 }
 export default ContainerSelect;

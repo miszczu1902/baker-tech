@@ -1,33 +1,27 @@
 package pl.lodz.p.it.bakertech.model.accounts;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import pl.lodz.p.it.bakertech.common.AbstractEntity;
+import lombok.*;
+import pl.lodz.p.it.bakertech.model.AbstractEntityWithId;
 import pl.lodz.p.it.bakertech.model.accounts.accessLevels.AccessLevel;
 import pl.lodz.p.it.bakertech.validation.constraint.accounts.Email;
 import pl.lodz.p.it.bakertech.validation.constraint.accounts.Username;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "account",
         indexes = {
                 @Index(name = "unique_email", columnList = "email", unique = true),
-                @Index(name = "unique_username", columnList = "username", unique = true)
+                @Index(name = "unique_username", columnList = "username", unique = true),
         })
-public class Account extends AbstractEntity {
-    @OneToMany(
-            fetch = FetchType.EAGER,
-            mappedBy = "account",
-            cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.REMOVE}
-    )
-    private List<AccessLevel> accessLevels = new ArrayList<>();
+public class Account extends AbstractEntityWithId {
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "account", cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.REMOVE})
+    private Set<AccessLevel> accessLevels = new HashSet<>();
 
     @Username
     @Column(name = "username", nullable = false, unique = true, updatable = false)
@@ -37,13 +31,17 @@ public class Account extends AbstractEntity {
     @Column(name = "email", unique = true, nullable = false)
     private String email;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "language_", nullable = false)
-    private ServiceLanguage language;
+    @Column(name = "isActive", nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
+    private Boolean isActive;
 
-    public Account(String username, String email, ServiceLanguage language) {
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "id", cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.REMOVE})
+    @JoinColumn(name = "personal_data_id", nullable = false)
+    private PersonalData personalData;
+
+    public Account(String username, String email, boolean isActive, PersonalData personalData) {
         this.username = username;
         this.email = email;
-        this.language = language;
+        this.isActive = isActive;
+        this.personalData = personalData;
     }
 }

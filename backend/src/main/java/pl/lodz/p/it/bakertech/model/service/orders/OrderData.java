@@ -1,37 +1,38 @@
 package pl.lodz.p.it.bakertech.model.service.orders;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import pl.lodz.p.it.bakertech.common.AbstractEntity;
+import lombok.*;
+import pl.lodz.p.it.bakertech.model.AbstractEntityWithId;
 import pl.lodz.p.it.bakertech.model.service.devices.Device;
-import pl.lodz.p.it.bakertech.validation.constraint.orders.Description;
-import pl.lodz.p.it.bakertech.validation.constraint.orders.OrderDuration;
-import pl.lodz.p.it.bakertech.validation.constraint.orders.TotalCost;
+import pl.lodz.p.it.bakertech.validation.constraint.service.Description;
+import pl.lodz.p.it.bakertech.validation.constraint.service.OrderDuration;
+import pl.lodz.p.it.bakertech.validation.constraint.service.TotalCost;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "order_data")
-public class OrderData extends AbstractEntity {
+public class OrderData extends AbstractEntityWithId {
     @OrderDuration
     @Column(name = "duration", nullable = false)
     private BigDecimal duration;
 
     @TotalCost
-    @Column(name = "total_cost" , nullable = false)
+    @Column(name = "total_cost", nullable = false)
     private BigDecimal totalCost;
 
-    @OneToMany
-    @JoinColumn(name = "devices", referencedColumnName = "id")
+    @ManyToMany
+    @JoinTable(
+            name = "device_order_data",
+            joinColumns = @JoinColumn(name = "device_id"),
+            inverseJoinColumns = @JoinColumn(name = "order_data_id")
+    )
     private Set<Device> device = new HashSet<>();
 
     @Description

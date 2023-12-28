@@ -5,17 +5,18 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import pl.lodz.p.it.bakertech.security.Roles;
 
-import java.lang.reflect.Field;
+import java.util.Optional;
 
 @Slf4j
 @Aspect
 @Component
-public class LoggingInterceptor {
+public class LoggingInterceptor implements CommonInterceptor {
     private StringBuilder message;
     private Object result;
 
-    @SuppressWarnings("unused")
+    @Override
     @Pointcut("@within(pl.lodz.p.it.bakertech.interceptors.Interception)")
     public void intercept() {
     }
@@ -29,20 +30,9 @@ public class LoggingInterceptor {
             message.append(joinPoint.getSignature().toShortString()).append(" |");
             message.append(" user: ").append(username).append(" |");
             message.append(" parameters values: ");
+
             for (Object param : joinPoint.getArgs()) {
-                if (param != null) {
-                    Field[] fields = param.getClass().getDeclaredFields();
-                    for (Field field : fields) {
-                        field.setAccessible(true);
-                        if (field.getName().equals("password")) {
-                            message.append(field.getName()).append(": ***** *** ");
-                        } else {
-                            message.append(field.getName()).append(": ").append(field.get(param)).append(" ");
-                        }
-                    }
-                } else {
-                    message.append(" ");
-                }
+                message.append(param).append(" ");
             }
             message.append("|");
         } catch (Exception e) {

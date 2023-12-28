@@ -1,16 +1,15 @@
 package pl.lodz.p.it.bakertech.model.service.orders.types;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 
+@Getter
+@Setter
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
 @Table(name = "conservation")
 @DiscriminatorValue("CONSERVATION")
 public class Conservation extends WarrantyRepair {

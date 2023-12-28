@@ -14,8 +14,7 @@ services:
     env_file:
       - env/db.env
     volumes:
-      - ./backend/db/init_keycloak.sql:/home/init_keycloak.sql
-      - ./backend/db/init.sql:/home/init.sql
+      - ./backend/db:/home/db
       - ./backend/db/init_structure.sh:/docker-entrypoint-initdb.d/init_structure.sh
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U bakertech" ]
@@ -102,7 +101,7 @@ services:
     extra_hosts:
       - "api:172.25.0.3"
     env_file:
-      - frontend/src/.env
+      - frontend/.env
     healthcheck:
       test: [ "CMD-SHELL", "curl 127.0.0.1:3000" ]
       interval: 30s

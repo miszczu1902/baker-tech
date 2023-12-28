@@ -1,7 +1,7 @@
-import {RegistrationPersonalData} from "./RegistrationPersonalData";
-import {RegistrationAddress} from "./RegistrationAddress";
-import {RegistrationBillingDetails} from "./RegistrationBillingDetails";
 import {Languages} from "../Languages";
+import {PersonalData} from "../accounts/PersonalData";
+import {Address} from "../accounts/Address";
+import {BillingDetails} from "../accounts/BillingDetails";
 
 export interface RegistrationData {
     username?: string;
@@ -9,7 +9,7 @@ export interface RegistrationData {
     email?: string;
     companyName?: string;
     defaultLanguage?: Languages;
-    personalData?: RegistrationPersonalData;
-    address?: RegistrationAddress;
-    billingDetails?: RegistrationBillingDetails;
+    personalData?: PersonalData;
+    address?: Address;
+    billingDetails?: BillingDetails;
 }

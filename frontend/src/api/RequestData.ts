@@ -8,7 +8,8 @@ export enum RequestMethod {
 
 export interface RequestData {
     method: RequestMethod;
-    endpoint: string;
+    endpoint?: string;
     headers?: Record<string, string>;
     data?: any;
+    queryParams?: Record<string, string | number>;
 }

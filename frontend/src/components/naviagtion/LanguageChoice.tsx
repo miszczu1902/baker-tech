@@ -1,11 +1,15 @@
 import {Box} from "@mui/material";
 import {GB, PL} from "country-flag-icons/react/3x2";
-import {useEffect, useState} from "react";
+import {useEffect} from "react";
 import i18n from "../../i18n";
 import {Languages} from "../../types/Languages";
+import {useDispatch, useSelector} from "react-redux";
+import {RootState} from "../../redux/store";
+import {setLanguage} from "../../redux/actions/authAction";
 
 const LanguageChoice = () => {
-    const [currentLanguage, setCurrentLanguage] = useState(localStorage.getItem("language"))
+    const currentLanguage = useSelector((state: RootState) => state.currentUser).language;
+    const dispatch = useDispatch();
 
     useEffect(() => {
         if (currentLanguage) {
@@ -14,8 +18,7 @@ const LanguageChoice = () => {
     }, [currentLanguage]);
 
     const handleLanguageChange = (newLanguage: Languages) => {
-        setCurrentLanguage(newLanguage);
-        localStorage.setItem("language", newLanguage);
+        dispatch(setLanguage(newLanguage));
     };
 
     return (

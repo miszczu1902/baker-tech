@@ -10,10 +10,17 @@ interface ContainerRowProps {
     placeholder: string;
     type: InputType;
     onChangeValue?: (event: React.ChangeEvent<HTMLInputElement>) => void;
-    value?: string;
+    value?: string | number;
+    valid?: boolean;
+    validationText?: string;
 }
 
-const ContainerRow: React.FC<ContainerRowProps> = ({placeholder, type, onChangeValue, value}) => {
+const ContainerRow: React.FC<ContainerRowProps> = ({placeholder,
+                                                       type,
+                                                       onChangeValue,
+                                                       value,
+                                                       valid,
+                                                   validationText}) => {
     return (
         <Box>
             <TextField
@@ -23,6 +30,7 @@ const ContainerRow: React.FC<ContainerRowProps> = ({placeholder, type, onChangeV
                 onChange={onChangeValue}
                 value={value}
                 className="data-container-row"
+                helperText={(validationText && !valid) && validationText}
             />
         </Box>
     );

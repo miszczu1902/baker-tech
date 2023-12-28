@@ -1,32 +1,33 @@
 import {RegistrationData} from "../../types/registration/RegistrationData";
-import {RegistrationAddress} from "../../types/registration/RegistrationAddress";
-import {RegistrationBillingDetails} from "../../types/registration/RegistrationBillingDetails";
-import {RegistrationPersonalData} from "../../types/registration/RegistrationPersonalData";
+import {Address} from "../../types/accounts/Address";
+import {BillingDetails} from "../../types/accounts/BillingDetails";
+import {PersonalData} from "../../types/accounts/PersonalData";
+import {UPDATE_ADDRESS, UPDATE_BILLING_DETAILS, UPDATE_PERSONAL_DATA, UPDATE_REGISTRATION_DATA} from "./actions";
 
 export const updateBasicRegistrationData = (data: RegistrationData) => {
     return {
-        type: 'UPDATE_REGISTRATION_DATA',
+        type: UPDATE_REGISTRATION_DATA,
         payload: data,
     };
 };
 
-export const updateAddressDuringRegistration = (data: RegistrationAddress) => {
+export const updateAddressDuringRegistration = (data: Address) => {
     return {
-        type: 'UPDATE_ADDRESS',
+        type: UPDATE_ADDRESS,
         payload: data,
     };
 };
 
-export const updateBillingDetailsDuringRegistration = (data: RegistrationBillingDetails) => {
+export const updateBillingDetailsDuringRegistration = (data: BillingDetails) => {
     return {
-        type: 'UPDATE_BILLING_DETAILS',
+        type: UPDATE_BILLING_DETAILS,
         payload: data,
     };
 };
 
-export const updatePersonalDataDuringRegistration = (data: RegistrationPersonalData) => {
+export const updatePersonalDataDuringRegistration = (data: PersonalData) => {
     return {
-        type: 'UPDATE_PERSONAL_DATA',
+        type: UPDATE_PERSONAL_DATA,
         payload: data,
     };
 };

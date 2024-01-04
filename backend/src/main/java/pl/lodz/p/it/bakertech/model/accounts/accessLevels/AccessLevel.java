@@ -4,9 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import pl.lodz.p.it.bakertech.model.AbstractEntityWithId;
 import pl.lodz.p.it.bakertech.model.accounts.Account;
-import pl.lodz.p.it.bakertech.model.reports.Report;
-
-import java.util.Set;
 
 @Getter
 @Setter
@@ -27,9 +24,6 @@ public abstract class AccessLevel extends AbstractEntityWithId {
     @ManyToOne
     @JoinColumn(name = "account_id", updatable = false, nullable = false, referencedColumnName = "id")
     private Account account;
-
-    @OneToMany(mappedBy = "accessLevel")
-    private Set<Report> reports;
 
     @Column(name = "access_level_name", updatable = false, nullable = false, insertable = false)
     private String accessLevelName;

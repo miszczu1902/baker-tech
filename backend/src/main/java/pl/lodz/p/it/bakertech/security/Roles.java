@@ -17,10 +17,6 @@ public class Roles {
         return List.of(ADMINISTRATOR, SERVICEMAN, CLIENT);
     }
 
-    public static String[] getAllRoles() {
-        return new String[]{ADMINISTRATOR, SERVICEMAN, CLIENT, GUEST};
-    }
-
     public static Map<String, String> getAuthenticatedRolesWithGroups() {
         return Map.of(ADMINISTRATOR, Groups.ADMINISTRATORS, SERVICEMAN, Groups.SERVICEMEN, CLIENT, Groups.CLIENTS);
     }

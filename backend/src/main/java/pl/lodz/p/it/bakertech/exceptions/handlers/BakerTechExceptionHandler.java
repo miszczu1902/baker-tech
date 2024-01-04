@@ -14,10 +14,9 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import pl.lodz.p.it.bakertech.exceptions.AppException;
 import pl.lodz.p.it.bakertech.exceptions.dto.ErrorResponseDTO;
-import pl.lodz.p.it.bakertech.config.BakerTechConfig;
+import pl.lodz.p.it.bakertech.utils.DateUtility;
 import pl.lodz.p.it.bakertech.validation.Messages;
 
-import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -27,7 +26,7 @@ public class BakerTechExceptionHandler extends ResponseEntityExceptionHandler {
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
         String title = HttpStatus.BAD_REQUEST.getReasonPhrase().replace(" ", "_").toUpperCase();
-        String timestamp = LocalDateTime.now().format(BakerTechConfig.DATE_TIME_FORMATTER);
+        String timestamp = DateUtility.nowWithTimestamp().toString();
         Optional<String> message = ex.getBindingResult()
                 .getAllErrors()
                 .stream()
@@ -45,7 +44,7 @@ public class BakerTechExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(value = AccessDeniedException.class)
     public ResponseEntity<ErrorResponseDTO> AccessDeniedExceptionHandler(final AccessDeniedException ex) {
         String title = HttpStatus.FORBIDDEN.getReasonPhrase().replace(" ", "_").toUpperCase();
-        String timestamp = LocalDateTime.now().format(BakerTechConfig.DATE_TIME_FORMATTER);
+        String timestamp = DateUtility.nowWithTimestamp().toString();
 
         return new ResponseEntity<>(new ErrorResponseDTO(
                 title,
@@ -57,7 +56,7 @@ public class BakerTechExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(value = AppException.class)
     public ResponseEntity<ErrorResponseDTO> AppExceptionHandler(final AppException ex) {
         String title = HttpStatus.valueOf(ex.getStatusCode().value()).getReasonPhrase().replace(" ", "_").toUpperCase();
-        String timestamp = LocalDateTime.now().format(BakerTechConfig.DATE_TIME_FORMATTER);
+        String timestamp = DateUtility.nowWithTimestamp().toString();
 
         return new ResponseEntity<>(new ErrorResponseDTO(
                 title,

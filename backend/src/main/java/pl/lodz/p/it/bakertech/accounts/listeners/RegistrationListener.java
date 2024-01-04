@@ -13,7 +13,7 @@ import java.util.Locale;
 public class RegistrationListener extends CommonMailSender<RegistrationEvent> {
     protected RegistrationListener(JavaMailSender mailSender,
                                    @Value("${spring.mail.username}") String sendFrom,
-                                   @Value("${bakertech.api.url}") String appUrl,
+                                   @Value("${bakertech.frontend.url}") String appUrl,
                                    MessageSource messageSource) {
         super(mailSender, sendFrom, appUrl, messageSource);
     }

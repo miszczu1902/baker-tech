@@ -13,21 +13,21 @@ import org.springframework.transaction.annotation.Transactional;
 import pl.lodz.p.it.bakertech.accounts.dto.register.RegisterAccountDTO;
 import pl.lodz.p.it.bakertech.accounts.dto.register.ConfirmAccountDTO;
 import pl.lodz.p.it.bakertech.accounts.dto.register.client.RegisterClientDTO;
+import pl.lodz.p.it.bakertech.accounts.excpetions.RegistrationException;
 import pl.lodz.p.it.bakertech.accounts.listeners.events.RegistrationEvent;
-import pl.lodz.p.it.bakertech.utils.mappers.AccountAndAccessLevelMapper;
-import pl.lodz.p.it.bakertech.utils.mappers.KeycloakMapper;
+import pl.lodz.p.it.bakertech.utils.mappers.accounts.AccountAndAccessLevelMapper;
+import pl.lodz.p.it.bakertech.utils.mappers.accounts.KeycloakMapper;
 import pl.lodz.p.it.bakertech.accounts.repositories.AccountConfirmationTokenRepository;
 import pl.lodz.p.it.bakertech.accounts.services.RegistrationService;
 import pl.lodz.p.it.bakertech.common.CommonService;
 import pl.lodz.p.it.bakertech.exceptions.AppException;
 import pl.lodz.p.it.bakertech.accounts.repositories.AccountRepository;
-import pl.lodz.p.it.bakertech.interceptors.Interception;
-import pl.lodz.p.it.bakertech.interceptors.keycloak.KeycloakInterception;
 import pl.lodz.p.it.bakertech.model.accounts.Account;
 import pl.lodz.p.it.bakertech.model.accounts.AccountConfirmationToken;
 import pl.lodz.p.it.bakertech.model.accounts.accessLevels.AccessLevel;
 import pl.lodz.p.it.bakertech.model.accounts.accessLevels.client.Client;
 import pl.lodz.p.it.bakertech.utils.RandomValueGenerator;
+import pl.lodz.p.it.bakertech.validation.etag.ETagGenerator;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -50,11 +50,12 @@ public class RegistrationServiceImpl extends CommonService implements Registrati
     public RegistrationServiceImpl(@Value("${bakertech.keycloak.realm}") String realmName,
                                    Keycloak keycloak,
                                    KeycloakMapper keycloakMapper,
+                                   ETagGenerator eTagGenerator,
                                    AccountRepository accountRepository,
                                    AccountConfirmationTokenRepository accountConfirmationTokenRepository,
                                    AccountAndAccessLevelMapper accountAndAccessLevelMapper,
                                    ApplicationEventPublisher eventPublisher) {
-        super(realmName, keycloak, keycloakMapper);
+        super(realmName, keycloak, keycloakMapper, eTagGenerator);
         this.accountRepository = accountRepository;
         this.accountConfirmationTokenRepository = accountConfirmationTokenRepository;
         this.accountAndAccessLevelMapper = accountAndAccessLevelMapper;
@@ -86,56 +87,52 @@ public class RegistrationServiceImpl extends CommonService implements Registrati
     @Override
     @PreAuthorize("hasAnyRole(@Roles.GUEST, @Roles.ADMINISTRATOR)")
     public String registerAccount(final RegisterAccountDTO account) {
-        return execute(() -> {
-            final Account accountToRegistration = accountAndAccessLevelMapper.accountEntityFromRegisterAccountDTO(account);
-            accountToRegistration.getPersonalData().setId(accountToRegistration);
-            accountRepository.saveAndFlush(accountToRegistration);
+        final Account accountToRegistration = accountAndAccessLevelMapper.accountEntityFromRegisterAccountDTO(account);
+        accountToRegistration.getPersonalData().setId(accountToRegistration);
+        accountRepository.saveAndFlush(accountToRegistration);
 
-            final String confirmationToken = prepareAccountConfirmationToken();
-            accountConfirmationTokenRepository.saveAndFlush(
-                    new AccountConfirmationToken(confirmationToken, LocalDateTime.now(TIMEZONE).plusDays(1), accountToRegistration));
+        final String confirmationToken = prepareAccountConfirmationToken();
+        accountConfirmationTokenRepository.saveAndFlush(
+                new AccountConfirmationToken(confirmationToken, LocalDateTime.now(TIMEZONE).plusDays(1), accountToRegistration));
 
-            AccessLevel accessLevel = accountToRegistration.getAccessLevels()
-                    .stream()
-                    .findFirst()
-                    .orElseThrow(AppException::createRegistrationException);
-            String password = accessLevel instanceof Client ? ((RegisterClientDTO) account).getPassword() : RandomValueGenerator.generateRandomPassword();
+        AccessLevel accessLevel = accountToRegistration.getAccessLevels()
+                .stream()
+                .findFirst()
+                .orElseThrow(RegistrationException::createRegistrationException);
+        String password = accessLevel instanceof Client ? ((RegisterClientDTO) account).getPassword() : RandomValueGenerator.generateRandomPassword();
 
-            final UserRepresentation keycloakUser = keycloakMapper.accessLevelEntityToKeycloakUserRepresentation(accessLevel, password);
-            if (realmResource.users().create(keycloakUser).getStatus() == 201) {
-                if (accessLevel instanceof Client) {
-                    eventPublisher.publishEvent(new RegistrationEvent(confirmationToken, account.getLanguage(), account.getEmail()));
-                } else {
-                    eventPublisher.publishEvent(new RegistrationEvent(
-                            confirmationToken,
-                            account.getLanguage(),
-                            account.getEmail(),
-                            account.getUsername(),
-                            password));
-                }
-                return account.getUsername();
+        final UserRepresentation keycloakUser = keycloakMapper.accessLevelEntityToKeycloakUserRepresentation(accessLevel, password);
+        if (realmResource.users().create(keycloakUser).getStatus() == 201) {
+            if (accessLevel instanceof Client) {
+                eventPublisher.publishEvent(new RegistrationEvent(confirmationToken, account.getLanguage(), account.getEmail()));
+            } else {
+                eventPublisher.publishEvent(new RegistrationEvent(
+                        confirmationToken,
+                        account.getLanguage(),
+                        account.getEmail(),
+                        account.getUsername(),
+                        password));
             }
-            throw AppException.createKeycloakException();
-        });
+            return account.getUsername();
+        }
+        throw AppException.createKeycloakException();
     }
 
     @Override
     @PreAuthorize("hasRole(@Roles.GUEST)")
     public void confirmAccountRegistration(final ConfirmAccountDTO confirmAccount) {
-        execute(() -> {
-            Optional<AccountConfirmationToken> confirmationTokenOptional = accountConfirmationTokenRepository
-                    .findByConfirmationToken(confirmAccount.confirmationToken());
+        Optional<AccountConfirmationToken> confirmationTokenOptional = accountConfirmationTokenRepository
+                .findByConfirmationToken(confirmAccount.confirmationToken());
 
-            if (confirmationTokenOptional.isPresent()) {
-                confirmAccount(confirmationTokenOptional.get());
-                Account account = confirmationTokenOptional.get().getAccount();
+        if (confirmationTokenOptional.isPresent()) {
+            confirmAccount(confirmationTokenOptional.get());
+            Account account = confirmationTokenOptional.get().getAccount();
 
-                account.setIsActive(true);
-                accountRepository.saveAndFlush(account);
-                accountConfirmationTokenRepository.delete(confirmationTokenOptional.get());
-            } else {
-                throw AppException.createRegistrationException();
-            }
-        });
+            account.setIsActive(true);
+            accountRepository.saveAndFlush(account);
+            accountConfirmationTokenRepository.delete(confirmationTokenOptional.get());
+        } else {
+            throw RegistrationException.createRegistrationException();
+        }
     }
 }

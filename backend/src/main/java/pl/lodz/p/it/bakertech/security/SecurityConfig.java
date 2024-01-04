@@ -55,8 +55,13 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .addFilterBefore(new CustomJwtFilter(), UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(authorize ->
-                        authorize.requestMatchers("/api/accounts",
-                                        "/api/auth")
+                        authorize.requestMatchers(
+                                        "/api/accounts",
+                                        "/api/auth",
+                                        "/api/devices",
+                                        "/api/parameters",
+                                        "/api/orders",
+                                        "/api/reports")
                                 .permitAll()
                                 .anyRequest()
                                 .authenticated()

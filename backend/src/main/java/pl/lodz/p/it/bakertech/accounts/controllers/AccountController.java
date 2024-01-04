@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -13,6 +14,7 @@ import pl.lodz.p.it.bakertech.accounts.dto.accounts.account.AccountDataDTO;
 import pl.lodz.p.it.bakertech.accounts.dto.accounts.AccountDataListDTO;
 import pl.lodz.p.it.bakertech.accounts.services.AccountActionService;
 import pl.lodz.p.it.bakertech.accounts.services.AccountDataService;
+import pl.lodz.p.it.bakertech.validation.etag.ETagGenerator;
 
 @RestController
 @RequestMapping("/accounts")
@@ -20,6 +22,7 @@ import pl.lodz.p.it.bakertech.accounts.services.AccountDataService;
 public class AccountController {
     private final AccountDataService accountDataService;
     private final AccountActionService accountActionService;
+    private final ETagGenerator eTagGenerator;
 
     @GetMapping
     @PreAuthorize("hasAnyRole(@Roles.ADMINISTRATOR, @Roles.SERVICEMAN)")
@@ -35,7 +38,10 @@ public class AccountController {
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole(@Roles.SERVICEMAN, @Roles.ADMINISTRATOR)")
     public ResponseEntity<AccountDataDTO> getAccount(@PathVariable final Long id) {
-        return ResponseEntity.ok(accountDataService.getAccountData(id));
+        var content = accountDataService.getAccountData(id);
+        return ResponseEntity.status(HttpStatus.OK)
+                .eTag(eTagGenerator.generateETagValue(content))
+                .body(content);
     }
 
     @GetMapping("/self")
@@ -47,8 +53,9 @@ public class AccountController {
 
     @PostMapping("/{id}/change-account-status")
     @PreAuthorize("hasRole(@Roles.ADMINISTRATOR)")
-    public ResponseEntity<Void> changeAccountStatus(@PathVariable final Long id) {
-        accountActionService.changeAccountStatus(id);
+    public ResponseEntity<Void> changeAccountStatus(@PathVariable final Long id,
+                                                    @RequestHeader("If-Match") final String ifMatch) {
+        accountActionService.changeAccountStatus(id, ifMatch);
         return ResponseEntity.noContent().build();
     }
 

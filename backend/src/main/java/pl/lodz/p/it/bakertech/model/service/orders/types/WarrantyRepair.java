@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import pl.lodz.p.it.bakertech.model.service.orders.Order;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -14,6 +14,6 @@ import java.time.LocalDate;
 @Table(name = "warranty_repair")
 @DiscriminatorValue("WARRANTY_REPAIR")
 public class WarrantyRepair extends Order {
-    @Column(name = "last_date_of_device_service")
-    private LocalDate lastDateOfDeviceService;
+    @Column(name = "last_date_of_device_service", nullable = false)
+    private LocalDateTime lastDateOfDeviceService;
 }

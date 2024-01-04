@@ -3,7 +3,7 @@ package pl.lodz.p.it.bakertech.validation.constraint.service;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 import jakarta.validation.ReportAsSingleViolation;
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
 
 import java.lang.annotation.ElementType;
@@ -18,7 +18,7 @@ import static pl.lodz.p.it.bakertech.validation.Messages.invalidOrderDescription
 @Target({ElementType.FIELD})
 @ReportAsSingleViolation
 @Length(max = 2000)
-@NotEmpty
+@NotNull
 public @interface Description {
     String message() default invalidOrderDescription;
 

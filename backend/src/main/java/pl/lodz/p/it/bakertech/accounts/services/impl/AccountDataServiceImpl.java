@@ -15,12 +15,13 @@ import pl.lodz.p.it.bakertech.accounts.dto.accounts.account.AccountDataDTO;
 import pl.lodz.p.it.bakertech.accounts.dto.accounts.AccountDataListDTO;
 import pl.lodz.p.it.bakertech.accounts.repositories.AccessLevelRepository;
 import pl.lodz.p.it.bakertech.model.accounts.accessLevels.AccessLevel;
-import pl.lodz.p.it.bakertech.utils.mappers.AccountAndAccessLevelMapper;
-import pl.lodz.p.it.bakertech.utils.mappers.KeycloakMapper;
+import pl.lodz.p.it.bakertech.utils.mappers.accounts.AccountAndAccessLevelMapper;
+import pl.lodz.p.it.bakertech.utils.mappers.accounts.KeycloakMapper;
 import pl.lodz.p.it.bakertech.accounts.repositories.AccountRepository;
 import pl.lodz.p.it.bakertech.accounts.services.AccountDataService;
 import pl.lodz.p.it.bakertech.common.CommonService;
 import pl.lodz.p.it.bakertech.exceptions.AppException;
+import pl.lodz.p.it.bakertech.validation.etag.ETagGenerator;
 
 @Service
 @Transactional(
@@ -37,10 +38,11 @@ public class AccountDataServiceImpl extends CommonService implements AccountData
     public AccountDataServiceImpl(@Value("${bakertech.keycloak.realm}") String realmName,
                                   Keycloak keycloak,
                                   KeycloakMapper keycloakMapper,
+                                  ETagGenerator eTagGenerator,
                                   AccessLevelRepository accessLevelRepository,
                                   AccountRepository accountRepository,
                                   AccountAndAccessLevelMapper accountAndAccessLevelMapper) {
-        super(realmName, keycloak, keycloakMapper);
+        super(realmName, keycloak, keycloakMapper, eTagGenerator);
         this.accessLevelRepository = accessLevelRepository;
         this.accountRepository = accountRepository;
         this.accountAndAccessLevelMapper = accountAndAccessLevelMapper;
@@ -53,31 +55,28 @@ public class AccountDataServiceImpl extends CommonService implements AccountData
                                                 Boolean isActive,
                                                 String accessLevel,
                                                 Pageable pageable) {
-        return execute(() -> {
-                    Page<AccessLevel> accounts = accessLevelRepository
-                            .findAllByUsernameAndEmailAndIsActiveAndAccessLevelName(username, email, isActive, accessLevel, pageable);
-                    return new PageImpl<>(accounts.get()
-                            .map(accountAndAccessLevelMapper::accessLevelEntityToAccountDataDTO)
-                            .distinct()
-                            .toList(),
-                            accounts.getPageable(),
-                            accounts.getTotalElements());
-                }
-        );
+        Page<AccessLevel> accounts = accessLevelRepository
+                .findAllByUsernameAndEmailAndIsActiveAndAccessLevelName(username, email, isActive, accessLevel, pageable);
+        return new PageImpl<>(accounts.get()
+                .map(accountAndAccessLevelMapper::accessLevelEntityToAccountDataDTO)
+                .distinct()
+                .toList(),
+                accounts.getPageable(),
+                accounts.getTotalElements());
     }
 
     @Override
     @PreAuthorize("hasAnyRole(@Roles.SERVICEMAN, @Roles.ADMINISTRATOR)")
     public AccountDataDTO getAccountData(final Long id) {
-        return execute(() -> accountAndAccessLevelMapper.accountEntityToAccountDataDTO(
-                accountRepository.findById(id)
-                        .orElseThrow()));
+        return accountAndAccessLevelMapper.accountEntityToAccountDataDTO(accountRepository.findById(id)
+                .orElseThrow());
     }
 
     @Override
     @PreAuthorize("hasAnyRole(@Roles.CLIENT, @Roles.SERVICEMAN, @Roles.ADMINISTRATOR)")
     public AccountDataDTO getAccountSelfData(final String username) {
-        return execute(() -> accountAndAccessLevelMapper.accountEntityToAccountDataDTO(
-                accountRepository.findById(accountRepository.findAccountByUsername(username).getId()).orElseThrow()));
-    }
+            return accountAndAccessLevelMapper.accountEntityToAccountDataDTO(accountRepository
+                    .findById(accountRepository.findAccountByUsername(username).getId())
+                    .orElseThrow());
+        }
 }

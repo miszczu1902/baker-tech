@@ -5,9 +5,6 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
-import pl.lodz.p.it.bakertech.security.Roles;
-
-import java.util.Optional;
 
 @Slf4j
 @Aspect

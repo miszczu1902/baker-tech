@@ -3,7 +3,7 @@ package pl.lodz.p.it.bakertech.validation.constraint.service;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 import jakarta.validation.ReportAsSingleViolation;
-import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Positive;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -16,7 +16,7 @@ import static pl.lodz.p.it.bakertech.validation.Messages.invalidOrderDuration;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD})
 @ReportAsSingleViolation
-@Pattern(regexp = "[\\s]*[0-9]*[1-9]+")
+@Positive
 public @interface OrderDuration {
     String message() default invalidOrderDuration;
 

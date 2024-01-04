@@ -7,5 +7,5 @@ public interface AccountActionService {
 
     void revokeAccessLevelFromAccount(Long id, AccessLevelsDTO removeAccessLevel);
 
-    void changeAccountStatus(Long id);
+    void changeAccountStatus(Long id, String ifMatch);
 }

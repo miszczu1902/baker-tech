@@ -4,12 +4,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import pl.lodz.p.it.bakertech.model.accounts.Account;
-
-import java.time.LocalDateTime;
+import lombok.*;
 import java.util.Objects;
 
 @Getter
@@ -32,15 +27,5 @@ public abstract class AbstractEntityWithId extends AbstractEntity {
     @Override
     public int hashCode() {
         return Objects.hash(id);
-    }
-
-    public AbstractEntityWithId(Long version,
-                                LocalDateTime creationDateTime,
-                                Account createdBy,
-                                LocalDateTime lastModificationDateTime,
-                                Account lastModificationBy,
-                                Long id) {
-        super(version, creationDateTime, createdBy, lastModificationDateTime, lastModificationBy);
-        this.id = id;
     }
 }

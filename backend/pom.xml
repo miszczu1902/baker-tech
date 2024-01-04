@@ -13,7 +13,7 @@
     <name>Baker-Tech</name>
     <properties>
         <java.version>21</java.version>
-        <mapstrcut.version>1.5.5.Final</mapstrcut.version>
+        <mapstruct.version>1.5.5.Final</mapstruct.version>
         <lombok.version>1.18.30</lombok.version>
         <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
         <springdoc-verison>2.3.0</springdoc-verison>
@@ -80,6 +80,7 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>${lombok.version}</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -153,7 +154,7 @@
         <dependency>
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
-            <version>${mapstrcut.version}</version>
+            <version>${mapstruct.version}</version>
         </dependency>
     </dependencies>
 
@@ -193,7 +194,7 @@
                         <path>
                             <groupId>org.mapstruct</groupId>
                             <artifactId>mapstruct-processor</artifactId>
-                            <version>${mapstrcut.version}</version>
+                            <version>${mapstruct.version}</version>
                         </path>
                     </annotationProcessorPaths>
                 </configuration>

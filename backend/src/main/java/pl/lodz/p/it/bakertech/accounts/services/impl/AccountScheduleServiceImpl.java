@@ -16,11 +16,12 @@ import pl.lodz.p.it.bakertech.common.CommonService;
 import pl.lodz.p.it.bakertech.exceptions.AppException;
 import pl.lodz.p.it.bakertech.interceptors.schedule.ScheduledInterception;
 import pl.lodz.p.it.bakertech.model.accounts.AccountConfirmationToken;
-import pl.lodz.p.it.bakertech.utils.mappers.KeycloakMapper;
+import pl.lodz.p.it.bakertech.utils.mappers.accounts.KeycloakMapper;
+import pl.lodz.p.it.bakertech.validation.etag.ETagGenerator;
 
 import java.util.List;
 
-import static pl.lodz.p.it.bakertech.utils.ISO8601Periods.PER_ONE_MINUTE;
+import static pl.lodz.p.it.bakertech.utils.SchedulePeriods.PER_ONE_MINUTE;
 
 @Service
 @ScheduledInterception
@@ -37,9 +38,10 @@ public class AccountScheduleServiceImpl extends CommonService implements Account
     public AccountScheduleServiceImpl(@Value("${bakertech.keycloak.realm}") String realmName,
                                       Keycloak keycloak,
                                       KeycloakMapper keycloakMapper,
+                                      ETagGenerator eTagGenerator,
                                       AccountRepository accountRepository,
                                       AccountConfirmationTokenRepository accountConfirmationTokenRepository) {
-        super(realmName, keycloak, keycloakMapper);
+        super(realmName, keycloak, keycloakMapper, eTagGenerator);
         this.accountRepository = accountRepository;
         this.accountConfirmationTokenRepository = accountConfirmationTokenRepository;
     }
@@ -47,25 +49,22 @@ public class AccountScheduleServiceImpl extends CommonService implements Account
     @Override
     @Scheduled(fixedRateString = PER_ONE_MINUTE)
     public void recognizeInactivatedAccounts() {
-        execute(() -> {
-            List<AccountConfirmationToken> unconfirmedAccounts = accountConfirmationTokenRepository.findAll();
-            if (!unconfirmedAccounts.isEmpty()) {
-                unconfirmedAccounts.forEach(accountConfirmationToken -> {
-                    String username = accountConfirmationToken.getAccount().getUsername();
+        List<AccountConfirmationToken> unconfirmedAccounts = accountConfirmationTokenRepository.findAll();
+        if (!unconfirmedAccounts.isEmpty()) {
+            unconfirmedAccounts.forEach(accountConfirmationToken -> {
+                String username = accountConfirmationToken.getAccount().getUsername();
 
-                    accountRepository.delete(accountConfirmationToken.getAccount());
-                    accountConfirmationTokenRepository.delete(accountConfirmationToken);
+                accountRepository.delete(accountConfirmationToken.getAccount());
+                accountConfirmationTokenRepository.delete(accountConfirmationToken);
 
-                    try (Response response = realmResource.users()
-                            .delete(getKeycloakUserByUsername(username).getId())) {
-                        if (response.getStatus() != 204  && response.getStatus() != 200) {
-                            throw AppException.createKeycloakException();
-                        }
-                    } catch (Exception e) {
-                        throw AppException.createKeycloakException(e.getCause());
+                try (Response response = realmResource.users().delete(getKeycloakUserByUsername(username).getId())) {
+                    if (response.getStatus() != 204 && response.getStatus() != 200) {
+                        throw AppException.createKeycloakException();
                     }
-                });
-            }
-        });
+                } catch (Exception e) {
+                    throw AppException.createKeycloakException(e.getCause());
+                }
+            });
+        }
     }
 }

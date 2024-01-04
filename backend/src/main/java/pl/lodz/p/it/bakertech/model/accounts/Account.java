@@ -6,6 +6,7 @@ import pl.lodz.p.it.bakertech.model.AbstractEntityWithId;
 import pl.lodz.p.it.bakertech.model.accounts.accessLevels.AccessLevel;
 import pl.lodz.p.it.bakertech.validation.constraint.accounts.Email;
 import pl.lodz.p.it.bakertech.validation.constraint.accounts.Username;
+import pl.lodz.p.it.bakertech.validation.etag.ETagField;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -31,7 +32,8 @@ public class Account extends AbstractEntityWithId {
     @Column(name = "email", unique = true, nullable = false)
     private String email;
 
-    @Column(name = "isActive", nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
+    @ETagField
+    @Column(name = "is_active", nullable = false, columnDefinition = "boolean default false")
     private Boolean isActive;
 
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "id", cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.REMOVE})

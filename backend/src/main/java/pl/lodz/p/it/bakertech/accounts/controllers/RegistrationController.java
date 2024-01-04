@@ -7,18 +7,17 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import pl.lodz.p.it.bakertech.accounts.dto.register.ConfirmAccountDTO;
 import pl.lodz.p.it.bakertech.accounts.dto.register.RegisterAccountDTO;
-import pl.lodz.p.it.bakertech.common.CommonController;
 import pl.lodz.p.it.bakertech.accounts.dto.register.client.RegisterClientDTO;
 import pl.lodz.p.it.bakertech.accounts.services.RegistrationService;
 
 import java.net.URI;
 
-import static pl.lodz.p.it.bakertech.config.BakerTechConfig.AUTH_URI;
+import static pl.lodz.p.it.bakertech.config.BakerTechConfig.API_URI;
 
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
-public class RegistrationController extends CommonController {
+public class RegistrationController {
     private final RegistrationService registrationService;
 
     @PostMapping("/register-client")
@@ -27,8 +26,8 @@ public class RegistrationController extends CommonController {
                                                @RequestHeader("Accept-Language") final String language) {
         client.setLanguage(language);
         return ResponseEntity.created(
-                        URI.create("%s/%s".formatted(AUTH_URI, registrationService.registerAccount(client)))
-                ).build();
+                URI.create("%s/%s".formatted(API_URI, registrationService.registerAccount(client)))
+        ).build();
     }
 
     @PostMapping("/register-serviceman")
@@ -37,7 +36,7 @@ public class RegistrationController extends CommonController {
                                                    @RequestHeader("Accept-Language") final String language) {
         serviceman.setLanguage(language);
         return ResponseEntity.created(
-                URI.create("%s/%s".formatted(AUTH_URI, registrationService.registerAccount(serviceman)))
+                URI.create("%s/accounts/%s".formatted(API_URI, registrationService.registerAccount(serviceman)))
         ).build();
     }
 

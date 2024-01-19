@@ -15,8 +15,9 @@ import java.util.Optional;
 @Transactional(
         propagation = Propagation.MANDATORY,
         isolation = Isolation.READ_COMMITTED,
-        rollbackFor = AppException.class
+        rollbackFor = AppException.class,
+        transactionManager = "businessTransactionManager"
 )
 public interface ServiceParametersRepository extends JpaRepository<ServiceParameter, Long> {
-    Optional<ServiceParameter> findByServiceParameterType(ServiceParameterType serviceParameterType);
+    Optional<ServiceParameter> findByServiceParameterTypeEquals(ServiceParameterType serviceParameterType);
 }

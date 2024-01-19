@@ -36,7 +36,8 @@ public class AdminReportsController {
     }
 
     @GetMapping("/orders")
-    public ResponseEntity<OrdersReportInfoDTO> getAllOrders() {
-        return ResponseEntity.ok(adminReportsService.getOrders());
+    public ResponseEntity<OrdersReportInfoDTO> getAllOrders(@RequestParam(name = "month", required = false) Integer month,
+                                                            @RequestParam(name = "year", required = false) Integer year) {
+        return ResponseEntity.ok(adminReportsService.getOrders(month, year));
     }
 }

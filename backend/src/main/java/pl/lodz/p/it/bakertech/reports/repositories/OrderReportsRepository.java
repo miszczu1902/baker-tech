@@ -14,7 +14,8 @@ import pl.lodz.p.it.bakertech.model.service.orders.Order;
 @Transactional(
         propagation = Propagation.MANDATORY,
         isolation = Isolation.READ_COMMITTED,
-        rollbackFor = AppException.class
+        rollbackFor = AppException.class,
+        transactionManager = "businessTransactionManager"
 )
 public interface OrderReportsRepository extends JpaRepository<Order, Long> {
     @Query("SELECT" +

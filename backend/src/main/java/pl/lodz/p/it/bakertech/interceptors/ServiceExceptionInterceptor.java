@@ -11,6 +11,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.TransactionTimedOutException;
 import pl.lodz.p.it.bakertech.exceptions.AppException;
 
 import java.util.NoSuchElementException;
@@ -29,6 +30,8 @@ public class ServiceExceptionInterceptor implements CommonInterceptor {
     public void catchException(Throwable ex) {
         try {
             throw ex;
+        } catch (TransactionTimedOutException txe) {
+            throw AppException.createTransactionTimeoutException(txe.getCause());
         } catch (NoSuchElementException nsee) {
             throw AppException.createEntityNotFoundException(nsee);
         } catch (DataAccessException dae) {
@@ -40,8 +43,10 @@ public class ServiceExceptionInterceptor implements CommonInterceptor {
                         throw AppException.createValidationException(dae.getCause());
                     }
                 }
-                case EmptyResultDataAccessException erdae -> throw AppException.createEntityNotFoundException(erdae.getCause());
-                case OptimisticLockingFailureException ole -> throw AppException.createOptimisticLockException(ole.getCause());
+                case EmptyResultDataAccessException erdae ->
+                        throw AppException.createEntityNotFoundException(erdae.getCause());
+                case OptimisticLockingFailureException ole ->
+                        throw AppException.createOptimisticLockException(ole.getCause());
                 default -> throw AppException.createValidationException(dae.getCause());
             }
         } catch (PersistenceException | java.sql.SQLException pe) {

@@ -22,12 +22,12 @@ import static pl.lodz.p.it.bakertech.config.BakerTechConfig.API_URI;
 @RestController
 @RequestMapping("/devices")
 @RequiredArgsConstructor
-@PreAuthorize("hasAnyRole(@Roles.ADMINISTRATOR, @Roles.SERVICEMAN)")
 public class DeviceController {
     private final DeviceService deviceService;
     private final ETagGenerator eTagGenerator;
 
     @GetMapping
+    @PreAuthorize("hasAnyRole(@Roles.ADMINISTRATOR, @Roles.SERVICEMAN)")
     public ResponseEntity<Page<DeviceListDataDTO>> getDevices(@PageableDefault Pageable pageable,
                                                               @RequestParam(required = false) final String serialNumber,
                                                               @RequestParam(required = false) final Boolean warrantyEnded,
@@ -36,13 +36,22 @@ public class DeviceController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole(@Roles.ADMINISTRATOR, @Roles.SERVICEMAN)")
     public ResponseEntity<Page<DeviceListDataDTO>> getDeviceETag(@PathVariable final Long id) {
         return ResponseEntity.status(HttpStatus.OK)
                 .eTag(eTagGenerator.generateETagValue(deviceService.getDevice(id)))
                 .build();
     }
 
+    @GetMapping("/devices-for-order/{orderId}")
+    @PreAuthorize("hasAnyRole(@Roles.ADMINISTRATOR, @Roles.SERVICEMAN, @Roles.CLIENT)")
+    public ResponseEntity<Page<DeviceListDataDTO>> getDevicesForSpecifiedOrder(@PageableDefault Pageable pageable,
+                                                                               @PathVariable final Long orderId) {
+       return ResponseEntity.ok(deviceService.getDevicesForOrder(orderId, pageable));
+    }
+
     @PostMapping
+    @PreAuthorize("hasAnyRole(@Roles.ADMINISTRATOR, @Roles.SERVICEMAN)")
     public ResponseEntity<Page<DeviceListDataDTO>> addDeviceToService(@Valid @RequestBody final AddDeviceDTO addDevice) {
         return ResponseEntity.created(
                 URI.create("%s/devices/%s".formatted(API_URI, deviceService.addDeviceToService(addDevice)))
@@ -50,6 +59,7 @@ public class DeviceController {
     }
 
     @PostMapping("/{id}/mark-ended-warranty")
+    @PreAuthorize("hasAnyRole(@Roles.ADMINISTRATOR, @Roles.SERVICEMAN)")
     public ResponseEntity<Void> markDeviceWarrantyAsEnded(@PathVariable final Long id,
                                                           @RequestHeader("If-Match") final String ifMatch) {
         deviceService.markEndedWarrantyForDevice(id, ifMatch);

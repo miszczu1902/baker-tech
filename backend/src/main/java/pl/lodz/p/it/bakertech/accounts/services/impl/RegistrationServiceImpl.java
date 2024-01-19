@@ -38,7 +38,8 @@ import static pl.lodz.p.it.bakertech.config.BakerTechConfig.TIMEZONE;
 @Transactional(
         propagation = Propagation.REQUIRES_NEW,
         isolation = Isolation.READ_COMMITTED,
-        rollbackFor = AppException.class
+        rollbackFor = AppException.class,
+        transactionManager = "accountsTransactionManager"
 )
 public class RegistrationServiceImpl extends CommonService implements RegistrationService {
     private final AccountRepository accountRepository;

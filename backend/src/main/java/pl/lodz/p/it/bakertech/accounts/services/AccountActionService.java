@@ -3,9 +3,7 @@ package pl.lodz.p.it.bakertech.accounts.services;
 import pl.lodz.p.it.bakertech.accounts.dto.accounts.account.AccessLevelsDTO;
 
 public interface AccountActionService {
-    void grantAccessLevelToAccount(Long id, AccessLevelsDTO assignAccessLevel);
-
-    void revokeAccessLevelFromAccount(Long id, AccessLevelsDTO removeAccessLevel);
+    void manageAccessLevels(Long id, AccessLevelsDTO accessLevelsDTO, boolean isGrant, String ifMatch);
 
     void changeAccountStatus(Long id, String ifMatch);
 }

@@ -14,11 +14,10 @@ import java.util.Optional;
 @Transactional(
         propagation = Propagation.MANDATORY,
         isolation = Isolation.READ_COMMITTED,
-        rollbackFor = AppException.class
+        rollbackFor = AppException.class,
+        transactionManager = "businessTransactionManager"
 )
 public interface AccessLevelServiceRepository extends JpaRepository<AccessLevel, Long> {
-    Optional<AccessLevel> findByAccessLevelNameAndAccount_Id(String accessLevelName, Long accountId);
-
     Optional<AccessLevel> findByAccessLevelNameAndAccount_Username(String accessLevelName, String username);
 
     boolean existsByAccessLevelNameAndAccount_Username(String accessLevelName, String username);

@@ -33,6 +33,10 @@ public class AppException extends ResponseStatusException {
         return new OptimisticLockException(HttpStatus.INTERNAL_SERVER_ERROR, Messages.internalServerError, cause);
     }
 
+    public static AppException createTransactionTimeoutException(final Throwable cause) {
+        return new TransactionTimeoutException(HttpStatus.INTERNAL_SERVER_ERROR, Messages.internalServerError, cause);
+    }
+
     public static AppException createPersistenceException(final Throwable cause) {
         return new PersistenceException(HttpStatus.INTERNAL_SERVER_ERROR, Messages.internalServerError, cause);
     }

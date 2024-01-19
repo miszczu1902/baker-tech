@@ -38,4 +38,11 @@ public class TestAccount {
             .password("5dJQNm=b")
             .email("cyprianbanino187@gmailx.com")
             .build();
+
+    public static TestAccount DAWID_JASPER = builder()
+            .id(-4)
+            .username("davidjasper")
+            .password("5dJQNm=b")
+            .email("djasperx@gmailt.com")
+            .build();
 }

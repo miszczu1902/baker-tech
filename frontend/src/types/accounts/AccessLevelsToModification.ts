@@ -1,5 +1,5 @@
-import {Roles} from "../../security/Roles";
+import { Roles } from "../../security/Roles";
 
 export interface AccessLevelsToModification {
-    accessLevels?: Roles[],
+  accessLevels?: Roles[];
 }

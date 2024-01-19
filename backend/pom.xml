@@ -17,6 +17,13 @@
         <lombok.version>1.18.30</lombok.version>
         <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
         <springdoc-verison>2.3.0</springdoc-verison>
+        <restassured-version>5.3.2</restassured-version>
+        <java-dotenv-version>5.2.2</java-dotenv-version>
+        <spring-retry-version>2.0.4</spring-retry-version>
+        <keycloak-version>22.0.5</keycloak-version>
+        <lang3-version>3.14.0</lang3-version>
+        <maven-compiler-version>3.11.0</maven-compiler-version>
+        <jacoco-version>0.8.11</jacoco-version>
     </properties>
     <dependencies>
         <dependency>
@@ -116,14 +123,14 @@
         <dependency>
             <groupId>io.rest-assured</groupId>
             <artifactId>rest-assured</artifactId>
-            <version>5.3.2</version>
+            <version>${restassured-version}</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>io.github.cdimascio</groupId>
             <artifactId>java-dotenv</artifactId>
-            <version>5.2.2</version>
+            <version>${java-dotenv-version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -136,19 +143,19 @@
         <dependency>
             <groupId>org.springframework.retry</groupId>
             <artifactId>spring-retry</artifactId>
-            <version>2.0.4</version>
+            <version>${spring-retry-version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.keycloak</groupId>
             <artifactId>keycloak-admin-client</artifactId>
-            <version>22.0.5</version>
+            <version>${keycloak-version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>3.14.0</version>
+            <version>${lang3-version}</version>
         </dependency>
 
         <dependency>
@@ -176,7 +183,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.11.0</version>
+                <version>${maven-compiler-version}</version>
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
@@ -198,6 +205,26 @@
                         </path>
                     </annotationProcessorPaths>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco-version}</version>
+                <executions>
+                    <execution>
+                        <id>jacoco-initialize</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>jacoco-site</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

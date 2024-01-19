@@ -12,7 +12,8 @@ import pl.lodz.p.it.bakertech.model.accounts.Account;
 @Transactional(
         propagation = Propagation.MANDATORY,
         isolation = Isolation.READ_COMMITTED,
-        rollbackFor = AppException.class
+        rollbackFor = AppException.class,
+        transactionManager = "accountsTransactionManager"
 )
 public interface AccountRepository extends JpaRepository<Account, Long> {
     Account findAccountByUsername(String username);

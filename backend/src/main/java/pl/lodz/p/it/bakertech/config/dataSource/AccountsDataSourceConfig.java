@@ -2,6 +2,7 @@ package pl.lodz.p.it.bakertech.config.dataSource;
 
 import jakarta.persistence.EntityManagerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
@@ -24,6 +25,9 @@ import javax.sql.DataSource;
         transactionManagerRef = "accountsTransactionManager"
 )
 public class AccountsDataSourceConfig {
+    @Value("${bakertech.transaction.default-timeout}")
+    private int txTimeout;
+
     @Primary
     @Bean(name = "accountsProperties")
     @ConfigurationProperties("spring.datasource.accounts")
@@ -49,8 +53,9 @@ public class AccountsDataSourceConfig {
 
     @Primary
     @Bean(name = "accountsTransactionManager")
-    @ConfigurationProperties("spring.jpa")
     public PlatformTransactionManager accountsTransactionManager(@Qualifier("accountsEntityManagerFactory") EntityManagerFactory entityManagerFactory) {
-        return new JpaTransactionManager(entityManagerFactory);
+        JpaTransactionManager jpaTransactionManager = new JpaTransactionManager(entityManagerFactory);
+        jpaTransactionManager.setDefaultTimeout(txTimeout);
+        return jpaTransactionManager;
     }
 }

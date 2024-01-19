@@ -2,12 +2,11 @@ package pl.lodz.p.it.bakertech.integration.accounts;
 
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
-import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.http.HttpStatus;
 import pl.lodz.p.it.bakertech.accounts.dto.accounts.account.AccessLevelsDTO;
 import pl.lodz.p.it.bakertech.integration.config.BakerTechTestConfig;
@@ -16,52 +15,30 @@ import pl.lodz.p.it.bakertech.security.Roles;
 import pl.lodz.p.it.bakertech.validation.Messages;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 import static io.restassured.RestAssured.given;
 import static pl.lodz.p.it.bakertech.integration.util.TestAccount.*;
 
-public class AccountModuleTests extends BakerTechTestConfig {
-    @ParameterizedTest
-    @ValueSource(strings = {"", "username", "email", "isActive"})
-    void success_getAllAccountsTest(String queryParam) {
-        Object queryParamValue;
-        switch (queryParam) {
-            case "username" -> queryParamValue = BAKERTECH_ADMIN.username();
-            case "email" -> queryParamValue = BAKERTECH_ADMIN.email();
-            case "isActive" -> queryParamValue = true;
-            default -> queryParamValue = null;
-        }
-
-        RequestSpecification header = given()
-                .header(keycloakJwtToken(BAKERTECH_ADMIN.username(), BAKERTECH_ADMIN.password()));
-        if (Optional.ofNullable(queryParamValue).isPresent()) {
-            header.queryParam(queryParam, queryParamValue);
-        }
-        Response response = header.get("/api/accounts");
-        Assertions.assertEquals(HttpStatus.OK.value(), response.getStatusCode());
-        Assertions.assertTrue((int) (response.jsonPath().get("totalElements")) > 0);
+public class AccountModificationDataTests extends BakerTechTestConfig {
+    public static List<TestAccount> allServicemen() {
+        return List.of(CARL_JOHNSON, MARCIN_KRASUCKI);
     }
 
-    @ParameterizedTest
-    @MethodSource("allAccounts")
-    void success_getSelfAccountDataTest(TestAccount account) {
-        Response response = given()
-                .header(keycloakJwtToken(account.username(), account.password()))
-                .when()
-                .get("/api/accounts/self");
-        Assertions.assertEquals(HttpStatus.OK.value(), response.getStatusCode());
-        Assertions.assertEquals(account.username(), response.jsonPath().get("username"));
-        Assertions.assertEquals(account.email(), response.jsonPath().get("email"));
+    @BeforeEach
+    public void initTest() {
+        initDb();
     }
 
     @ParameterizedTest
     @MethodSource("allServicemen")
     void success_grantAndRevokeAccessLevel(TestAccount account) {
+        initDb();
+        String eTagUrl = "/api/accounts/%s".formatted(account.id());
         Response response = given()
                 .when()
                 .header(keycloakJwtToken(BAKERTECH_ADMIN.username(), BAKERTECH_ADMIN.password()))
+                .header(eTag(eTagUrl, BAKERTECH_ADMIN.username(), BAKERTECH_ADMIN.password()))
                 .contentType(ContentType.JSON)
                 .body(new AccessLevelsDTO(Set.of(Roles.ADMINISTRATOR)))
                 .post("/api/accounts/%s/grant-access-levels".formatted(account.id()));
@@ -70,6 +47,7 @@ public class AccountModuleTests extends BakerTechTestConfig {
         response = given()
                 .when()
                 .header(keycloakJwtToken(BAKERTECH_ADMIN.username(), BAKERTECH_ADMIN.password()))
+                .header(eTag(eTagUrl, BAKERTECH_ADMIN.username(), BAKERTECH_ADMIN.password()))
                 .body(new AccessLevelsDTO(Set.of(Roles.ADMINISTRATOR)))
                 .contentType(ContentType.JSON)
                 .post("/api/accounts/%s/revoke-access-levels".formatted(account.id()));
@@ -78,10 +56,12 @@ public class AccountModuleTests extends BakerTechTestConfig {
 
     @Test
     void success_changeAccountStatus() {
+        initDb();
         String url = "/api/accounts/%s/change-account-status".formatted(MARCIN_KRASUCKI.id());
-
+        String eTagUrl = "/api/accounts/%s".formatted(MARCIN_KRASUCKI.id());
         Response response = given()
                 .header(keycloakJwtToken(BAKERTECH_ADMIN.username(), BAKERTECH_ADMIN.password()))
+                .header(eTag(eTagUrl, BAKERTECH_ADMIN.username(), BAKERTECH_ADMIN.password()))
                 .when()
                 .post(url);
         Assertions.assertEquals(HttpStatus.NO_CONTENT.value(), response.getStatusCode());
@@ -90,17 +70,24 @@ public class AccountModuleTests extends BakerTechTestConfig {
         Assertions.assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatusCode());
 
         response = given()
-                .when()
                 .header(keycloakJwtToken(BAKERTECH_ADMIN.username(), BAKERTECH_ADMIN.password()))
+                .header(eTag(eTagUrl, BAKERTECH_ADMIN.username(), BAKERTECH_ADMIN.password()))
+                .when()
                 .post(url);
         Assertions.assertEquals(HttpStatus.NO_CONTENT.value(), response.getStatusCode());
     }
 
     @Test
     void error_cannotChangeStatusForOwnAccount() {
+        initDb();
         Response response = given()
-                .when()
                 .header(keycloakJwtToken(BAKERTECH_ADMIN.username(), BAKERTECH_ADMIN.password()))
+                .header(eTag(
+                        "/api/accounts/%s".formatted(BAKERTECH_ADMIN.id()),
+                        BAKERTECH_ADMIN.username(),
+                        BAKERTECH_ADMIN.password()))
+                .contentType(ContentType.JSON)
+                .when()
                 .post("/api/accounts/%s/change-account-status".formatted(BAKERTECH_ADMIN.id()));
         Assertions.assertEquals(HttpStatus.FORBIDDEN.value(), response.getStatusCode());
         Assertions.assertEquals(Messages.cannotChangeStatusSelf, response.jsonPath().get("message"));
@@ -108,45 +95,81 @@ public class AccountModuleTests extends BakerTechTestConfig {
 
     @Test
     void error_cannotAssignAccessLevelSelf() {
+        initDb();
         Response response = given()
                 .when()
                 .header(keycloakJwtToken(BAKERTECH_ADMIN.username(), BAKERTECH_ADMIN.password()))
+                .header(eTag(
+                        "/api/accounts/%s".formatted(BAKERTECH_ADMIN.id()),
+                        BAKERTECH_ADMIN.username(),
+                        BAKERTECH_ADMIN.password()))
                 .contentType(ContentType.JSON)
                 .body(new AccessLevelsDTO(Set.of(Roles.SERVICEMAN)))
-                .post("/api/accounts/%s/grant-access-levels" .formatted(BAKERTECH_ADMIN.id()));
+                .post("/api/accounts/%s/grant-access-levels".formatted(BAKERTECH_ADMIN.id()));
         Assertions.assertEquals(HttpStatus.FORBIDDEN.value(), response.getStatusCode());
         Assertions.assertEquals(Messages.cannotChangeAccessLevelsSelf, response.jsonPath().get("message"));
     }
 
     @Test
     void error_cannotRevokeOnlyOneAccessLevel() {
+        initDb();
         Response response = given()
                 .when()
                 .header(keycloakJwtToken(BAKERTECH_ADMIN.username(), BAKERTECH_ADMIN.password()))
+                .header(eTag(
+                        "/api/accounts/%s".formatted(MARCIN_KRASUCKI.id()),
+                        BAKERTECH_ADMIN.username(),
+                        BAKERTECH_ADMIN.password()))
                 .contentType(ContentType.JSON)
                 .body(new AccessLevelsDTO(Set.of(Roles.SERVICEMAN)))
-                .post("/api/accounts/%s/revoke-access-levels" .formatted(MARCIN_KRASUCKI.id()));
+                .post("/api/accounts/%s/revoke-access-levels".formatted(MARCIN_KRASUCKI.id()));
         Assertions.assertEquals(HttpStatus.FORBIDDEN.value(), response.getStatusCode());
         Assertions.assertEquals(Messages.cannotRemoveOneAccessLevel, response.jsonPath().get("message"));
     }
 
     @Test
     void error_cannotAssignAccessLevelToClient() {
+        initDb();
         Response response = given()
                 .when()
                 .header(keycloakJwtToken(BAKERTECH_ADMIN.username(), BAKERTECH_ADMIN.password()))
+                .header(eTag(
+                        "/api/accounts/%s".formatted(CYPRIAN_BANINO.id()),
+                        BAKERTECH_ADMIN.username(),
+                        BAKERTECH_ADMIN.password()))
                 .contentType(ContentType.JSON)
                 .body(new AccessLevelsDTO(Set.of(Roles.ADMINISTRATOR, Roles.SERVICEMAN)))
-                .post("/api/accounts/%s/grant-access-levels" .formatted(CYPRIAN_BANINO.id()));
+                .post("/api/accounts/%s/grant-access-levels".formatted(CYPRIAN_BANINO.id()));
         Assertions.assertEquals(HttpStatus.FORBIDDEN.value(), response.getStatusCode());
         Assertions.assertEquals(Messages.cannotAssignAccessLevels, response.jsonPath().get("message"));
     }
 
-    public static List<TestAccount> allAccounts() {
-        return List.of(BAKERTECH_ADMIN, CARL_JOHNSON, CYPRIAN_BANINO, MARCIN_KRASUCKI);
-    }
+    @Test
+    void error_cannotVerifyETag() {
+        Response response = given()
+                .when()
+                .header(keycloakJwtToken(BAKERTECH_ADMIN.username(), BAKERTECH_ADMIN.password()))
+                .header(eTag(
+                        "/api/accounts/%s".formatted(DAWID_JASPER.id()),
+                        BAKERTECH_ADMIN.username(),
+                        BAKERTECH_ADMIN.password()))
+                .contentType(ContentType.JSON)
+                .body(new AccessLevelsDTO(Set.of(Roles.ADMINISTRATOR)))
+                .post("/api/accounts/%s/grant-access-levels".formatted(CARL_JOHNSON.id()));
+        Assertions.assertEquals(HttpStatus.CONFLICT.value(), response.getStatusCode());
+        Assertions.assertEquals(Messages.contentChanged, response.jsonPath().get("message"));
 
-    public static List<TestAccount> allServicemen() {
-        return List.of(CARL_JOHNSON, MARCIN_KRASUCKI);
+        response = given()
+                .when()
+                .header(keycloakJwtToken(BAKERTECH_ADMIN.username(), BAKERTECH_ADMIN.password()))
+                .header(eTag(
+                        "/api/accounts/%s".formatted(CYPRIAN_BANINO.id()),
+                        BAKERTECH_ADMIN.username(),
+                        BAKERTECH_ADMIN.password()))
+                .contentType(ContentType.JSON)
+                .body(new AccessLevelsDTO(Set.of(Roles.ADMINISTRATOR)))
+                .post("/api/accounts/%s/change-account-status".formatted(CARL_JOHNSON.id()));
+        Assertions.assertEquals(HttpStatus.CONFLICT.value(), response.getStatusCode());
+        Assertions.assertEquals(Messages.contentChanged, response.jsonPath().get("message"));
     }
 }

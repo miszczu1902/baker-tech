@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import pl.lodz.p.it.bakertech.common.CommonService;
 import pl.lodz.p.it.bakertech.exceptions.AppException;
+import pl.lodz.p.it.bakertech.exceptions.ForbiddenException;
 import pl.lodz.p.it.bakertech.model.accounts.accessLevels.Serviceman;
 import pl.lodz.p.it.bakertech.model.accounts.accessLevels.client.Client;
 import pl.lodz.p.it.bakertech.model.service.orders.Order;
@@ -25,6 +26,7 @@ import pl.lodz.p.it.bakertech.model.service.parameters.ServiceParameter;
 import pl.lodz.p.it.bakertech.model.service.parameters.ServiceParameterType;
 import pl.lodz.p.it.bakertech.security.Roles;
 import pl.lodz.p.it.bakertech.service.dto.orders.create.CreateOrderDTO;
+import pl.lodz.p.it.bakertech.service.dto.orders.data.NextConservationDTO;
 import pl.lodz.p.it.bakertech.service.dto.orders.queue.OrderDataForQueueDTO;
 import pl.lodz.p.it.bakertech.service.dto.orders.update.UpdateForCloseDTO;
 import pl.lodz.p.it.bakertech.service.dto.orders.update.UpdateForSettlementDTO;
@@ -50,7 +52,8 @@ import static pl.lodz.p.it.bakertech.config.BakerTechConfig.ROUNDING_PRECISION;
 @Transactional(
         propagation = Propagation.REQUIRES_NEW,
         isolation = Isolation.READ_COMMITTED,
-        rollbackFor = AppException.class
+        rollbackFor = AppException.class,
+        transactionManager = "businessTransactionManager"
 )
 public class OrdersServiceImpl extends CommonService implements OrdersService {
     private final OrderRepository orderRepository;
@@ -83,14 +86,28 @@ public class OrdersServiceImpl extends CommonService implements OrdersService {
                                             OrderStatus status,
                                             OrderType orderType,
                                             Boolean delayed,
+                                            String client,
                                             Pageable pageable) {
-        Page<Order> orders = orderRepository
-                .findAllByLicenseIdAndStatusAndOrderTypeAndDelayed(licenseId, status, orderType, delayed, pageable);
-        return new PageImpl<>(orders.get()
-                .map(orderMapper::orderEntityToOrderListData)
-                .toList(),
-                orders.getPageable(),
-                orders.getTotalElements());
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        boolean clientCondition = accessLevelServiceRepository.existsByAccessLevelNameAndAccount_Username(Roles.CLIENT, Optional.ofNullable(client).orElse(username));
+        if ((accessLevelServiceRepository.existsByAccessLevelNameAndAccount_Username(Roles.SERVICEMAN, username)
+                || accessLevelServiceRepository.existsByAccessLevelNameAndAccount_Username(Roles.ADMINISTRATOR, username)) || clientCondition) {
+            Page<Order> orders = orderRepository
+                    .findAllByLicenseIdAndStatusAndOrderTypeAndDelayedAndClient(
+                            licenseId,
+                            status,
+                            orderType,
+                            delayed,
+                            clientCondition ? username : client,
+                            pageable);
+            return new PageImpl<>(orders.get()
+                    .map(orderMapper::orderEntityToOrderListData)
+                    .toList(),
+                    orders.getPageable(),
+                    orders.getTotalElements());
+        } else {
+            throw ForbiddenException.createException();
+        }
     }
 
     @Override
@@ -122,28 +139,17 @@ public class OrdersServiceImpl extends CommonService implements OrdersService {
             default -> orderToCreate = orderMapper.createOrderToNonWarrantyRepairEntity(createOrder);
         }
 
-
-        if (Optional.ofNullable(createOrder.nextOrderData().lastDateOfDeviceService()).isPresent()) {
-            final LocalDateTime lastDateOfDeviceService =
-                    DateUtility.parseWithoutTimestamp(createOrder.nextOrderData().lastDateOfDeviceService(), true);
-            if (lastDateOfDeviceService.isAfter(now) || lastDateOfDeviceService.isEqual(now)) {
-                throw IncorrectDatePeriodForOrderException.createException();
-            }
-        }
-
         final ServiceParameter serviceParameters = serviceParametersRepository
-                .findByServiceParameterType(ServiceParameterType.CUT_OFF_DATE_PERIOD)
+                .findByServiceParameterTypeEquals(ServiceParameterType.CUT_OFF_DATE_PERIOD)
                 .orElseThrow();
         orderToCreate.setDateOfOrderExecution(now.plusDays(serviceParameters.getValue().longValue()))
                 .setClient((Client) accessLevelServiceRepository
-                        .findByAccessLevelNameAndAccount_Id(Roles.CLIENT, createOrder.client()).orElseThrow());
+                        .findByAccessLevelNameAndAccount_Username(Roles.CLIENT, createOrder.client()).orElseThrow());
 
         if (createOrder.orderType() == OrderType.CONSERVATION) {
-            LocalDateTime dateOfNextDeviceConservation =
-                    DateUtility.parseWithoutTimestamp(createOrder.nextOrderData().dateOfNextDeviceConservation(), true);
-            if (dateOfNextDeviceConservation.isBefore(now) || dateOfNextDeviceConservation.isEqual(now)) {
-                throw IncorrectDatePeriodForOrderException.createException();
-            } else if (orderToCreate.getDateOfOrderExecution().isAfter(dateOfNextDeviceConservation)) {
+            LocalDateTime dateOfNextDeviceConservation = DateUtility.parseWithoutTimestamp(
+                    createOrder.nextOrderData().dateOfNextDeviceConservation(), true);
+            if (orderToCreate.getDateOfOrderExecution().isAfter(dateOfNextDeviceConservation)) {
                 orderToCreate.setDateOfOrderExecution(dateOfNextDeviceConservation);
             }
         }
@@ -172,7 +178,7 @@ public class OrdersServiceImpl extends CommonService implements OrdersService {
                         }
                         final OrderData orderData = order.getOrderData();
                         final ServiceParameter unitCost = serviceParametersRepository
-                                .findByServiceParameterType(ServiceParameterType.UNIT_COST_OF_WORKING_HOUR)
+                                .findByServiceParameterTypeEquals(ServiceParameterType.UNIT_COST_OF_WORKING_HOUR)
                                 .orElseThrow();
 
                         order.setDateOfOrderExecution(now)
@@ -239,5 +245,47 @@ public class OrdersServiceImpl extends CommonService implements OrdersService {
             throw AppException.createContentWasChangedException();
         }
 
+    }
+
+    @Override
+    @PreAuthorize("hasRole(@Roles.SERVICEMAN)")
+    public Page<OrderDataListDTO> getOrdersAssignedToServiceman(OrderStatus status,
+                                                                OrderType orderType,
+                                                                Boolean delayed,
+                                                                String client,
+                                                                Pageable pageable) {
+
+        Page<Order> orders = orderRepository
+                .findAllForServicemanByLicenseIdAndStatusAndOrderTypeAndDelayedAndClient(
+                        SecurityContextHolder.getContext().getAuthentication().getName(),
+                        status,
+                        orderType,
+                        delayed,
+                        client,
+                        pageable);
+        return new PageImpl<>(orders.get()
+                .map(orderMapper::orderEntityToOrderListData)
+                .toList(),
+                orders.getPageable(),
+                orders.getTotalElements());
+    }
+
+    @Override
+    @PreAuthorize("hasAnyRole(@Roles.ADMINISTRATOR, @Roles.SERVICEMAN, @Roles.CLIENT)")
+    public NextConservationDTO getNextConservationForSpecifiedConservation(Long conservationId) {
+        String username = SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getName();
+        boolean clientCondition = accessLevelServiceRepository.existsByAccessLevelNameAndAccount_Username(Roles.CLIENT, username);
+        Optional<Conservation> conservation = orderRepository.findConservationAfterSpecifiedConservation(conservationId);
+
+        if (!clientCondition || (conservation.isPresent() && username.equals(conservation.get()
+                .getClient()
+                .getAccount()
+                .getUsername()))) {
+            return conservation.map(value -> new NextConservationDTO(value.getId())).orElse(null);
+        } else {
+            throw ForbiddenException.createException();
+        }
     }
 }

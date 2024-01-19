@@ -16,7 +16,8 @@ import java.util.List;
 @Transactional(
         propagation = Propagation.MANDATORY,
         isolation = Isolation.READ_COMMITTED,
-        rollbackFor = AppException.class
+        rollbackFor = AppException.class,
+        transactionManager = "businessTransactionManager"
 )
 public interface AvailablePeriodsForReportsRepository extends JpaRepository<Order, Long> {
     @Query("SELECT DISTINCT extract(month from o.dateOfOrderExecution) AS availableMonth, " +

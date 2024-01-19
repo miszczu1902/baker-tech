@@ -11,5 +11,5 @@ public interface AdminReportsService {
 
     Page<TextWithNumberReportDataDTO> ordersByServicemanInMonth(Integer month, Integer year, Pageable pageable);
 
-    OrdersReportInfoDTO getOrders();
+    OrdersReportInfoDTO getOrders(Integer month, Integer year);
 }

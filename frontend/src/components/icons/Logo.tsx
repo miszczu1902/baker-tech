@@ -1,17 +1,17 @@
 import React from "react";
 
 interface LogoProps {
-    onClick?: () => void;
+  onClick?: () => void;
 }
 
-const Logo: React.FC<LogoProps> = ({onClick}) => {
+const Logo: React.FC<LogoProps> = ({ onClick }) => {
   return (
     <div className="logo" onClick={onClick}>
       <svg
         version="1.0"
         xmlns="http://www.w3.org/2000/svg"
-        width="64.000000pt"
-        height="64.000000pt"
+        width="48.000000pt"
+        height="48.000000pt"
         viewBox="0 0 512.000000 512.000000"
         preserveAspectRatio="xMidYMid meet"
         className="logo"

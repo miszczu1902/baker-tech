@@ -25,5 +25,4 @@ public class BakerTechConfig {
         TIMEZONE = ZoneId.of(timezone);
         API_URI = authUri;
     }
-
 }

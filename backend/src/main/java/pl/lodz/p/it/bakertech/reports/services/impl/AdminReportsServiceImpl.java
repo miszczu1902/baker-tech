@@ -27,6 +27,7 @@ import pl.lodz.p.it.bakertech.utils.mappers.accounts.KeycloakMapper;
 import pl.lodz.p.it.bakertech.validation.etag.ETagGenerator;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 import static pl.lodz.p.it.bakertech.config.BakerTechConfig.ROUNDING_PRECISION;
 
@@ -34,7 +35,8 @@ import static pl.lodz.p.it.bakertech.config.BakerTechConfig.ROUNDING_PRECISION;
 @Transactional(
         propagation = Propagation.REQUIRES_NEW,
         isolation = Isolation.READ_COMMITTED,
-        rollbackFor = AppException.class
+        rollbackFor = AppException.class,
+        transactionManager = "businessTransactionManager"
 )
 @PreAuthorize("hasRole(@Roles.ADMINISTRATOR)")
 public class AdminReportsServiceImpl extends CommonService implements AdminReportsService {
@@ -57,16 +59,16 @@ public class AdminReportsServiceImpl extends CommonService implements AdminRepor
     }
 
     @Override
-    public PercentageOfOrdersDTO findPercentageOfOrdersByType(Integer month, Integer year) {
+    public PercentageOfOrdersDTO findPercentageOfOrdersByType(final Integer month, final Integer year) {
         var result = adminReportsRepository.findPercentageOfOrdersByTypeWithDefault(month, year);
         return new PercentageOfOrdersDTO(
-                BigDecimal.valueOf(result.getNonWarrantyRepair()).round(ROUNDING_PRECISION),
-                BigDecimal.valueOf(result.getWarrantyRepair()).round(ROUNDING_PRECISION),
-                BigDecimal.valueOf(result.getConservation()).round(ROUNDING_PRECISION));
+                BigDecimal.valueOf(Optional.ofNullable(result.getNonWarrantyRepair()).orElse(0D)).round(ROUNDING_PRECISION),
+                BigDecimal.valueOf(Optional.ofNullable(result.getWarrantyRepair()).orElse(0D)).round(ROUNDING_PRECISION),
+                BigDecimal.valueOf(Optional.ofNullable(result.getConservation()).orElse(0D)).round(ROUNDING_PRECISION));
     }
 
     @Override
-    public Page<TextWithNumberReportDataDTO> ordersByServicemanInMonth(Integer month, Integer year, Pageable pageable) {
+    public Page<TextWithNumberReportDataDTO> ordersByServicemanInMonth(final Integer month, final Integer year, Pageable pageable) {
         Page<AccessLevel> accessLevels = accessLevelReportsRepository.findAllByAccessLevelName(Roles.SERVICEMAN, pageable);
         return new PageImpl<>(accessLevels.get()
                 .map(accessLevel -> new TextWithNumberReportDataDTO(
@@ -79,12 +81,28 @@ public class AdminReportsServiceImpl extends CommonService implements AdminRepor
     }
 
     @Override
-    public OrdersReportInfoDTO getOrders() {
+    public OrdersReportInfoDTO getOrders(final Integer month, final Integer year) {
         return new OrdersReportInfoDTO(
-                BigDecimal.valueOf(adminReportsRepository.findAllByStatusEquals(OrderStatus.OPEN).size()).round(ROUNDING_PRECISION),
-                BigDecimal.valueOf(adminReportsRepository.findAllByStatusEquals(OrderStatus.FOR_SETTLEMENT).size()).round(ROUNDING_PRECISION),
-                BigDecimal.valueOf(adminReportsRepository.findAllByStatusEquals(OrderStatus.CLOSED).size()).round(ROUNDING_PRECISION),
-                BigDecimal.valueOf(adminReportsRepository.findAllByDelayedIsTrueAndInOrderQueueIsTrue().size()).round(ROUNDING_PRECISION)
+                BigDecimal.valueOf(
+                        Optional.ofNullable(adminReportsRepository.findByMonthYearOrderStatus(month, year, OrderStatus.OPEN)
+                                .getValue()).orElse(0L)
+                ).round(ROUNDING_PRECISION),
+                BigDecimal.valueOf(
+                                Optional.ofNullable(adminReportsRepository.findByMonthYearOrderStatus(month, year, OrderStatus.IN_PROGRESS)
+                                        .getValue()).orElse(0L))
+                        .round(ROUNDING_PRECISION),
+                BigDecimal.valueOf(
+                                Optional.ofNullable(adminReportsRepository.findByMonthYearOrderStatus(month, year, OrderStatus.FOR_SETTLEMENT)
+                                        .getValue()).orElse(0L))
+                        .round(ROUNDING_PRECISION),
+                BigDecimal.valueOf(
+                                Optional.ofNullable(adminReportsRepository.findByMonthYearOrderStatus(month, year, OrderStatus.CLOSED)
+                                        .getValue()).orElse(0L))
+                        .round(ROUNDING_PRECISION),
+                BigDecimal.valueOf(
+                                Optional.ofNullable(adminReportsRepository.findByDelayed(month, year)
+                                        .getValue()).orElse(0L))
+                        .round(ROUNDING_PRECISION)
         );
     }
 }

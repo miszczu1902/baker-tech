@@ -1,0 +1,39 @@
+.param-content {
+  background-color: $secondary-color !important;
+  margin: 1vh 0 0 1vw !important;
+  border-radius: 15px !important;
+  padding: 1vw 1vw 1vh 1vw !important;
+  display: grid !important;
+  height: 60% !important;
+}
+
+.single-window {
+  width: 30% !important;
+  margin: auto !important;
+  margin-top: 5vh !important;
+  justify-content: center !important;
+  text-align: center !important;
+  align-self: center !important;
+  align-items: center !important;
+  height: 80% !important;
+  background-color: $secondary-background-color !important;
+  border-top: 1.5vw solid $primary-color !important;
+
+}
+.table-single {
+  height: 90% !important;
+}
+
+.param-content-title {
+  font-weight: bold !important;
+}
+
+.param-content-row {
+  width: 100% !important;
+}
+
+.param-content-item {
+  text-align: center !important;
+  align-self: center !important;
+  align-items: center !important;
+}

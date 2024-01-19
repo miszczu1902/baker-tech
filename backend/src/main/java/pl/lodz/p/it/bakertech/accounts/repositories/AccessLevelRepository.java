@@ -18,7 +18,8 @@ import java.util.Optional;
 @Transactional(
         propagation = Propagation.MANDATORY,
         isolation = Isolation.READ_COMMITTED,
-        rollbackFor = AppException.class
+        rollbackFor = AppException.class,
+        transactionManager = "accountsTransactionManager"
 )
 public interface AccessLevelRepository extends JpaRepository<AccessLevel, Long> {
     @Query("SELECT a FROM AccessLevel a WHERE a.account.id = :accountId AND a.accessLevelName LIKE %:accessLevelName%")

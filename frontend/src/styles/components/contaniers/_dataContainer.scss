@@ -71,7 +71,7 @@
   max-width: 50% !important;
   flex: 1 !important;
   display: inline-block !important;
-  border-right: 1px solid $primary-background-color !important;
+  //border-right: 1px solid $primary-background-color !important;
 }
 
 .data-right-part {
@@ -105,4 +105,37 @@
   background-color: $primary-background-color !important;
   font-weight: bold !important;
   margin: 0 1vw 0 0 !important;
+}
+
+.data-select {
+  text-align: center !important;
+  justify-content: center !important;
+  align-items: center !important;
+  scale: 0.8 !important;
+}
+.data-select-item {
+  width: 60% !important;
+}
+
+.small {
+  width: 95% !important;
+}
+
+.micro {
+  width: 40% !important;
+}
+
+.wide-dialog {
+  min-width: 90vw !important;
+}
+
+.with-padding {
+  padding-top: 2vh !important;
+}
+
+.center {
+  justify-content: center !important;
+  text-align: center !important;
+  align-items: center !important;
+  align-content: center !important;
 }

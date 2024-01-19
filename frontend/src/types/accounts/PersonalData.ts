@@ -1,5 +1,5 @@
 export interface PersonalData {
-    firstname?: string;
-    lastname?: string;
-    phoneNumber?: string;
+  firstname?: string;
+  lastname?: string;
+  phoneNumber?: string;
 }

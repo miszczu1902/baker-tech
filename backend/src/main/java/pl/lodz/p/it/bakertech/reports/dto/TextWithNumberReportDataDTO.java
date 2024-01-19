@@ -2,5 +2,5 @@ package pl.lodz.p.it.bakertech.reports.dto;
 
 import java.math.BigDecimal;
 
-public record TextWithNumberReportDataDTO(String username, BigDecimal value) {
+public record TextWithNumberReportDataDTO(String content, BigDecimal value) {
 }

@@ -10,6 +10,8 @@ public record OrderDetailsDTO(
         String licenseId,
         String client,
         @ETagField OrderStatus status,
+        Boolean delayed,
+        Boolean inOrderQueue,
         OrderType orderType,
         OrderDataDTO orderData,
         ConservationDTO conservation,

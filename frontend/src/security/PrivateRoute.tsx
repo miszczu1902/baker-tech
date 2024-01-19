@@ -1,25 +1,49 @@
-import React, {useEffect, useState} from "react";
-import {useSelector} from "react-redux";
-import {RootState} from "../redux/store";
-import {useKeycloak} from "@react-keycloak/web";
-import {useNavigate} from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/store";
+import { useNavigate } from "react-router-dom";
+import NotificationHandler from "../components/response/NotificationHandler";
+import keycloak from "../keycloak/keycloak";
 
 interface PrivateRouteProps {
-    component: React.ComponentType<any>;
-    accessLevels: string[];
+  component: React.ComponentType<any>;
+  accessLevels: string[];
 }
 
-const PrivateRoute: React.FC<PrivateRouteProps> = ({component: Component, accessLevels, ...rest}) => {
-    const currentRole = useSelector((state: RootState) => state.currentUser).currentRole as string;
-    const navigate = useNavigate();
-    const {keycloak} = useKeycloak();
-    const [isReadyToRender, setIsReadyToRender] = useState<boolean>(false);
+const PrivateRoute: React.FC<PrivateRouteProps> = ({
+  component: Component,
+  accessLevels,
+  ...rest
+}) => {
+  const currentRole = useSelector((state: RootState) => state.currentUser)
+    .currentRole as string;
+  const notificationDisplay = useSelector(
+    (state: RootState) => state.notificationDisplay,
+  );
+  const navigate = useNavigate();
+  const [isReadyToRender, setIsReadyToRender] = useState<boolean>(false);
 
-    useEffect(() => {
-        console.log(keycloak);
-        accessLevels.includes(currentRole) ? setIsReadyToRender(true) : navigate('/forbidden');
-    }, [window.location.pathname, currentRole]);
+  useEffect(() => {
+    accessLevels.includes(currentRole)
+      ? setIsReadyToRender(true)
+      : navigate("/forbidden");
+  }, [
+    window.location.pathname,
+    currentRole,
+    notificationDisplay,
+    keycloak.token
+  ]);
 
-    return isReadyToRender ? <Component {...rest} /> : null;
+  return (
+    <div>
+      {isReadyToRender ? <Component {...rest} /> : null}
+      <NotificationHandler
+        isOpenConfirm={notificationDisplay.isOpen}
+        onChangeConfirm={() => {}}
+        isOpenAlert={notificationDisplay.isOpenAlert}
+        onChangeAlert={() => {}}
+      />
+    </div>
+  );
 };
 export default PrivateRoute;

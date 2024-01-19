@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import pl.lodz.p.it.bakertech.reports.dto.TextWithNumberReportDataDTO;
 import pl.lodz.p.it.bakertech.reports.dto.NumberValueDTO;
+import pl.lodz.p.it.bakertech.reports.dto.admin.PercentageOfOrdersDTO;
 import pl.lodz.p.it.bakertech.reports.services.ServicemanReportsService;
 
 @RestController
@@ -29,9 +30,16 @@ public class ServicemanReportsController {
                                                                                     @RequestParam(name = "year", required = false) Integer year) {
         return ResponseEntity.ok(servicemanReportsService.getAmountOfOrdersExecutedByServiceman(month, year));
     }
+
     @GetMapping("/the-most-repaired-device-category")
     public ResponseEntity<TextWithNumberReportDataDTO> getTheMostFrequentlyRepairedTypeOfDevicesInService(@RequestParam(name = "month", required = false) Integer month,
                                                                                                           @RequestParam(name = "year", required = false) Integer year) {
         return ResponseEntity.ok(servicemanReportsService.getTheMostFrequentlyRepairedTypeOfDevicesInService(month, year));
+    }
+
+    @GetMapping("/percentage-of-orders")
+    public ResponseEntity<PercentageOfOrdersDTO> getPercentageDataForExecutedOrdersByServiceman(@RequestParam(name = "month", required = false) Integer month,
+                                                                                       @RequestParam(name = "year", required = false) Integer year) {
+        return ResponseEntity.ok(servicemanReportsService.findPercentageOfOrdersByTypeAndUsername(month, year));
     }
 }

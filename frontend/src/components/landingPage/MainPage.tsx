@@ -1,22 +1,18 @@
-import {Roles} from "../../security/Roles";
-import AdminDashboard from "../reports/AdminDashboard";
-import ServicemanDashboard from "../reports/ServicemanDashboard";
-import ClientDashboard from "../reports/ClientDashboard";
+import { Roles } from "../../security/Roles";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
 import LandingPage from "./LandingPage";
-import {useSelector} from "react-redux";
-import {RootState} from "../../redux/store";
+import Dashboard from "../reports/Dashboard";
 
 const MainPage = () => {
-    const currentRole = useSelector((state: RootState) => state.currentUser).currentRole;
+  const currentRole = useSelector(
+    (state: RootState) => state.currentUser,
+  ).currentRole;
 
-    return (
-        currentRole !== Roles.GUEST ?
-            <div>
-                {currentRole === Roles.ADMINISTRATOR && <AdminDashboard/>}
-                {currentRole === Roles.SERVICEMAN && <ServicemanDashboard/>}
-                {currentRole === Roles.CLIENT && <ClientDashboard/>}
-            </div>
-            : <LandingPage/>
-    );
-}
+  return (
+    <div>
+      {currentRole === Roles.GUEST ?  <LandingPage/> : <Dashboard/>}
+    </div>
+  );
+};
 export default MainPage;

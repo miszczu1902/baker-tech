@@ -1,0 +1,6 @@
+export enum OrderStatus {
+  OPEN = "OPEN",
+  IN_PROGRESS = "IN_PROGRESS",
+  FOR_SETTLEMENT = "FOR_SETTLEMENT",
+  CLOSED = "CLOSED",
+}

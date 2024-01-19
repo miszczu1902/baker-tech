@@ -3,6 +3,7 @@ package pl.lodz.p.it.bakertech.reports.services;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import pl.lodz.p.it.bakertech.reports.dto.NumberValueDTO;
+import pl.lodz.p.it.bakertech.reports.dto.admin.PercentageOfOrdersDTO;
 import pl.lodz.p.it.bakertech.reports.dto.client.ClientDeviceReportInfoDTO;
 
 public interface ClientReportsService {
@@ -11,4 +12,6 @@ public interface ClientReportsService {
     NumberValueDTO getOrdersInMonthForClient(Integer month, Integer year);
 
     Page<ClientDeviceReportInfoDTO> getServicedDevicesForClient(Integer month, Integer year, Pageable pageable);
+
+    PercentageOfOrdersDTO findPercentageOfOrdersByTypeAndUsername(Integer month, Integer year);
 }

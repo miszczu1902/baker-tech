@@ -1,0 +1,38 @@
+.orders-queue-container {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  flex-direction: row !important;
+}
+
+.orders-queue-tile {
+  background-color: $secondary-background-color !important;
+  max-width: 30% !important;
+  margin: 1vh 1vw 1vh 1vw !important;
+  padding: 1% !important;
+  border-radius: 10px !important;
+  cursor: pointer !important;
+  text-align: center !important;
+  border: 2px solid $primary-text-color !important;
+}
+
+.delayed {
+  border: 5px solid $reject-color !important;
+}
+
+.orders-queue-header {
+  width: 100% !important;
+  text-align: center !important;
+  align-items: center !important;
+  top: 0 !important;
+  padding: 1vh 0 1vh 0 !important;
+  background-color: $secondary-background-color;
+}
+
+.create-order {
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: space-between !important;
+}

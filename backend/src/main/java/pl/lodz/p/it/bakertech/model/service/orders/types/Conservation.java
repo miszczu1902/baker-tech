@@ -1,9 +1,11 @@
 package pl.lodz.p.it.bakertech.model.service.orders.types;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import pl.lodz.p.it.bakertech.model.service.orders.Order;
-import pl.lodz.p.it.bakertech.validation.etag.ETagField;
 
 import java.time.LocalDateTime;
 
@@ -22,7 +24,6 @@ public class Conservation extends Order {
     @JoinColumn(name = "last_conservation_id", referencedColumnName = "id")
     private Conservation lastConservation;
 
-    @ETagField
     @Column(name ="report_next_automatically", nullable = false)
     private Boolean reportNextAutomatically;
 }

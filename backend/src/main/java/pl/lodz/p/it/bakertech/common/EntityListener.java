@@ -2,9 +2,8 @@ package pl.lodz.p.it.bakertech.common;
 
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
-import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import pl.lodz.p.it.bakertech.accounts.repositories.AccountForEntityListenerRepository;
@@ -16,13 +15,12 @@ import java.util.Optional;
 import static pl.lodz.p.it.bakertech.config.BakerTechConfig.TIMEZONE;
 
 @Component
-@NoArgsConstructor
-public class EntityListener {
-    private ApplicationContext applicationContext;
+public class EntityListener implements ApplicationContextAware {
+    private static ApplicationContext applicationContext;
 
-    @Autowired
-    public EntityListener(ApplicationContext applicationContext) {
-        this.applicationContext = applicationContext;
+    @Override
+    public void setApplicationContext(ApplicationContext context) {
+        applicationContext = context;
     }
 
     @PrePersist

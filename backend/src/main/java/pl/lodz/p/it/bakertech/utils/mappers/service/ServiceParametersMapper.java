@@ -6,5 +6,5 @@ import pl.lodz.p.it.bakertech.service.dto.parameters.ServiceParameterDTO;
 
 @Mapper(componentModel = "spring")
 public interface ServiceParametersMapper {
-    ServiceParameterDTO serviceParametrersToServiceParametersDTO(ServiceParameter serviceParameter);
+    ServiceParameterDTO serviceParametersToServiceParametersDTO(ServiceParameter serviceParameter);
 }

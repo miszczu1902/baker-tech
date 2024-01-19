@@ -19,7 +19,8 @@ import pl.lodz.p.it.bakertech.validation.etag.ETagGenerator;
 @Transactional(
         propagation = Propagation.REQUIRES_NEW,
         isolation = Isolation.READ_COMMITTED,
-        rollbackFor = AppException.class
+        rollbackFor = AppException.class,
+        transactionManager = "businessTransactionManager"
 )
 @PreAuthorize("hasAnyRole(@Roles.ADMINISTRATOR, @Roles.SERVICEMAN, @Roles.CLIENT)")
 public class AvailablePeriodsForReportsServiceImpl extends CommonService implements AvailablePeriodsForReportsService {

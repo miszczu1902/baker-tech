@@ -16,10 +16,11 @@ import java.util.Optional;
 @Transactional(
         propagation = Propagation.MANDATORY,
         isolation = Isolation.READ_COMMITTED,
-        rollbackFor = AppException.class
+        rollbackFor = AppException.class,
+        transactionManager = "businessTransactionManager"
 )
 public interface AccessLevelReportsRepository extends JpaRepository<AccessLevel, Long> {
     Page<AccessLevel> findAllByAccessLevelName(String accessLevelName, Pageable pageable);
 
-    Optional<AccessLevel> findByAccount_Username(String username);
+    Optional<AccessLevel> findByAccount_UsernameAndAccessLevelNameEquals(String username, String accessLevel);
 }

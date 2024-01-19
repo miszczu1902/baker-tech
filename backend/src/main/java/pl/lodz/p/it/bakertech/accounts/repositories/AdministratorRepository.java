@@ -12,7 +12,8 @@ import pl.lodz.p.it.bakertech.model.accounts.accessLevels.Administrator;
 @Transactional(
         propagation = Propagation.MANDATORY,
         isolation = Isolation.READ_COMMITTED,
-        rollbackFor = AppException.class
+        rollbackFor = AppException.class,
+        transactionManager = "accountsTransactionManager"
 )
 public interface AdministratorRepository extends JpaRepository<Administrator, Long> {
 }

@@ -1,4 +1,4 @@
 export interface BillingDetails {
-    nip?: number;
-    regon?: number;
+  nip?: number;
+  regon?: number;
 }

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import pl.lodz.p.it.bakertech.reports.dto.NumberValueDTO;
+import pl.lodz.p.it.bakertech.reports.dto.admin.PercentageOfOrdersDTO;
 import pl.lodz.p.it.bakertech.reports.dto.client.ClientDeviceReportInfoDTO;
 import pl.lodz.p.it.bakertech.reports.services.ClientReportsService;
 
@@ -40,4 +41,9 @@ public class ClientReportsController {
         return ResponseEntity.ok(clientReportsService.getServicedDevicesForClient(month, year, page));
     }
 
+    @GetMapping("/percentage-of-orders")
+    public ResponseEntity<PercentageOfOrdersDTO> getPercentageDataForExecutedOrdersForClient(@RequestParam(name = "month", required = false) Integer month,
+                                                                                                @RequestParam(name = "year", required = false) Integer year) {
+        return ResponseEntity.ok(clientReportsService.findPercentageOfOrdersByTypeAndUsername(month, year));
+    }
 }

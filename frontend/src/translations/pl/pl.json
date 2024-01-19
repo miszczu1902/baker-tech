@@ -3,7 +3,8 @@
     "register": "Zarejestruj",
     "login": "Zaloguj",
     "logout": "Wyloguj",
-    "altBackground": "Tło"
+    "altBackground": "Tło",
+    "text": "Baker-Tech to wielodostępny system informatyczny, którego celem jest usprwanienie mo-\nnitorowania i zarządzania zleceniami naprawy i konserwacji sprzętu piekarniczego realizowa-\nnego przez serwis oraz udostępnienie raportów podsumowujące wykonane naprawy."
   },
   "sidebar": {
     "currentUser": "Zalogowany jako:",
@@ -17,13 +18,25 @@
     "orders": "Zlecenia",
     "order": "Utwórz zlecenie",
     "devices": "Urządzenia",
-    "self": "Moje konto"
+    "self": "Moje konto",
+    "admin": "Panel administracyjny",
+    "serviceman": "Panel serwisanta",
+    "client": "Panel klienta",
+    "settings": "Ustawienia"
   },
   "breadcrumb": {
     "home": "Strona główna",
     "accounts": "Konta",
     "self": "Moje konto",
-    "register": "Zarejestruj"
+    "register": "Zarejestruj",
+    "devices": "Urządzenia",
+    "add": "Dodaj",
+    "admin": "Panel administracyjny",
+    "serviceman": "Panel serwisanta",
+    "client": "Panel klienta",
+    "queue": "Kolejka zgłoszeń",
+    "orders": "Zlecenia",
+    "settings": "Ustawienia"
   },
   "tables": {
     "search": "Szukaj",
@@ -39,7 +52,10 @@
   "buttons": {
     "next": "Dalej",
     "submit": "Wyślij",
-    "mainPage": "Strona główna"
+    "mainPage": "Strona główna",
+    "select": "Wybierz",
+    "edit": "Edytuj",
+    "display": "Wyświetl"
   },
   "alerts": {
     "agree": "Zatwierdź",
@@ -79,11 +95,20 @@
       "totalCost": "Niepoprawna wartość kosztu jednostkowego",
       "confirmationToken": "Niepoprawny żeton potwierdzenia"
     },
-    "cannot" : {
+    "cannot": {
       "change": {
         "statusSelf": "Nie można zmienić stanu konta samemu sobie",
         "accessLevelsSelf": "Nie można zmienić poziomów dostępu samemu sobie",
-        "oneAccessLevel": "Nie można usunąć jedynego poziomu dostępu przypisanego do konta"
+        "oneAccessLevel": "Nie można usunąć jedynego poziomu dostępu przypisanego do konta",
+        "warranty": "Nie można zmienić statusu gwarancji",
+        "order": "Nie udało się zmodyfikować zlecenia"
+      },
+      "assign": {
+        "nonWarrantyDevice": "Nie można przypisać urządzenia bez gwarancji do zlecenia gwarancyjnego",
+        "moreWarrantyDevice": "Do zlecenia gwarancyjnego można przypisać tylko jedno urządzenie"
+      },
+      "settle": {
+        "order": "Nie można rozliczyć zlecenia"
       }
     },
     "placeholder": {
@@ -102,7 +127,13 @@
       "lastname": "Pole nazwisko jest niepoprawnie wypełnione",
       "language": "Wybrany język jest niepoprawny",
       "license": "Niepoprawny numer licencji",
-      "confirm": "Hasła się nie zgadzają"
+      "confirm": "Hasła się nie zgadzają",
+      "deviceName": "Niepoprawna nazwa urządzenia",
+      "brand": "Niepoprawny wzór nazwy firmy",
+      "serialNumber": "Niepoprawny wzór numeru seryjnego",
+      "category": "Kategoria musi być jedną z: ",
+      "description": "Opis może mieć maksymalnie 2000 znaków",
+      "positive": "Wartość musi być większa od 0"
     },
     "violation": "Żądanie zawiera naruszenia ograniczeń"
   },
@@ -160,6 +191,91 @@
       "serviceman": "Serwisant",
       "client": "Klient",
       "guest": "Gość"
+    }
+  },
+  "devices": {
+    "mechanical": "Mechaniczne",
+    "electromechanical": "Elektromechaniczne",
+    "brand": "Marka",
+    "deviceName": "Nazwa",
+    "serialNumber": "Numer seryjny",
+    "warrantyEnded": "Zakończony okres gwarancji",
+    "category": "Kategoria",
+    "ended": "Tak",
+    "notEnded": "Nie",
+    "endWarranty": "Zakończ",
+    "add": "Dodaj nowe urządzenie",
+    "end": "Gwarancja zakończona",
+    "no": "Ważna gwarancja"
+  },
+  "admin": {
+    "title": "Parametry serwisu",
+    "edit": "Edytuj",
+    "cut_off_date_period": "Okres daty granicznej [dni]",
+    "unit_cost_of_working_hour": "Koszt roboczogodziny [PLN]",
+    "editParamValue": "Edytuj wartość parametru",
+    "editParamValuePlaceholder": "Podaj tutaj wartość parametru",
+    "cancel": "Anuluj"
+  },
+  "orders": {
+    "ordersQueue": {
+      "warranty_repair": "Naprawa gwarancyjna",
+      "non_warranty_repair": "Naprawa pogwarancyjna",
+      "conservation": "Konserwacja",
+      "date": "Planowana data realizacji",
+      "client": "Klient",
+      "address": "Adres"
+    },
+    "id": "Identyfikator zlecenia",
+    "client": "Klient",
+    "serviceman": "Realizuje pracownik",
+    "orderType": "Rodzaj zlecenia",
+    "orderData": "Dane zlecenia",
+    "orderStatus": "Status zlecenia",
+    "dateOfNextDeviceConservation": "Data następnej konserwacji",
+    "dateOfOrderExecution": "Planowana data realizacji",
+    "lastConservation": "Poprzednia konserwacja",
+    "nextConservation": "Następna konserwacja",
+    "lastDateOfDeviceService": "Ostatnio serwisowane",
+    "description": "Opis zlecenia",
+    "add": "Utwórz nowe zlecenie",
+    "open": "Otwarte",
+    "in_progress": "W realizacji",
+    "for_settlement": "Do rozliczenia",
+    "closed": "Zamknięte",
+    "delayed": "Czy opóźnione",
+    "true": "Tak",
+    "false": "Nie",
+    "assign": "Zacznij realizację",
+    "delayedOrders": "Opóźnione",
+    "totalCost": "Koszt zlecenia [PLN]",
+    "duration": "Czas trwania",
+    "assignedToServiceman": "Przypisane do mnie",
+    "warrantyEnded": "Zakończona gwarancja",
+    "warrantyNotEnded": "Obowiązująca gwarancja",
+    "continue" : "Kontynuuj konserwację*",
+    "devices": "Wybierz urządzenia*",
+    "devicesList": "Urządzenia"
+  },
+  "reports": {
+    "admin": {
+      "percentage": "Procentowy rozkład zleceń ze względu na rodzaj [%]",
+      "ordersStatuses": "Ilość zrealizowanych zleceń ze względu na status oraz opóźnienia w realizacji",
+      "orders": "Ilość zleceń zrealizowanych przez serwisantów"
+    },
+    "year": "Rok",
+    "month": "Miesiąc",
+    "serviceman": {
+      "reportTitle": "Statystyki pracy serwisanta",
+      "avgTime": "Średni czas poświęcony na realizację zlecenia [h]",
+      "exec": "Ilość zrealizowanych zleceń",
+      "type": "Najczęściej naprawiany rodzaj urządzeń oraz ilość naprawionych urządzeń danego typu"
+    },
+    "client": {
+      "reportTitle": "Statystyki usług realizowanych dla klienta",
+      "devices": "Lista serwisowanych urządzeń",
+      "warrantyDevices": "Ilość serwisowanych urządzeń na gwarancji",
+      "executedOrders": "Ilość zrealizowanych zleceń dla klienta"
     }
   }
 }

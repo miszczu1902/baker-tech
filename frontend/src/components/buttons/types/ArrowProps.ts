@@ -1,4 +1,4 @@
 export interface ArrowProps {
-    className?: string
-    onClick?: () => void;
+  className?: string;
+  onClick?: () => void;
 }

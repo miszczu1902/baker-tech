@@ -17,7 +17,8 @@ import java.util.Set;
 @Transactional(
         propagation = Propagation.MANDATORY,
         isolation = Isolation.READ_COMMITTED,
-        rollbackFor = AppException.class
+        rollbackFor = AppException.class,
+        transactionManager = "businessTransactionManager"
 )
 public interface ConservationRepository extends JpaRepository<Conservation, Long> {
     @Query("SELECT c FROM Conservation c " +

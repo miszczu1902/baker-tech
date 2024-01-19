@@ -14,15 +14,18 @@ import pl.lodz.p.it.bakertech.exceptions.AppException;
 
 import pl.lodz.p.it.bakertech.reports.dto.TextWithNumberReportDataDTO;
 import pl.lodz.p.it.bakertech.reports.dto.NumberValueDTO;
+import pl.lodz.p.it.bakertech.reports.dto.admin.PercentageOfOrdersDTO;
 import pl.lodz.p.it.bakertech.reports.repositories.AccessLevelReportsRepository;
 import pl.lodz.p.it.bakertech.reports.repositories.OrderReportsRepository;
 import pl.lodz.p.it.bakertech.reports.repositories.DeviceReportsRepository;
 import pl.lodz.p.it.bakertech.reports.repositories.ServicemanReportsRepository;
 import pl.lodz.p.it.bakertech.reports.services.ServicemanReportsService;
+import pl.lodz.p.it.bakertech.security.Roles;
 import pl.lodz.p.it.bakertech.utils.mappers.accounts.KeycloakMapper;
 import pl.lodz.p.it.bakertech.validation.etag.ETagGenerator;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 import static pl.lodz.p.it.bakertech.config.BakerTechConfig.ROUNDING_PRECISION;
 
@@ -30,7 +33,8 @@ import static pl.lodz.p.it.bakertech.config.BakerTechConfig.ROUNDING_PRECISION;
 @Transactional(
         propagation = Propagation.REQUIRES_NEW,
         isolation = Isolation.READ_COMMITTED,
-        rollbackFor = AppException.class
+        rollbackFor = AppException.class,
+        transactionManager = "businessTransactionManager"
 )
 @PreAuthorize("hasRole(@Roles.SERVICEMAN)")
 public class ServicemanReportsServiceImpl extends CommonService implements ServicemanReportsService {
@@ -61,8 +65,10 @@ public class ServicemanReportsServiceImpl extends CommonService implements Servi
                 .getContext()
                 .getAuthentication()
                 .getName();
-        return new NumberValueDTO(BigDecimal.valueOf(servicemanReportsRepository
-                .getAverageOrderTimeExecutionForServiceman(month, year, currentServicemanUsername)).round(ROUNDING_PRECISION));
+        return new NumberValueDTO(BigDecimal.valueOf(
+                        Optional.ofNullable(servicemanReportsRepository
+                                .getAverageOrderTimeExecutionForServiceman(month, year, currentServicemanUsername)).orElse(0D))
+                .round(ROUNDING_PRECISION));
     }
 
     @Override
@@ -71,13 +77,33 @@ public class ServicemanReportsServiceImpl extends CommonService implements Servi
                 .getContext()
                 .getAuthentication()
                 .getName();
-        Long id = accessLevelReportsRepository.findByAccount_Username(currentServicemanUsername).orElseThrow().getId();
-        return new TextWithNumberReportDataDTO(currentServicemanUsername, BigDecimal.valueOf(orderReportsRepository.findOrdersByServicemanInMonth(month, year, id)).round(ROUNDING_PRECISION));
+        Long id = accessLevelReportsRepository.findByAccount_UsernameAndAccessLevelNameEquals(currentServicemanUsername, Roles.SERVICEMAN)
+                .orElseThrow().getId();
+        return new TextWithNumberReportDataDTO(currentServicemanUsername, BigDecimal.valueOf(
+                        Optional.ofNullable(orderReportsRepository.findOrdersByServicemanInMonth(month, year, id)).orElse(0L))
+                .round(ROUNDING_PRECISION));
     }
 
     @Override
     public TextWithNumberReportDataDTO getTheMostFrequentlyRepairedTypeOfDevicesInService(Integer month, Integer year) {
         var result = deviceReportsRepository.getTheMostFrequentlyRepairedTypeOfDevices(month, year);
-        return new TextWithNumberReportDataDTO(result.getCategory().toString(), BigDecimal.valueOf(result.getValue()).round(ROUNDING_PRECISION));
+        return new TextWithNumberReportDataDTO(result.getCategory().toString(),
+                BigDecimal.valueOf(
+                                Optional.ofNullable(result.getValue()).orElse(0L))
+                        .round(ROUNDING_PRECISION)
+        );
+    }
+
+    @Override
+    public PercentageOfOrdersDTO findPercentageOfOrdersByTypeAndUsername(Integer month, Integer year) {
+        String currentServicemanUsername = SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getName();
+        var result = servicemanReportsRepository.findPercentageOfOrdersByTypeAndUsernameWithDefault(month, year, currentServicemanUsername);
+        return new PercentageOfOrdersDTO(
+                BigDecimal.valueOf(Optional.ofNullable(result.getNonWarrantyRepair()).orElse(0D)).round(ROUNDING_PRECISION),
+                BigDecimal.valueOf(Optional.ofNullable(result.getWarrantyRepair()).orElse(0D)).round(ROUNDING_PRECISION),
+                BigDecimal.valueOf(Optional.ofNullable(result.getConservation()).orElse(0D)).round(ROUNDING_PRECISION));
     }
 }

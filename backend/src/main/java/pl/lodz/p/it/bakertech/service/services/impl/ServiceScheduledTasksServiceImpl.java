@@ -35,7 +35,8 @@ import static pl.lodz.p.it.bakertech.utils.SchedulePeriods.*;
 @Transactional(
         propagation = Propagation.REQUIRES_NEW,
         isolation = Isolation.READ_COMMITTED,
-        rollbackFor = AppException.class
+        rollbackFor = AppException.class,
+        transactionManager = "businessTransactionManager"
 )
 @PreAuthorize("hasRole(@Roles.SYSTEM)")
 public class ServiceScheduledTasksServiceImpl extends CommonService implements ServiceScheduledTasksService {

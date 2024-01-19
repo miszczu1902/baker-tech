@@ -21,7 +21,6 @@ import pl.lodz.p.it.bakertech.accounts.repositories.AccountRepository;
 import pl.lodz.p.it.bakertech.accounts.services.AccountActionService;
 import pl.lodz.p.it.bakertech.common.CommonService;
 import pl.lodz.p.it.bakertech.exceptions.AppException;
-import pl.lodz.p.it.bakertech.model.accounts.Account;
 import pl.lodz.p.it.bakertech.model.accounts.accessLevels.AccessLevel;
 import pl.lodz.p.it.bakertech.model.accounts.accessLevels.Administrator;
 import pl.lodz.p.it.bakertech.model.accounts.accessLevels.Serviceman;
@@ -29,7 +28,6 @@ import pl.lodz.p.it.bakertech.security.Roles;
 import pl.lodz.p.it.bakertech.validation.etag.ETagGenerator;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -37,8 +35,10 @@ import java.util.stream.Collectors;
 @Transactional(
         propagation = Propagation.REQUIRES_NEW,
         isolation = Isolation.READ_COMMITTED,
-        rollbackFor = AppException.class
+        rollbackFor = AppException.class,
+        transactionManager = "accountsTransactionManager"
 )
+@PreAuthorize("hasRole(@Roles.ADMINISTRATOR)")
 public class AccountActionServiceImpl extends CommonService implements AccountActionService {
     private final AccountRepository accountRepository;
     private final AccessLevelRepository accessLevelRepository;
@@ -55,109 +55,76 @@ public class AccountActionServiceImpl extends CommonService implements AccountAc
     }
 
     @Override
-    @PreAuthorize("hasRole(@Roles.ADMINISTRATOR)")
-    public void grantAccessLevelToAccount(final Long id, final AccessLevelsDTO assignAccessLevel) {
+    public void manageAccessLevels(final Long id,
+                                   final AccessLevelsDTO accessLevelsDTO,
+                                   final boolean isGrant,
+                                   final String ifMatch) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        Optional<Account> account = accountRepository.findById(id);
+        accountRepository.findById(id)
+                .ifPresent(accountToUpdate -> {
+                    if (!ifMatch.equals(eTagGenerator.generateETagValue(accountToUpdate))) {
+                        throw AppException.createContentWasChangedException();
+                    } else if (accountToUpdate.getAccessLevels().size() == 1 && !isGrant) {
+                        throw CannotRemoveOnlyOneAssignedAccessLevelToAccountException.createException();
+                    } else if (accountToUpdate.getAccessLevels().size() == 2 && isGrant) {
+                        throw CannotAssignAccessLevelsException.createException();
+                    } else {
+                        if (!username.equals(accountToUpdate.getUsername())) {
+                            Set<String> accessLevels = accountToUpdate.getAccessLevels()
+                                    .stream()
+                                    .map(AccessLevel::getAccessLevelName)
+                                    .collect(Collectors.toSet());
+                            Set<String> targetAccessLevels = accessLevelsDTO.accessLevels()
+                                    .stream()
+                                    .filter(accessLevelName -> isGrant || accessLevels.contains(accessLevelName))
+                                    .collect(Collectors.toSet());
 
-        if (account.isPresent()) {
-            Account accountToUpdate = account.get();
-            if (!username.equals(accountToUpdate.getUsername())) {
-                Set<String> accessLevels = accountToUpdate.getAccessLevels()
-                        .stream()
-                        .map(AccessLevel::getAccessLevelName)
-                        .collect(Collectors.toSet());
-                Set<String> missingAccessLevels = assignAccessLevel.accessLevels()
-                        .stream()
-                        .filter(accessLevelName -> !accessLevels.contains(accessLevelName))
-                        .collect(Collectors.toSet());
+                            if (targetAccessLevels.isEmpty() || (isGrant && accessLevels.contains(Roles.CLIENT))) {
+                                throw CannotAssignAccessLevelsException.createException();
+                            } else {
+                                Set<AccessLevel> accessLevelsToManage = targetAccessLevels.stream()
+                                        .map(accessLevel -> isGrant
+                                                ? accessLevel.equals(Roles.ADMINISTRATOR)
+                                                ? accessLevelRepository.saveAndFlush(new Administrator(accountToUpdate))
+                                                : accessLevelRepository.saveAndFlush(new Serviceman(accountToUpdate))
+                                                : accessLevelRepository
+                                                .findAccessLevelByAccountIdAndAccessLevelName(accountToUpdate.getId(), accessLevel)
+                                                .orElseThrow(CannotAssignAccessLevelsException::createException))
+                                        .collect(Collectors.toSet());
 
-                if (missingAccessLevels.isEmpty() || accessLevels.contains(Roles.CLIENT)) {
-                    throw CannotAssignAccessLevelsException.createException();
-                } else {
-                    Set<AccessLevel> accessLevelsToAssign = missingAccessLevels.stream()
-                            .map(accessLevel -> accessLevel.equals(Roles.ADMINISTRATOR)
-                                    ? accessLevelRepository.saveAndFlush(new Administrator(accountToUpdate))
-                                    : accessLevelRepository.saveAndFlush(new Serviceman(accountToUpdate)))
-                            .collect(Collectors.toSet());
-                    accountToUpdate.getAccessLevels().addAll(accessLevelsToAssign);
-                    accountRepository.saveAndFlush(accountToUpdate);
+                                if (isGrant) {
+                                    accountToUpdate.getAccessLevels().addAll(accessLevelsToManage);
+                                } else {
+                                    accountToUpdate.getAccessLevels().removeAll(accessLevelsToManage);
+                                }
+                                accountRepository.saveAndFlush(accountToUpdate);
 
-                    String userId = getKeycloakUserByUsername(accountToUpdate.getUsername()).getId();
-                    List<String> missingGroups = missingAccessLevels.stream()
-                            .filter(accessLevel -> Roles.getAuthenticatedRolesWithGroups().containsKey(accessLevel))
-                            .map(accessLevel -> Roles.getAuthenticatedRolesWithGroups().get(accessLevel))
-                            .toList();
-                    realmResource.groups()
-                            .groups()
-                            .stream()
-                            .filter(group -> missingGroups.contains(group.getName()))
-                            .map(GroupRepresentation::getId)
-                            .forEach(group -> getKeycloakUserByUserId(userId).joinGroup(group));
-                }
-            } else {
-                throw CannotChangeAccessLevelSelfException.createException();
-            }
-        } else {
-            throw CannotAssignAccessLevelsException.createException();
-        }
+                                String userId = getKeycloakUserByUsername(accountToUpdate.getUsername()).getId();
+                                List<String> targetGroups = targetAccessLevels.stream()
+                                        .filter(accessLevel -> Roles.getAuthenticatedRolesWithGroups().containsKey(accessLevel))
+                                        .map(accessLevel -> Roles.getAuthenticatedRolesWithGroups().get(accessLevel))
+                                        .toList();
+                                realmResource.groups()
+                                        .groups()
+                                        .stream()
+                                        .filter(group -> targetGroups.contains(group.getName()))
+                                        .map(GroupRepresentation::getId)
+                                        .forEach(group -> {
+                                            if (isGrant) {
+                                                getKeycloakUserByUserId(userId).joinGroup(group);
+                                            } else {
+                                                getKeycloakUserByUserId(userId).leaveGroup(group);
+                                            }
+                                        });
+                            }
+                        } else {
+                            throw CannotChangeAccessLevelSelfException.createException();
+                        }
+                    }
+                });
     }
 
     @Override
-    @PreAuthorize("hasRole(@Roles.ADMINISTRATOR)")
-    public void revokeAccessLevelFromAccount(final Long id, final AccessLevelsDTO removeAccessLevel) {
-
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        Optional<Account> account = accountRepository.findById(id);
-
-        if (account.isPresent()) {
-            Account accountToUpdate = account.get();
-            if (accountToUpdate.getAccessLevels().size() == 1) {
-                throw CannotRemoveOnlyOneAssignedAccessLevelToAccountException.createException();
-            }
-
-            if (!username.equals(accountToUpdate.getUsername())) {
-                Set<String> accessLevels = accountToUpdate.getAccessLevels()
-                        .stream()
-                        .map(AccessLevel::getAccessLevelName)
-                        .collect(Collectors.toSet());
-                Set<String> containedAccessLevels = removeAccessLevel.accessLevels()
-                        .stream()
-                        .filter(accessLevels::contains)
-                        .collect(Collectors.toSet());
-
-                if (containedAccessLevels.isEmpty() || accessLevels.contains(Roles.CLIENT)) {
-                    throw CannotAssignAccessLevelsException.createException();
-                } else {
-                    containedAccessLevels.forEach(accessLevel -> accessLevelRepository
-                            .findAccessLevelByAccountIdAndAccessLevelName(accountToUpdate.getId(), accessLevel)
-                            .ifPresent(level -> {
-                                accountToUpdate.getAccessLevels().remove(level);
-                                accessLevelRepository.delete(level);
-                            }));
-
-                    String userId = getKeycloakUserByUsername(accountToUpdate.getUsername()).getId();
-                    List<String> groupsToRemove = containedAccessLevels.stream()
-                            .filter(accessLevel -> Roles.getAuthenticatedRolesWithGroups().containsKey(accessLevel))
-                            .map(accessLevel -> Roles.getAuthenticatedRolesWithGroups().get(accessLevel))
-                            .toList();
-                    realmResource.groups()
-                            .groups()
-                            .stream()
-                            .filter(group -> groupsToRemove.contains(group.getName()))
-                            .map(GroupRepresentation::getId)
-                            .forEach(group -> getKeycloakUserByUserId(userId).leaveGroup(group));
-                }
-            } else {
-                throw CannotChangeAccessLevelSelfException.createException();
-            }
-        } else {
-            throw CannotAssignAccessLevelsException.createException();
-        }
-    }
-
-    @Override
-    @PreAuthorize("hasRole(@Roles.ADMINISTRATOR)")
     public void changeAccountStatus(final Long id, final String ifMatch) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         accountRepository.findById(id)
@@ -166,7 +133,6 @@ public class AccountActionServiceImpl extends CommonService implements AccountAc
                         if (!username.equals(accountToUpdate.getUsername())) {
                             accountToUpdate.setIsActive(!accountToUpdate.getIsActive());
                             accountRepository.saveAndFlush(accountToUpdate);
-
                             UserRepresentation keycloakUser = getKeycloakUserByUsername(accountToUpdate.getUsername());
                             keycloakUser.setEnabled(!keycloakUser.isEnabled());
                             getKeycloakUserByUserId(keycloakUser.getId()).update(keycloakUser);

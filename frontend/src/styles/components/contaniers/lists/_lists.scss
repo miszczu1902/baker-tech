@@ -31,6 +31,12 @@
 .list-row {
   cursor: pointer !important;
 }
+
+.selected-row {
+  background-color: $primary-color !important;
+  color: $secondary-text-color !important;
+}
+
 .list-row:hover {
   background-color: $primary-color !important;
   color: $secondary-color !important;
@@ -52,12 +58,21 @@
   color: $primary-color !important;
   cursor: pointer !important;
 }
+
 .MuiPagination-root {
   width: 50% !important;
 }
+
 .list-pagination {
   display: flex !important;
   text-align: center !important;
   justify-content: space-between !important;
   padding: 1vh 2vh 0 0 !important;
+}
+
+.normal {
+  width: auto !important;
+}
+.tiny {
+  width: 60% !important;
 }

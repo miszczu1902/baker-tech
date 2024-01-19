@@ -33,8 +33,8 @@ public class OrderData extends AbstractEntityWithId {
     @ManyToMany
     @JoinTable(
             name = "device_order_data",
-            joinColumns = @JoinColumn(name = "device_id"),
-            inverseJoinColumns = @JoinColumn(name = "order_data_id")
+            joinColumns = @JoinColumn(name = "order_data_id"),
+            inverseJoinColumns = @JoinColumn(name = "device_id")
     )
     private Set<Device> devices = new HashSet<>();
 

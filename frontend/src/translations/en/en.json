@@ -3,7 +3,8 @@
     "register": "Register",
     "login": "Login",
     "logout": "Logout",
-    "altBackground": "Tlo"
+    "altBackground": "Background",
+    "text": "Baker-Tech is a multi-access information system designed to facilitate the monitoring and\nmanagement of repair and maintenance of bakery equipment carried out by the service centre\nand to make available reports summarising the repairs carried out."
   },
   "sidebar": {
     "currentUser": "Logged as:",
@@ -13,17 +14,29 @@
     "servicemen": "Servicemen",
     "clients": "Clients",
     "reports": "Reports",
-    "queue": "Order queue",
+    "queue": "Order' s queue",
     "orders": "Orders",
     "order": "Create order",
     "devices": "Devices",
-    "self": "My account"
+    "self": "My account",
+    "admin": "Admin dashboard",
+    "serviceman": "Serviceman dashboard",
+    "client": "Client dashboard",
+    "settings": "Settings"
   },
   "breadcrumb": {
     "home": "Home",
     "accounts": "Accounts",
     "self": "My account",
-    "register": "Register"
+    "register": "Register",
+    "devices": "Devices",
+    "add": "Add",
+    "admin": "Admin dashboard",
+    "serviceman": "Serviceman dashboard",
+    "client": "Client dashboard",
+    "queue": "Order's queue",
+    "orders": "Orders",
+    "settings": "Settings"
   },
   "tables": {
     "search": "Search",
@@ -39,7 +52,10 @@
   "buttons": {
     "next": "Next",
     "submit": "Submit",
-    "mainPage": "Main page"
+    "mainPage": "Main page",
+    "select": "Select",
+    "edit": "Edit",
+    "display": "Display"
   },
   "alerts": {
     "agree": "Confirm",
@@ -79,11 +95,20 @@
       "totalCost": "Invalid total cost value",
       "confirmationToken": "Invalid confirmation token"
     },
-    "cannot" : {
+    "cannot": {
       "change": {
         "statusSelf": "Cannot change account status yourself",
         "accessLevelsSelf": "Cannot modify access levels yourself",
-        "oneAccessLevel": "Cannot remove access level when account has only one level assigned"
+        "oneAccessLevel": "Cannot remove access level when account has only one level assigned",
+        "warranty": "Cannot change warranty",
+        "order": "Cannot change order"
+      },
+      "assign": {
+        "nonWarrantyDevice": "Cannot assign non warranty device to warranty repair",
+        "moreWarrantyDevice": "Cannot assign nore than omne device to warranty repair"
+      },
+      "settle": {
+        "order": "Cannot settle order"
       }
     },
     "placeholder": {
@@ -102,7 +127,13 @@
       "lastname": "Incorrect lastname field",
       "language": "Incorrect language selected",
       "license": "Incorrect license",
-      "confirm": "Password are not the same"
+      "confirm": "Password are not the same",
+      "deviceName": "Incorrect device name",
+      "brand": "Incorrect brand",
+      "serialNumber": "Incorrect serial number pattern",
+      "category": "Category must be one of: ",
+      "description": "Description max length is 2000 characters",
+      "positive": "Value should be greater than 0"
     },
     "violation": "The request contains restriction violations"
   },
@@ -133,7 +164,7 @@
     "nip": "* NIP",
     "regon": "* REGON",
     "confirm": "* Confirm password",
-    "mandatory" : "* - Mandatory fields",
+    "mandatory": "* - Mandatory fields",
     "confirmation": {
       "passed": "Registration passed. Please check your email to end registration process",
       "success": "Registration was ended successful"
@@ -160,6 +191,91 @@
       "serviceman": "Serviceman",
       "client": "Client",
       "guest": "Guest"
+    }
+  },
+  "devices": {
+    "mechanical": "Mechanical",
+    "electromechanical": "Electromechanical",
+    "brand": "Brand",
+    "deviceName": "Device name",
+    "serialNumber": "Serial number",
+    "warrantyEnded": "Warranty ended",
+    "category": "Category",
+    "ended": "Yes",
+    "notEnded": "No",
+    "endWarranty": "End",
+    "add": "Add new device",
+    "end": "Warranty ended",
+    "no": "Valid warranty"
+  },
+  "admin": {
+    "title": "Service's parameters",
+    "edit": "Edit",
+    "cut_off_date_period": "Cut off date period [days]",
+    "unit_cost_of_working_hour": "Unit cost of working hour [PLN]",
+    "editParamValue": "Edit parameter value",
+    "editParamValuePlaceholder": "Place new parameter value here",
+    "cancel": "Cancel"
+  },
+  "orders": {
+    "ordersQueue": {
+      "warranty_repair": "Warranty repair",
+      "non_warranty_repair": "Non warranty repair",
+      "conservation": "Conservation",
+      "date": "Scheduled date execution",
+      "client": "Client",
+      "address": "Address"
+    },
+    "id": "Order's ID",
+    "client": "Client",
+    "serviceman": "Serviceman assigned",
+    "orderType": "Order type",
+    "orderData": "Order data",
+    "orderStatus": "Order status",
+    "dateOfNextDeviceConservation": "Date of next conservation",
+    "dateOfOrderExecution": "Date of order execution",
+    "lastConservation": "Last conservation",
+    "nextConservation": "Next conservation",
+    "lastDateOfDeviceService": "Last service date",
+    "description": "Order's description",
+    "add": "Add new order",
+    "open": "Open",
+    "in_progress": "In progress",
+    "for_settlement": "For settlement",
+    "closed": "Closed",
+    "delayed": "Is delayed",
+    "true": "Yes",
+    "false": "No",
+    "assign": "Start execution",
+    "delayedOrders": "Delayed",
+    "totalCost": "Order's cost [PLN]",
+    "duration": "Duration",
+    "assignedToServiceman": "Assigned to me",
+    "warrantyEnded": "Ended warranty",
+    "warrantyNotEnded": "Not Ended warranty",
+    "continue" : "Continue conservation*",
+    "devices": "Select devices*",
+    "devicesList": "Devices"
+  },
+  "reports": {
+    "admin": {
+      "percentage": "Percentage distribution of orders by type [%]",
+      "ordersStatuses": "Number of completed orders due to status and delays in execution",
+      "orders": "Number of orders completed by service technicians"
+    },
+    "year": "Year",
+    "month": "Month",
+    "serviceman": {
+      "reportTitle": "Service technician work statistics",
+      "avgTime": "Average time spent on order execution [h]",
+      "exec": "Number of completed orders",
+      "type": "The most frequently repaired type of devices and the number of devices of a given type repaired"
+    },
+    "client": {
+      "reportTitle": "Statistics of services provided to the client",
+      "devices": "List of serviced devices",
+      "warrantyDevices": "Number of devices serviced under warranty",
+      "executedOrders": "Number of completed orders for the client"
     }
   }
 }

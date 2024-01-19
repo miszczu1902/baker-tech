@@ -1,3 +1,3 @@
 export interface RegistrationConfirmation {
-    confirmationToken: string;
+  confirmationToken: string;
 }

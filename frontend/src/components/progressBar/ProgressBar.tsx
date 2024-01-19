@@ -1,11 +1,17 @@
-import {LinearProgress} from "@mui/material";
+import { LinearProgress } from "@mui/material";
 import React from "react";
 
 interface ProgressBarProps {
-    progress: number;
+  progress: number;
 }
 
-const ProgressBar: React.FC<ProgressBarProps> = ({progress}) => {
-    return <LinearProgress className="progress-bar" variant="determinate" value={progress} />
-}
+const ProgressBar: React.FC<ProgressBarProps> = ({ progress }) => {
+  return (
+    <LinearProgress
+      className="progress-bar"
+      variant="determinate"
+      value={progress}
+    />
+  );
+};
 export default ProgressBar;

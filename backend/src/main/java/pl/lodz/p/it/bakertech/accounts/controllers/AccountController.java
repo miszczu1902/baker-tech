@@ -62,16 +62,18 @@ public class AccountController {
     @PostMapping("/{id}/grant-access-levels")
     @PreAuthorize("hasRole(@Roles.ADMINISTRATOR)")
     public ResponseEntity<Void> assignAccessLevels(@PathVariable final Long id,
-                                                   @RequestBody final AccessLevelsDTO assignAccessLevel) {
-        accountActionService.grantAccessLevelToAccount(id, assignAccessLevel);
+                                                   @RequestBody final AccessLevelsDTO assignAccessLevel,
+                                                   @RequestHeader("If-Match") final String ifMatch) {
+        accountActionService.manageAccessLevels(id, assignAccessLevel, true, ifMatch);
         return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/{id}/revoke-access-levels")
     @PreAuthorize("hasRole(@Roles.ADMINISTRATOR)")
     public ResponseEntity<Void> revokeAccessLevels(@PathVariable final Long id,
-                                                   @RequestBody final AccessLevelsDTO assignAccessLevel) {
-        accountActionService.revokeAccessLevelFromAccount(id, assignAccessLevel);
+                                                   @RequestBody final AccessLevelsDTO assignAccessLevel,
+                                                   @RequestHeader("If-Match") final String ifMatch) {
+        accountActionService.manageAccessLevels(id, assignAccessLevel, false, ifMatch);
         return ResponseEntity.noContent().build();
     }
 }

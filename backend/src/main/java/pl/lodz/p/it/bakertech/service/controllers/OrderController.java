@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import pl.lodz.p.it.bakertech.model.service.orders.OrderStatus;
 import pl.lodz.p.it.bakertech.model.service.orders.types.OrderType;
 import pl.lodz.p.it.bakertech.service.dto.orders.create.CreateOrderDTO;
+import pl.lodz.p.it.bakertech.service.dto.orders.data.NextConservationDTO;
 import pl.lodz.p.it.bakertech.service.dto.orders.data.OrderDataListDTO;
 import pl.lodz.p.it.bakertech.service.dto.orders.queue.OrderDataForQueueDTO;
 import pl.lodz.p.it.bakertech.service.dto.orders.update.UpdateOrderDTO;
@@ -37,8 +38,10 @@ public class OrderController {
                                                             @RequestParam(required = false) final Long licenseId,
                                                             @RequestParam(required = false) final OrderStatus status,
                                                             @RequestParam(required = false) final OrderType orderType,
-                                                            @RequestParam(required = false) final Boolean delayed) {
-        return ResponseEntity.ok(ordersService.getOrders(licenseId, status, orderType, delayed, pageable));
+                                                            @RequestParam(required = false) final Boolean delayed,
+                                                            @RequestParam(required = false) final String client
+    ) {
+        return ResponseEntity.ok(ordersService.getOrders(licenseId, status, orderType, delayed, client, pageable));
     }
 
     @GetMapping("/orders-queue")
@@ -74,10 +77,26 @@ public class OrderController {
 
     @PatchMapping("/{id}")
     @PreAuthorize("hasAnyRole(@Roles.ADMINISTRATOR, @Roles.SERVICEMAN)")
-    public ResponseEntity<Void> assignOrderToServicemanAccount(@PathVariable final Long id,
-                                                               @RequestBody @Valid final UpdateOrderDTO updateOrder,
-                                                               @RequestHeader("If-Match") final String ifMatch) {
+    public ResponseEntity<Void> updateOrderData(@PathVariable final Long id,
+                                                @RequestBody @Valid final UpdateOrderDTO updateOrder,
+                                                @RequestHeader("If-Match") final String ifMatch) {
         ordersService.updateOrderStatus(id, updateOrder.forSettlement(), updateOrder.forClose(), ifMatch);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/assigned-to-serviceman")
+    @PreAuthorize("hasRole(@Roles.SERVICEMAN)")
+    public ResponseEntity<Page<OrderDataListDTO>> getOrdersAssignedToServiceman(@PageableDefault Pageable pageable,
+                                                                                @RequestParam(required = false) final OrderStatus status,
+                                                                                @RequestParam(required = false) final OrderType orderType,
+                                                                                @RequestParam(required = false) final Boolean delayed,
+                                                                                @RequestParam(required = false) final String client) {
+        return ResponseEntity.ok(ordersService.getOrdersAssignedToServiceman(status, orderType, delayed, client, pageable));
+    }
+
+    @GetMapping("/{id}/next-conservation")
+    @PreAuthorize("hasAnyRole(@Roles.ADMINISTRATOR, @Roles.SERVICEMAN, @Roles.CLIENT)")
+    public ResponseEntity<NextConservationDTO> getOrders(@PathVariable Long id) {
+        return ResponseEntity.ok(ordersService.getNextConservationForSpecifiedConservation(id));
     }
 }

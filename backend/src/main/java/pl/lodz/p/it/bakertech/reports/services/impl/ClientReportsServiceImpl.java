@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import pl.lodz.p.it.bakertech.common.CommonService;
 import pl.lodz.p.it.bakertech.exceptions.AppException;
 import pl.lodz.p.it.bakertech.reports.dto.NumberValueDTO;
+import pl.lodz.p.it.bakertech.reports.dto.admin.PercentageOfOrdersDTO;
 import pl.lodz.p.it.bakertech.reports.dto.client.ClientDeviceReportInfoDTO;
 import pl.lodz.p.it.bakertech.reports.repositories.ClientReportsRepository;
 import pl.lodz.p.it.bakertech.reports.repositories.DeviceReportsRepository;
@@ -24,6 +25,7 @@ import pl.lodz.p.it.bakertech.utils.mappers.reports.ProjectionMapper;
 import pl.lodz.p.it.bakertech.validation.etag.ETagGenerator;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 import static pl.lodz.p.it.bakertech.config.BakerTechConfig.ROUNDING_PRECISION;
 
@@ -31,7 +33,8 @@ import static pl.lodz.p.it.bakertech.config.BakerTechConfig.ROUNDING_PRECISION;
 @Transactional(
         propagation = Propagation.REQUIRES_NEW,
         isolation = Isolation.READ_COMMITTED,
-        rollbackFor = AppException.class
+        rollbackFor = AppException.class,
+        transactionManager = "businessTransactionManager"
 )
 @PreAuthorize("hasRole(@Roles.CLIENT)")
 public class ClientReportsServiceImpl extends CommonService implements ClientReportsService {
@@ -77,5 +80,19 @@ public class ClientReportsServiceImpl extends CommonService implements ClientRep
                 result.getPageable(),
                 result.getTotalElements()
         );
+    }
+
+    @Override
+    public PercentageOfOrdersDTO findPercentageOfOrdersByTypeAndUsername(Integer month, Integer year) {
+        var result = clientReportsRepository.findPercentageOfOrdersByTypeAndUsernameWithDefault(
+                month,
+                year,
+                SecurityContextHolder.getContext()
+                        .getAuthentication()
+                        .getName());
+        return new PercentageOfOrdersDTO(
+                BigDecimal.valueOf(Optional.ofNullable(result.getNonWarrantyRepair()).orElse(0D)).round(ROUNDING_PRECISION),
+                BigDecimal.valueOf(Optional.ofNullable(result.getWarrantyRepair()).orElse(0D)).round(ROUNDING_PRECISION),
+                BigDecimal.valueOf(Optional.ofNullable(result.getConservation()).orElse(0D)).round(ROUNDING_PRECISION));
     }
 }

@@ -14,7 +14,8 @@ import java.util.Optional;
 @Transactional(
         propagation = Propagation.MANDATORY,
         isolation = Isolation.READ_COMMITTED,
-        rollbackFor = AppException.class
+        rollbackFor = AppException.class,
+        transactionManager = "accountsTransactionManager"
 )
 public interface AccountConfirmationTokenRepository extends JpaRepository<AccountConfirmationToken, Long> {
     boolean existsAccountConfirmationTokenByConfirmationToken(String confirmationToken);

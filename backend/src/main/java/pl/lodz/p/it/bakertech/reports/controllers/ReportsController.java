@@ -14,7 +14,7 @@ import pl.lodz.p.it.bakertech.reports.services.AvailablePeriodsForReportsService
 @RequiredArgsConstructor
 @PreAuthorize("hasAnyRole(@Roles.ADMINISTRATOR, @Roles.SERVICEMAN, @Roles.CLIENT)")
 public class ReportsController {
-private final AvailablePeriodsForReportsService availablePeriodsForReportsService;
+    private final AvailablePeriodsForReportsService availablePeriodsForReportsService;
 
     @GetMapping("/dates")
     public ResponseEntity<AvailableDatesDTO> availablePeriodsForReports() {

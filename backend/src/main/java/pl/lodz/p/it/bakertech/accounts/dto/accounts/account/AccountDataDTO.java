@@ -6,8 +6,8 @@ import java.util.Set;
 
 public record AccountDataDTO(
         Long id,
-        String username,
-        String email,
+        @ETagField String username,
+        @ETagField String email,
         @ETagField Boolean isActive,
         PersonalDataDTO personalData,
         AddressDTO address,

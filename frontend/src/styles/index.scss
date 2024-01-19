@@ -11,7 +11,9 @@
 @import "./components/progressBar/progressBar";
 @import "./components/registration/registrtation";
 @import "./components/feedback/feedback";
-
+@import "./components/service/parameters";
+@import "./components/service/orders";
+@import "./components/reports/reports";
 
 body {
   font-family: $font-family;
@@ -19,10 +21,13 @@ body {
   padding: 0;
   margin: 0;
   color: $primary-text-color;
+  overflow-x: hidden !important;
+  overflow-y: hidden !important;
 }
 
 .Mui-focused {
   color: $primary-color !important;
+  border-color: $primary-color !important;
 }
 
 .input-internal-autofill-selected {
@@ -31,6 +36,17 @@ body {
 
 .MuiInput-root:after {
   border-bottom: 2px solid $primary-color !important;
+  border-color: $primary-color !important;
+}
+
+.MuiInputLabel-root {
+  color: $primary-color !important;
+  border-color: $primary-color !important;
+}
+
+.MuiSelect-nativeInput {
+  color: $primary-color !important;
+  border-color: $primary-color !important;
 }
 
 .default-container {
@@ -46,7 +62,7 @@ body {
   width: 100vw !important;
   padding: 1vh 0 1vh 0;
   display: flex;
-  min-height: 100% !important;
+  height: 10vh !important;
 }
 
 .default-navbar-logo {
@@ -61,7 +77,7 @@ body {
 }
 
 .logo {
-  scale: 0.8;
+  scale: 0.7 !important;
   vertical-align: middle;
   font-size: 20pt;
   justify-content: center;
@@ -114,6 +130,8 @@ body {
   width: 100% !important;
 }
 
-.data-container-languages {
-
+input {
+  border-color: $primary-color !important;
 }
+
+

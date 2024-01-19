@@ -21,22 +21,30 @@ import java.util.Set;
                 @Index(name = "unique_username", columnList = "username", unique = true),
         })
 public class Account extends AbstractEntityWithId {
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "account", cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.REMOVE})
+    @OneToMany(
+            fetch = FetchType.LAZY,
+            mappedBy = "account",
+            cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.REMOVE})
     private Set<AccessLevel> accessLevels = new HashSet<>();
 
+    @ETagField
     @Username
     @Column(name = "username", nullable = false, unique = true, updatable = false)
     private String username;
 
+    @ETagField
     @Email
-    @Column(name = "email", unique = true, nullable = false)
+    @Column(name = "email", unique = true, nullable = false, updatable = false)
     private String email;
 
     @ETagField
     @Column(name = "is_active", nullable = false, columnDefinition = "boolean default false")
     private Boolean isActive;
 
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "id", cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.REMOVE})
+    @OneToOne(
+            fetch = FetchType.LAZY,
+            mappedBy = "id",
+            cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.REMOVE})
     @JoinColumn(name = "personal_data_id", nullable = false)
     private PersonalData personalData;
 

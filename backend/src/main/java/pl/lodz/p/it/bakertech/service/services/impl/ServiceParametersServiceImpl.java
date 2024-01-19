@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 import pl.lodz.p.it.bakertech.common.CommonService;
 import pl.lodz.p.it.bakertech.exceptions.AppException;
 import pl.lodz.p.it.bakertech.model.service.parameters.ServiceParameter;
-import pl.lodz.p.it.bakertech.model.service.parameters.ServiceParameterType;
 import pl.lodz.p.it.bakertech.service.dto.parameters.ModifyServiceParameterDTO;
 import pl.lodz.p.it.bakertech.service.dto.parameters.ServiceParameterDTO;
 import pl.lodz.p.it.bakertech.service.repositories.ServiceParametersRepository;
@@ -27,7 +26,8 @@ import java.util.stream.Collectors;
 @Transactional(
         propagation = Propagation.REQUIRES_NEW,
         isolation = Isolation.READ_COMMITTED,
-        rollbackFor = AppException.class
+        rollbackFor = AppException.class,
+        transactionManager = "businessTransactionManager"
 )
 @PreAuthorize("hasRole(@Roles.ADMINISTRATOR)")
 public class ServiceParametersServiceImpl extends CommonService implements ServiceParametersService {
@@ -50,22 +50,22 @@ public class ServiceParametersServiceImpl extends CommonService implements Servi
     public Set<ServiceParameterDTO> getServiceParameters() {
         return serviceParametersRepository.findAll()
                 .stream()
-                .map(serviceParametersMapper::serviceParametrersToServiceParametersDTO)
+                .map(serviceParametersMapper::serviceParametersToServiceParametersDTO)
                 .collect(Collectors.toSet());
 
     }
 
     @Override
-    public ServiceParameterDTO getServiceParameter(final ServiceParameterType parameterType) {
-        return serviceParametersMapper.serviceParametrersToServiceParametersDTO(serviceParametersRepository
-                .findByServiceParameterType(parameterType).orElseThrow());
+    public ServiceParameterDTO getServiceParameter(final Long id) {
+        return serviceParametersMapper.serviceParametersToServiceParametersDTO(serviceParametersRepository
+                .findById(id).orElseThrow());
     }
 
     @Override
-    public void updateServiceParameter(final ModifyServiceParameterDTO serviceParameters, final String ifMatch) {
-        ServiceParameter serviceParameterData = serviceParametersRepository
-                .findByServiceParameterType(serviceParameters.serviceParameterType())
-                .orElseThrow();
+    public void updateServiceParameter(final Long id,
+                                       final ModifyServiceParameterDTO serviceParameters,
+                                       final String ifMatch) {
+        ServiceParameter serviceParameterData = serviceParametersRepository.findById(id).orElseThrow();
         if (ifMatch.equals(eTagGenerator.generateETagValue(serviceParameterData))) {
             serviceParameterData.setValue(serviceParameters.value());
             serviceParametersRepository.saveAndFlush(serviceParameterData);

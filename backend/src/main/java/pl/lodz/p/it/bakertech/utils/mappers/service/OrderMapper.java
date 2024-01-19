@@ -18,6 +18,7 @@ import pl.lodz.p.it.bakertech.service.dto.orders.data.OrderDetailsDTO;
 import pl.lodz.p.it.bakertech.service.dto.orders.data.WarrantyRepairDTO;
 import pl.lodz.p.it.bakertech.service.dto.orders.queue.OrderDataForQueueDTO;
 
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -26,7 +27,7 @@ public interface OrderMapper {
     @Mappings({
             @Mapping(target = "licenseId", source = "serviceman.licenseId"),
             @Mapping(target = "client", source = "client.account.username"),
-            @Mapping(target = "orderData.devices", expression = "java(mapDevicesEntityToIds(orderData))"),
+            @Mapping(target = "orderData.devices", ignore = true),
             @Mapping(target = "conservation", expression = "java(conservationEntityToConservationDTO(order))"),
             @Mapping(target = "warrantyRepair", expression = "java(warrantyRepairEntityToWarrantyRepairDTO(order))"),
     })
@@ -34,7 +35,7 @@ public interface OrderMapper {
 
     @Mappings({
             @Mapping(target = "licenseId", source = "serviceman.licenseId"),
-            @Mapping(target = "username", source = "client.account.username")
+            @Mapping(target = "client", source = "client.account.username")
     })
     OrderDataListDTO orderEntityToOrderListData(Order order);
 
@@ -103,7 +104,12 @@ public interface OrderMapper {
 
     default ConservationDTO conservationEntityToConservationDTO(Order order) {
         if (order instanceof Conservation && order.getOrderType() == OrderType.CONSERVATION) {
-            return new ConservationDTO(((Conservation) order).getDateOfNextDeviceConservation(), ((Conservation) order).getLastConservation().getId());
+            var id = Optional.ofNullable(((Conservation) order).getLastConservation());
+            var conservationDTO = new ConservationDTO(((Conservation) order).getDateOfNextDeviceConservation(), null);
+            if (id.isPresent()) {
+                conservationDTO = new ConservationDTO(((Conservation) order).getDateOfNextDeviceConservation(), id.get().getId());
+            }
+            return conservationDTO;
         }
         return null;
     }

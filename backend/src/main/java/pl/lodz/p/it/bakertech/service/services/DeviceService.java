@@ -9,6 +9,8 @@ import pl.lodz.p.it.bakertech.service.dto.devices.DeviceListDataDTO;
 public interface DeviceService {
     Page<DeviceListDataDTO> getDevices(String serialNumber, Boolean warrantyEnded, DeviceCategory category, Pageable pageable);
 
+    Page<DeviceListDataDTO> getDevicesForOrder(Long orderId, Pageable pageable);
+
     DeviceListDataDTO getDevice(Long id);
 
     Long addDeviceToService(AddDeviceDTO deviceToAdd);

@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 public record OrderDataListDTO(Long id,
                                String licenseId,
-                               String username,
+                               String client,
                                OrderType orderType,
                                OrderStatus status,
                                LocalDateTime dateOfOrderExecution,

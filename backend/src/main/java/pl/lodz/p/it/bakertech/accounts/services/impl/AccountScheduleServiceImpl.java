@@ -28,7 +28,8 @@ import static pl.lodz.p.it.bakertech.utils.SchedulePeriods.PER_ONE_MINUTE;
 @Transactional(
         propagation = Propagation.REQUIRES_NEW,
         isolation = Isolation.READ_COMMITTED,
-        rollbackFor = AppException.class
+        rollbackFor = AppException.class,
+        transactionManager = "accountsTransactionManager"
 )
 public class AccountScheduleServiceImpl extends CommonService implements AccountScheduleService {
     private final AccountRepository accountRepository;

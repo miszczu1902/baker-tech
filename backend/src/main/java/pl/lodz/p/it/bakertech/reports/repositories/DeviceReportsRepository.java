@@ -18,7 +18,8 @@ import pl.lodz.p.it.bakertech.reports.repositories.projections.ServicedDevicesPr
 @Transactional(
         propagation = Propagation.MANDATORY,
         isolation = Isolation.READ_COMMITTED,
-        rollbackFor = AppException.class
+        rollbackFor = AppException.class,
+        transactionManager = "businessTransactionManager"
 )
 public interface DeviceReportsRepository extends JpaRepository<Device, Long> {
     @Query("SELECT " +

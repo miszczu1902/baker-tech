@@ -19,7 +19,7 @@ const RegistrationPassed = () => {
   const [responseMessage, setResponseMessage] = useState<string>(
     confirmationToken
       ? "registration.confirmation.success"
-      : "registration.confirmation.passed",
+      : "registration.confirmation.passed"
   );
 
   const fetchData = () => {
@@ -27,11 +27,8 @@ const RegistrationPassed = () => {
       method: RequestMethod.POST,
       endpoint: `${ApiEndpoints.ACCOUNT_ACTIVATION_ENDPOINT}`.replace(
         ":confirmationToken",
-        confirmationToken as string,
-      ),
-      data: {
-        confirmationToken: confirmationToken,
-      },
+        confirmationToken as string
+      )
     };
     requestService
       .sendRequestAndGetResponse(requestData)
@@ -39,7 +36,7 @@ const RegistrationPassed = () => {
   };
 
   useEffect(() => {
-    if (currentRole === Roles.GUEST && confirmationToken) {
+    if (currentRole === Roles.GUEST && confirmationToken !== undefined) {
       fetchData();
     }
   }, [confirmationToken]);

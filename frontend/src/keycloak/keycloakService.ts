@@ -7,11 +7,11 @@ import {
   setAvailableRoles,
   setCurrentRole,
   setCurrentUser,
-  setToken
+  setToken,
 } from "../redux/actions/authActions";
 import {
   AuthClientError,
-  AuthClientEvent
+  AuthClientEvent,
 } from "@react-keycloak/core/lib/types";
 import keycloak from "./keycloak";
 
@@ -21,13 +21,11 @@ export const login = (keycloak: Keycloak) => {
   });
 };
 
-export const logout = (keycloak: Keycloak) => {
-  keycloak.logout().catch(() => {
-  });
-  window.location.href = "/";
-  store.dispatch(setCurrentRole(Roles.GUEST));
+export const logout = async (keycloak: Keycloak) => {
+  keycloak.logout().then(() => {});
+  setUserDataOnNewToken(Roles.GUEST, undefined, undefined);
   store.dispatch(setAvailableRoles([Roles.GUEST]));
-  store.dispatch(setCurrentUser(""));
+  window.location.href = "/";
 };
 
 export const setKeycloakCurrentUser = (token: any) => {
@@ -37,7 +35,7 @@ export const setKeycloakCurrentUser = (token: any) => {
     const decodedToken = jwtDecode(token) as KeycloakTokenParsed;
     const availableRoles = _.intersection(
       decodedToken.realm_access?.roles as string[],
-      Object.values(Roles)
+      Object.values(Roles),
     );
 
     if (
@@ -63,23 +61,28 @@ export const setKeycloakCurrentUser = (token: any) => {
       store.dispatch(setAvailableRoles(availableRoles as Roles[]));
     }
     setUserDataOnNewToken(currentRole, token, decodedToken);
+  } else {
+    store.dispatch(setCurrentRole(Roles.GUEST));
+    store.dispatch(setAvailableRoles([Roles.GUEST]));
+    store.dispatch(setCurrentUser(""));
+    store.dispatch(setToken(undefined));
   }
 };
 
 export const setUserDataOnNewToken = (
   role: Roles,
   token: any,
-  decodedToken: KeycloakTokenParsed
+  decodedToken: KeycloakTokenParsed | undefined,
 ) => {
   const currentRole = store.getState().currentUser.currentRole;
   store.dispatch(setCurrentRole(role !== currentRole ? role : currentRole));
-  store.dispatch(setCurrentUser(decodedToken.preferred_username));
+  store.dispatch(setCurrentUser(decodedToken?.preferred_username));
   store.dispatch(setToken(token));
 };
 
 export const catchEvent = (
   eventType: AuthClientEvent,
-  error?: AuthClientError
+  error?: AuthClientError,
 ) => {
   switch (eventType) {
     case "onAuthRefreshSuccess":

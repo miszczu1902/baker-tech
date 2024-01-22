@@ -96,7 +96,7 @@ public class OrderController {
 
     @GetMapping("/{id}/next-conservation")
     @PreAuthorize("hasAnyRole(@Roles.ADMINISTRATOR, @Roles.SERVICEMAN, @Roles.CLIENT)")
-    public ResponseEntity<NextConservationDTO> getOrders(@PathVariable Long id) {
+    public ResponseEntity<NextConservationDTO> getNextConservationForOrder(@PathVariable Long id) {
         return ResponseEntity.ok(ordersService.getNextConservationForSpecifiedConservation(id));
     }
 }

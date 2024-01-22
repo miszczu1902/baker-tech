@@ -4,7 +4,13 @@ import { CreateOrderType } from "../../../types/service/orders/CreateOrderType";
 import { RequestData, RequestMethod } from "../../../api/RequestData";
 import { ApiEndpoints } from "../../../api/ApiEndpoints";
 import { useNavigate } from "react-router-dom";
-import { Box, Checkbox, Chip, FormControl, FormControlLabel } from "@mui/material";
+import {
+  Box,
+  Checkbox,
+  Chip,
+  FormControl,
+  FormControlLabel,
+} from "@mui/material";
 import { OrderType } from "../../../types/service/orders/OrderType";
 import { delay } from "lodash";
 import { ALERT_AUTOHIDE } from "../../../utils/consts";
@@ -200,6 +206,9 @@ const CreateOrder = () => {
           requestData={getRequestData()}
           afterSuccessHandling={() => {
             handleParentIsOpenAlertState(true);
+            setCreateOrder({
+              orderType: orderType,
+            } as CreateOrderType);
             delay(() => navigate("/orders"), ALERT_AUTOHIDE / 3);
           }}
           message={"alerts.modification"}

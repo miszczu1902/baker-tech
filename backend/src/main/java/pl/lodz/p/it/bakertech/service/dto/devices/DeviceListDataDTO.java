@@ -6,9 +6,9 @@ import pl.lodz.p.it.bakertech.validation.etag.ETagField;
 public record DeviceListDataDTO(
         Long id,
         @ETagField Long version,
-        String deviceName,
-        String brand,
-        String serialNumber,
+        @ETagField String deviceName,
+        @ETagField String brand,
+        @ETagField String serialNumber,
         @ETagField Boolean warrantyEnded,
         DeviceCategory category
 ) {

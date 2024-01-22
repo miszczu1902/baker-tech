@@ -67,3 +67,4 @@ document/**
 **/auxil
 
 **/db/init_keycloak.sql
+frontend/.env

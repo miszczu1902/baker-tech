@@ -7,7 +7,7 @@ import RegistrationSecondPage from "./RegistrationSecondPage";
 import RegistrationThirdPage from "./RegistrationThirdPage";
 import BasicButton from "../buttons/BasicButton";
 import BackArrow from "../buttons/BackArrow";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import { RequestData, RequestMethod } from "../../api/RequestData";
 import { ApiEndpoints } from "../../api/ApiEndpoints";
@@ -17,6 +17,12 @@ import { RegistrationValidationPages } from "../../types/registration/Registrati
 import { ALERT_AUTOHIDE } from "../../utils/consts";
 import Logo from "../icons/Logo";
 import NotificationHandler from "../response/NotificationHandler";
+import { delay } from "lodash";
+import {
+  setFirstPageRegistrationStatus,
+  setSecondPageRegistrationStatus,
+  setThirdPageRegistrationStatus
+} from "../../redux/actions/validationActions";
 
 const AccountRegistration = () => {
   const { t } = useTranslation();
@@ -30,6 +36,7 @@ const AccountRegistration = () => {
   const validPages = useSelector(
     (state: RootState) => state.registrationValidations,
   ) as RegistrationValidationPages;
+  const dispatch = useDispatch();
   const amountOfPages = currentRole === Roles.GUEST ? 3 : (2 as number);
   const [currentPage, setCurrentPage] = useState(1);
   const [progress, setProgress] = useState(0);
@@ -58,7 +65,10 @@ const AccountRegistration = () => {
   };
 
   const success = () => {
-    setTimeout(() => {
+    dispatch(setFirstPageRegistrationStatus(undefined));
+    dispatch(setSecondPageRegistrationStatus(undefined));
+    dispatch(setThirdPageRegistrationStatus(undefined));
+    delay(() => {
       currentRole === Roles.GUEST
         ? navigate("/registration-passed")
         : navigate("/accounts");
@@ -135,7 +145,7 @@ const AccountRegistration = () => {
               onClick={
                 currentPage < amountOfPages
                   ? handleGoToNextPage
-                  : async () => handleParentIsOpenState(true)
+                  : () => handleParentIsOpenState(true)
               }
             />
           </Box>
@@ -149,6 +159,7 @@ const AccountRegistration = () => {
         onChangeAlert={handleParentIsOpenAlertState}
         requestData={getRequestData()}
         afterSuccessHandling={success}
+        message={"confirmation.confirmation.success"}
       />
     </div>
   );

@@ -35,6 +35,7 @@ const ServiceParameters = () => {
 
   const success = (arg: any) => {
     setServiceParameters(arg);
+    dispatch(setNewServiceParameterValue(undefined));
   };
 
   useEffect(() => {
@@ -45,7 +46,7 @@ const ServiceParameters = () => {
         dispatch(setOpenConfirm(false));
         dispatch(setOpenAlert(true));
       });
-  }, [parameterValue]);
+  }, []);
 
   return (
     <Box flexGrow={1} className="param-content single-window">

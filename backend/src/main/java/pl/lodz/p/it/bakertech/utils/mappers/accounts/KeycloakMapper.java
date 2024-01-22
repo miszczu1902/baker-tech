@@ -60,6 +60,6 @@ public interface KeycloakMapper {
     }
 
     default boolean setEnable() {
-        return true;
+        return false;
     }
 }

@@ -20,5 +20,5 @@ import java.util.Optional;
 public interface AccountConfirmationTokenRepository extends JpaRepository<AccountConfirmationToken, Long> {
     boolean existsAccountConfirmationTokenByConfirmationToken(String confirmationToken);
 
-    Optional<AccountConfirmationToken> findByConfirmationToken(String confirmationToken);
+    Optional<AccountConfirmationToken> findByConfirmationTokenEquals(String confirmationToken);
 }

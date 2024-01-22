@@ -1,4 +1,4 @@
-package pl.lodz.p.it.bakertech.integration.accounts;
+package pl.lodz.p.it.bakertech.integration.rest.accounts;
 
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
@@ -7,7 +7,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.http.HttpStatus;
-import pl.lodz.p.it.bakertech.integration.config.BakerTechTestConfig;
+import pl.lodz.p.it.bakertech.integration.config.BakerTechIntegrationTestConfig;
 import pl.lodz.p.it.bakertech.integration.util.TestAccount;
 
 import java.util.List;
@@ -16,7 +16,7 @@ import java.util.Optional;
 import static io.restassured.RestAssured.given;
 import static pl.lodz.p.it.bakertech.integration.util.TestAccount.*;
 
-public class AccountsDisplayTests extends BakerTechTestConfig {
+public class AccountsDisplayTests extends BakerTechIntegrationTestConfig {
     public static List<TestAccount> allAccounts() {
         return List.of(BAKERTECH_ADMIN, CARL_JOHNSON, CYPRIAN_BANINO, MARCIN_KRASUCKI, DAWID_JASPER);
     }

@@ -51,10 +51,11 @@ body {
 
 .default-container {
   width: 100vw !important;
-  min-height: 85vh !important;
+  min-height: 90vh !important;
   margin: 0;
   padding: 0;
-  background: url("../assets/landing-page-bg.jpg");
+  background: url("../assets/landing-page-bg.jpg") no-repeat !important;
+  background-size: cover !important;
 }
 
 .default-navbar {

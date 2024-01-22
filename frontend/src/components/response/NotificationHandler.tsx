@@ -5,6 +5,7 @@ import { RequestData } from "../../api/RequestData";
 import { RequestService } from "../../api/RequestService";
 import { ErrorResponseData } from "../../api/ErrorResponseData";
 import { useTranslation } from "react-i18next";
+import { logout } from "../../keycloak/keycloakService";
 
 export interface NotificationHandlerProps {
   isOpenConfirm: boolean;

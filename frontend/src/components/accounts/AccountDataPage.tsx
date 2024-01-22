@@ -77,7 +77,7 @@ const AccountDataPage: React.FC<AccountDataPageParams> = ({
     setIsOpenAlert(newState);
   };
 
-  const fetchData = (arg: any) => {
+  const success = (arg: any) => {
     setAccountData(arg as AccountData);
   };
 
@@ -85,7 +85,7 @@ const AccountDataPage: React.FC<AccountDataPageParams> = ({
     if (!accountData) {
       requestService
         .sendRequestAndGetResponse<AccountData>(getAccountDataRequest())
-        .then(fetchData)
+        .then(success)
         .catch(() => {
           dispatch(setOpenConfirm(false));
           dispatch(setOpenAlert(true));
@@ -201,7 +201,7 @@ const AccountDataPage: React.FC<AccountDataPageParams> = ({
               ? getChangeAccountStatusRequest()
               : getAccountDataRequest()
         }
-        afterSuccessHandling={fetchData}
+        afterSuccessHandling={success}
       />
     </div>
   );

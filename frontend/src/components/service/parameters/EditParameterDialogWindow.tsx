@@ -31,11 +31,12 @@ const EditParameterDialogWindow: React.FC<FeedbackProps> = ({
 
   const handleValueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     let paramValue = Number(event.target.value);
+    setIsValid(validatePositiveValue(paramValue));
     dispatch(setNewServiceParameterValue(paramValue));
   };
 
   useEffect(() => {
-    setIsValid(validatePositiveValue(parameterValue));
+    setNewServiceParameterValue(parameterValue);
   }, [parameterValue, isValid]);
 
   return (
@@ -49,7 +50,7 @@ const EditParameterDialogWindow: React.FC<FeedbackProps> = ({
         <ContainerRow
           className="param-content-row"
           placeholder={`${t("admin.editParamValuePlaceholder")}*`}
-          type={InputType.BASIC}
+          type={InputType.NUMERICAL}
           onChangeValue={handleValueChange}
           value={parameterValue}
         />

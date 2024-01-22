@@ -2,6 +2,7 @@ package pl.lodz.p.it.bakertech.exceptions;
 
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.web.server.ResponseStatusException;
 import pl.lodz.p.it.bakertech.validation.Messages;
 
@@ -14,12 +15,13 @@ public class AppException extends ResponseStatusException {
         this.cause = cause;
     }
 
-    public static AppException createAppException(final Throwable cause) {
-        return new AppException(HttpStatus.INTERNAL_SERVER_ERROR, Messages.internalServerError, cause);
+    public AppException(HttpStatusCode statusCode, String reason, Throwable cause) {
+        super(statusCode, reason);
+        this.cause = cause;
     }
 
-    public static AppException createForbiddenException(final Throwable cause) {
-        return new pl.lodz.p.it.bakertech.exceptions.ForbiddenException(HttpStatus.FORBIDDEN, Messages.errorForbidden, cause);
+    public static AppException createAppException(final Throwable cause) {
+        return new AppException(HttpStatus.INTERNAL_SERVER_ERROR, Messages.internalServerError, cause);
     }
 
     public static AppException createEtagException(final Throwable cause) {

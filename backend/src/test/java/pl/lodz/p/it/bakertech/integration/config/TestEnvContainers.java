@@ -18,7 +18,7 @@ public class TestEnvContainers {
     private static final Path dbDirPath = Paths.get("db").toAbsolutePath();
     private static final Path initDbPath = Paths.get("db/init_structure.sh").toAbsolutePath();
 
-    protected static Dotenv dotenv = Dotenv.configure()
+    static Dotenv dotenv = Dotenv.configure()
             .directory(dotEnvPath.toString())
             .filename(".env")
             .load();

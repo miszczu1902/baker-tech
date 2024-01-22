@@ -4,7 +4,7 @@
     "login": "Login",
     "logout": "Logout",
     "altBackground": "Background",
-    "text": "Baker-Tech is a multi-access information system designed to facilitate the monitoring and\nmanagement of repair and maintenance of bakery equipment carried out by the service centre\nand to make available reports summarising the repairs carried out."
+    "text": "Baker-Tech is a multi-access information system designed to facilitate the monitoring and\nmanagement of repair and maintenance of bakery equipment carried out by the service centre\nand to make available reports summarising the repairs carried out. Baker-Tech, as a multi-access computer system, enables the submission of orders by both service technicians and customers, allowing technicians to focus more on efficiently handling requests. "
   },
   "sidebar": {
     "currentUser": "Logged as:",
@@ -145,7 +145,8 @@
     "internalServer": "Internal server error",
     "unauthorized": "Login failed",
     "forbidden": "No permission to resource",
-    "notFound": "Resource not found"
+    "notFound": "Resource not found",
+    "badRequest": "Sent request was incorrect"
   },
   "registration": {
     "register": "Register",
@@ -214,7 +215,7 @@
     "cut_off_date_period": "Cut off date period [days]",
     "unit_cost_of_working_hour": "Unit cost of working hour [PLN]",
     "editParamValue": "Edit parameter value",
-    "editParamValuePlaceholder": "Place new parameter value here",
+    "editParamValuePlaceholder": "Place new parameter value here (greater than 0)",
     "cancel": "Cancel"
   },
   "orders": {

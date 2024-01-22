@@ -19,14 +19,17 @@ import java.util.Set;
 @Table(name = "device", indexes = {
         @Index(name = "unique_device_snbdn", columnList = "brand,device_name,serial_number", unique = true)})
 public class Device extends AbstractEntityWithId {
+    @ETagField
     @DeviceName
     @Column(name = "device_name", nullable = false, updatable = false)
     private String deviceName;
 
+    @ETagField
     @Brand
     @Column(name = "brand", nullable = false, updatable = false)
     private String brand;
 
+    @ETagField
     @SerialNumber
     @Column(name = "serial_number")
     private String serialNumber;

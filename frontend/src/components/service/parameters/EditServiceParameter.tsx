@@ -53,10 +53,7 @@ const EditServiceParameter: React.FC<EditServiceParameterProps> = ({
   };
 
   useEffect(() => {
-    dispatch(
-      setNewServiceParameterValue(value),
-    );
-  }, [parameterValue]);
+  }, []);
 
   return (
     <div>
@@ -89,6 +86,7 @@ const EditServiceParameter: React.FC<EditServiceParameterProps> = ({
         onChangeAlert={handleParentIsOpenAlertState}
         requestData={editServiceParamRequestData()}
         message={"alerts.modification"}
+        afterSuccessHandling={() => dispatch(setNewServiceParameterValue(undefined))}
       />
     </div>
   );

@@ -9,6 +9,7 @@ public class Messages {
     public static final String internalServerError = "error.internalServer";
     public static final String contentChanged = "error.contentChanged";
     public static final String validationViolation = "validation.violation";
+    public static final String badRequest = "error.badRequest";
     public static final String objectNotFound = "object.notFound";
     public static final String objectNotUnique = "object.notUnique";
 

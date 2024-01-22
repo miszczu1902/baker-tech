@@ -4,7 +4,7 @@
     "login": "Zaloguj",
     "logout": "Wyloguj",
     "altBackground": "Tło",
-    "text": "Baker-Tech to wielodostępny system informatyczny, którego celem jest usprwanienie mo-\nnitorowania i zarządzania zleceniami naprawy i konserwacji sprzętu piekarniczego realizowa-\nnego przez serwis oraz udostępnienie raportów podsumowujące wykonane naprawy."
+    "text": "Baker-Tech to wielodostępny system informatyczny, którego celem jest usprawnienie monitorowania i zarządzania \nzleceniami naprawy i konserwacji sprzętu piekarniczego realizowanego przez serwis oraz udostępnienie raportów podsumowujące wykonane naprawy. \n Baker-Tech, jako wielodostępny system informatyczny, umożliwia zgłaszanie zleceń zarówno przez serwisantów, jak i klientów serwisu. Ta funkcjonalność pozwala serwisantom skupić się bardziej na efektywnej realizacji zgłoszeń."
   },
   "sidebar": {
     "currentUser": "Zalogowany jako:",
@@ -145,7 +145,8 @@
     "internalServer": "Wewnętrzny problem serwera",
     "unauthorized": "Logowanie nie powiodło się",
     "forbidden": "Brak uprawnień do zasobu",
-    "notFound": "Nie znaleziono zasobu"
+    "notFound": "Nie znaleziono zasobu",
+    "badRequest": "Wysłane żądanie jest nieprawidłowe"
   },
   "registration": {
     "register": "Zarejestruj",
@@ -214,7 +215,7 @@
     "cut_off_date_period": "Okres daty granicznej [dni]",
     "unit_cost_of_working_hour": "Koszt roboczogodziny [PLN]",
     "editParamValue": "Edytuj wartość parametru",
-    "editParamValuePlaceholder": "Podaj tutaj wartość parametru",
+    "editParamValuePlaceholder": "Podaj tutaj wartość parametru (większą niż 0)",
     "cancel": "Anuluj"
   },
   "orders": {

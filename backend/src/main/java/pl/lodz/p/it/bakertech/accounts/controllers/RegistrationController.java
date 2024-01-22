@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import pl.lodz.p.it.bakertech.accounts.dto.register.ConfirmAccountDTO;
 import pl.lodz.p.it.bakertech.accounts.dto.register.RegisterAccountDTO;
 import pl.lodz.p.it.bakertech.accounts.dto.register.client.RegisterClientDTO;
 import pl.lodz.p.it.bakertech.accounts.services.RegistrationService;
@@ -40,10 +39,10 @@ public class RegistrationController {
         ).build();
     }
 
-    @PostMapping("/activate-account")
+    @PostMapping("/activate-account/{confirmationToken}")
     @PreAuthorize("hasRole(@Roles.GUEST)")
-    public ResponseEntity<Void> activateClientAccount(final ConfirmAccountDTO confirmAccount) {
-        registrationService.confirmAccountRegistration(confirmAccount);
+    public ResponseEntity<Void> activateClientAccount(@PathVariable String confirmationToken) {
+        registrationService.confirmAccountRegistration(confirmationToken);
         return ResponseEntity.noContent().build();
     }
 }

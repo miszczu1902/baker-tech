@@ -15,15 +15,15 @@
         <java.version>21</java.version>
         <mapstruct.version>1.5.5.Final</mapstruct.version>
         <lombok.version>1.18.30</lombok.version>
-        <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
-        <springdoc-verison>2.3.0</springdoc-verison>
-        <restassured-version>5.3.2</restassured-version>
-        <java-dotenv-version>5.2.2</java-dotenv-version>
-        <spring-retry-version>2.0.4</spring-retry-version>
-        <keycloak-version>22.0.5</keycloak-version>
-        <lang3-version>3.14.0</lang3-version>
-        <maven-compiler-version>3.11.0</maven-compiler-version>
-        <jacoco-version>0.8.11</jacoco-version>
+        <lombok.mapstruct.binding.version>0.2.0</lombok.mapstruct.binding.version>
+        <springdoc.verison>2.3.0</springdoc.verison>
+        <restassured.version>5.3.2</restassured.version>
+        <java.dotenv.version>5.2.2</java.dotenv.version>
+        <spring.retry.version>2.0.4</spring.retry.version>
+        <keycloak.version>22.0.5</keycloak.version>
+        <lang3.version>3.14.0</lang3.version>
+        <maven.compiler.version>3.11.0</maven.compiler.version>
+        <jacoco.version>0.8.11</jacoco.version>
     </properties>
     <dependencies>
         <dependency>
@@ -117,20 +117,20 @@
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-            <version>${springdoc-verison}</version>
+            <version>${springdoc.verison}</version>
         </dependency>
 
         <dependency>
             <groupId>io.rest-assured</groupId>
             <artifactId>rest-assured</artifactId>
-            <version>${restassured-version}</version>
+            <version>${restassured.version}</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>io.github.cdimascio</groupId>
             <artifactId>java-dotenv</artifactId>
-            <version>${java-dotenv-version}</version>
+            <version>${java.dotenv.version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -143,19 +143,19 @@
         <dependency>
             <groupId>org.springframework.retry</groupId>
             <artifactId>spring-retry</artifactId>
-            <version>${spring-retry-version}</version>
+            <version>${spring.retry.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.keycloak</groupId>
             <artifactId>keycloak-admin-client</artifactId>
-            <version>${keycloak-version}</version>
+            <version>${keycloak.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>${lang3-version}</version>
+            <version>${lang3.version}</version>
         </dependency>
 
         <dependency>
@@ -183,7 +183,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>${maven-compiler-version}</version>
+                <version>${maven.compiler.version}</version>
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
@@ -196,7 +196,7 @@
                         <path>
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok-mapstruct-binding</artifactId>
-                            <version>${lombok-mapstruct-binding.version}</version>
+                            <version>${lombok.mapstruct.binding.version}</version>
                         </path>
                         <path>
                             <groupId>org.mapstruct</groupId>
@@ -209,7 +209,7 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>${jacoco-version}</version>
+                <version>${jacoco.version}</version>
                 <executions>
                     <execution>
                         <id>jacoco-initialize</id>

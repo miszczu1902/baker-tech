@@ -102,6 +102,7 @@ const AddDevice = () => {
 
   const success = (arg: any) => {
     handleParentIsOpenAlertState(true);
+    setDevice({});
     delay(() => navigate("/devices"), ALERT_AUTOHIDE);
   };
 

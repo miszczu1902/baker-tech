@@ -6,7 +6,7 @@ import {
 import { RegistrationValidationPages } from "../../types/registration/RegistrationValidationPages";
 
 export const setFirstPageRegistrationStatus = (
-  data: RegistrationValidationPages,
+  data: RegistrationValidationPages | undefined,
 ) => {
   return {
     type: SET_FIRST_PAGE_REGISTRATION_STATUS,
@@ -15,7 +15,7 @@ export const setFirstPageRegistrationStatus = (
 };
 
 export const setSecondPageRegistrationStatus = (
-  data: RegistrationValidationPages,
+  data: RegistrationValidationPages | undefined,
 ) => {
   return {
     type: SET_SECOND_PAGE_REGISTRATION_STATUS,
@@ -24,7 +24,7 @@ export const setSecondPageRegistrationStatus = (
 };
 
 export const setThirdPageRegistrationStatus = (
-  data: RegistrationValidationPages,
+  data: RegistrationValidationPages | undefined,
 ) => {
   return {
     type: SET_THIRD_PAGE_REGISTRATION_STATUS,

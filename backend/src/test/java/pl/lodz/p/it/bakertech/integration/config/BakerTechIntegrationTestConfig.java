@@ -5,12 +5,14 @@ import io.restassured.http.Header;
 import io.restassured.response.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
-import org.springframework.beans.factory.annotation.Value;
+import org.junit.jupiter.api.Tag;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import pl.lodz.p.it.bakertech.validation.etag.ETagGenerator;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -21,14 +23,13 @@ import static pl.lodz.p.it.bakertech.integration.config.TestEnvContainers.*;
 @Slf4j
 @Testcontainers
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public abstract class BakerTechTestConfig {
+@Tag("IntegrationTest")
+public abstract class BakerTechIntegrationTestConfig {
     @LocalServerPort
     int port;
-    @Value("${spring.security.oauth2.client.registration.keycloak.client-id}")
-    private String clientId;
 
-    @Value("${spring.security.oauth2.client.registration.keycloak.client-secret}")
-    private String clientSecret;
+    @Autowired
+    protected ETagGenerator eTagGenerator;
 
     @DynamicPropertySource
     static void configProperties(DynamicPropertyRegistry registry) {
@@ -53,15 +54,15 @@ public abstract class BakerTechTestConfig {
         registry.add("mail.enable", () -> false);
     }
 
-    protected Response auth(final String username, final String password) {
+    protected static Response auth(final String username, final String password) {
         Response response = given()
                 .port(keycloakPort)
                 .header("Content-Type", "application/x-www-form-urlencoded")
                 .formParam("username", username)
                 .formParam("password", password)
                 .formParam("grant_type", "password")
-                .formParam("client_id", clientId)
-                .formParam("client_secret", clientSecret)
+                .formParam("client_id", dotenv.get("CLIENT_ID"))
+                .formParam("client_secret", dotenv.get("CLIENT_PASSWORD"))
                 .when()
                 .post("/realms/BakerTech/protocol/openid-connect/token");
         log.info("\nUsername: %s\n Login response: %s".formatted(username, response.asPrettyString()));
@@ -69,7 +70,7 @@ public abstract class BakerTechTestConfig {
 
     }
 
-    protected Header keycloakJwtToken(final String username, final String password) {
+    protected static Header keycloakJwtToken(final String username, final String password) {
         String token = "Bearer %s".formatted(
                 auth(username, password)
                         .jsonPath()
@@ -78,7 +79,7 @@ public abstract class BakerTechTestConfig {
         return new Header("Authorization", token);
     }
 
-    protected Header eTag(final String url, final String username, final String password) {
+    protected static Header eTag(final String url, final String username, final String password) {
         String eTag = given()
                 .header(keycloakJwtToken(username, password))
                 .when()

@@ -114,7 +114,7 @@ const OrderEditForm: React.FC<OrderDetailsDisplayProps> = ({
                   ))}
               </Box>
             )}
-            {orderDetails?.orderType !== OrderType.NON_WARRANTY_REPAIR && (
+            {orderDetails?.orderType && (
               <Box flexGrow={1} className="center">
                 <Typography>{t("orders.devices")}</Typography>
                 <BasicButton

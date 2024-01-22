@@ -1,4 +1,4 @@
-package pl.lodz.p.it.bakertech.integration.accounts;
+package pl.lodz.p.it.bakertech.integration.rest.accounts;
 
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
@@ -9,7 +9,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.http.HttpStatus;
 import pl.lodz.p.it.bakertech.accounts.dto.accounts.account.AccessLevelsDTO;
-import pl.lodz.p.it.bakertech.integration.config.BakerTechTestConfig;
+import pl.lodz.p.it.bakertech.integration.config.BakerTechIntegrationTestConfig;
 import pl.lodz.p.it.bakertech.integration.util.TestAccount;
 import pl.lodz.p.it.bakertech.security.Roles;
 import pl.lodz.p.it.bakertech.validation.Messages;
@@ -20,7 +20,7 @@ import java.util.Set;
 import static io.restassured.RestAssured.given;
 import static pl.lodz.p.it.bakertech.integration.util.TestAccount.*;
 
-public class AccountModificationDataTests extends BakerTechTestConfig {
+public class AccountModificationDataTests extends BakerTechIntegrationTestConfig {
     public static List<TestAccount> allServicemen() {
         return List.of(CARL_JOHNSON, MARCIN_KRASUCKI);
     }
@@ -33,7 +33,6 @@ public class AccountModificationDataTests extends BakerTechTestConfig {
     @ParameterizedTest
     @MethodSource("allServicemen")
     void success_grantAndRevokeAccessLevel(TestAccount account) {
-        initDb();
         String eTagUrl = "/api/accounts/%s".formatted(account.id());
         Response response = given()
                 .when()
@@ -56,7 +55,6 @@ public class AccountModificationDataTests extends BakerTechTestConfig {
 
     @Test
     void success_changeAccountStatus() {
-        initDb();
         String url = "/api/accounts/%s/change-account-status".formatted(MARCIN_KRASUCKI.id());
         String eTagUrl = "/api/accounts/%s".formatted(MARCIN_KRASUCKI.id());
         Response response = given()
@@ -79,7 +77,6 @@ public class AccountModificationDataTests extends BakerTechTestConfig {
 
     @Test
     void error_cannotChangeStatusForOwnAccount() {
-        initDb();
         Response response = given()
                 .header(keycloakJwtToken(BAKERTECH_ADMIN.username(), BAKERTECH_ADMIN.password()))
                 .header(eTag(
@@ -95,7 +92,6 @@ public class AccountModificationDataTests extends BakerTechTestConfig {
 
     @Test
     void error_cannotAssignAccessLevelSelf() {
-        initDb();
         Response response = given()
                 .when()
                 .header(keycloakJwtToken(BAKERTECH_ADMIN.username(), BAKERTECH_ADMIN.password()))
@@ -112,7 +108,6 @@ public class AccountModificationDataTests extends BakerTechTestConfig {
 
     @Test
     void error_cannotRevokeOnlyOneAccessLevel() {
-        initDb();
         Response response = given()
                 .when()
                 .header(keycloakJwtToken(BAKERTECH_ADMIN.username(), BAKERTECH_ADMIN.password()))
@@ -129,7 +124,6 @@ public class AccountModificationDataTests extends BakerTechTestConfig {
 
     @Test
     void error_cannotAssignAccessLevelToClient() {
-        initDb();
         Response response = given()
                 .when()
                 .header(keycloakJwtToken(BAKERTECH_ADMIN.username(), BAKERTECH_ADMIN.password()))
@@ -145,7 +139,7 @@ public class AccountModificationDataTests extends BakerTechTestConfig {
     }
 
     @Test
-    void error_cannotVerifyETag() {
+    void error_cannotVerifyETagTest() {
         Response response = given()
                 .when()
                 .header(keycloakJwtToken(BAKERTECH_ADMIN.username(), BAKERTECH_ADMIN.password()))

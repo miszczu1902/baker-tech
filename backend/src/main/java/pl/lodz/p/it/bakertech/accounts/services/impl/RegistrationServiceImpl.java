@@ -11,10 +11,10 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import pl.lodz.p.it.bakertech.accounts.dto.register.RegisterAccountDTO;
-import pl.lodz.p.it.bakertech.accounts.dto.register.ConfirmAccountDTO;
 import pl.lodz.p.it.bakertech.accounts.dto.register.client.RegisterClientDTO;
 import pl.lodz.p.it.bakertech.accounts.excpetions.RegistrationException;
 import pl.lodz.p.it.bakertech.accounts.listeners.events.RegistrationEvent;
+import pl.lodz.p.it.bakertech.utils.DateUtility;
 import pl.lodz.p.it.bakertech.utils.mappers.accounts.AccountAndAccessLevelMapper;
 import pl.lodz.p.it.bakertech.utils.mappers.accounts.KeycloakMapper;
 import pl.lodz.p.it.bakertech.accounts.repositories.AccountConfirmationTokenRepository;
@@ -29,10 +29,7 @@ import pl.lodz.p.it.bakertech.model.accounts.accessLevels.client.Client;
 import pl.lodz.p.it.bakertech.utils.RandomValueGenerator;
 import pl.lodz.p.it.bakertech.validation.etag.ETagGenerator;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
-
-import static pl.lodz.p.it.bakertech.config.BakerTechConfig.TIMEZONE;
 
 @Service
 @Transactional(
@@ -94,7 +91,7 @@ public class RegistrationServiceImpl extends CommonService implements Registrati
 
         final String confirmationToken = prepareAccountConfirmationToken();
         accountConfirmationTokenRepository.saveAndFlush(
-                new AccountConfirmationToken(confirmationToken, LocalDateTime.now(TIMEZONE).plusDays(1), accountToRegistration));
+                new AccountConfirmationToken(confirmationToken, DateUtility.nowWithTimestamp().plusDays(1), accountToRegistration));
 
         AccessLevel accessLevel = accountToRegistration.getAccessLevels()
                 .stream()
@@ -121,17 +118,19 @@ public class RegistrationServiceImpl extends CommonService implements Registrati
 
     @Override
     @PreAuthorize("hasRole(@Roles.GUEST)")
-    public void confirmAccountRegistration(final ConfirmAccountDTO confirmAccount) {
+    public void confirmAccountRegistration(final String confirmationToken) {
         Optional<AccountConfirmationToken> confirmationTokenOptional = accountConfirmationTokenRepository
-                .findByConfirmationToken(confirmAccount.confirmationToken());
-
+                .findByConfirmationTokenEquals(confirmationToken);
         if (confirmationTokenOptional.isPresent()) {
             confirmAccount(confirmationTokenOptional.get());
             Account account = confirmationTokenOptional.get().getAccount();
-
             account.setIsActive(true);
             accountRepository.saveAndFlush(account);
             accountConfirmationTokenRepository.delete(confirmationTokenOptional.get());
+
+            UserRepresentation keycloakUserByUsername = getKeycloakUserByUsername(account.getUsername());
+            keycloakUserByUsername.setEnabled(true);
+            getKeycloakUserByUserId(keycloakUserByUsername.getId()).update(keycloakUserByUsername);
         } else {
             throw RegistrationException.createRegistrationException();
         }

@@ -51,6 +51,10 @@ const OrderDetailsDisplay: React.FC<OrderDetailsDisplayProps> = ({
   return (
     <div className="data-left-part">
       <p>
+        <b>{t("orders.id")}: </b>
+        {orderDetails?.id}
+      </p>
+      <p>
         <b>{t("orders.client")}: </b>
         {orderDetails?.client}
       </p>

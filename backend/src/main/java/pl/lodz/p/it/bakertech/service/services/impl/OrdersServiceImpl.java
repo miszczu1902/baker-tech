@@ -89,7 +89,10 @@ public class OrdersServiceImpl extends CommonService implements OrdersService {
                                             String client,
                                             Pageable pageable) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        boolean clientCondition = accessLevelServiceRepository.existsByAccessLevelNameAndAccount_Username(Roles.CLIENT, Optional.ofNullable(client).orElse(username));
+        boolean clientCondition = Optional.ofNullable(client).isPresent() &&
+                accessLevelServiceRepository.existsByAccessLevelNameAndAccount_Username(Roles.CLIENT, client)
+                && client.equals(username);
+
         if ((accessLevelServiceRepository.existsByAccessLevelNameAndAccount_Username(Roles.SERVICEMAN, username)
                 || accessLevelServiceRepository.existsByAccessLevelNameAndAccount_Username(Roles.ADMINISTRATOR, username)) || clientCondition) {
             Page<Order> orders = orderRepository
@@ -254,7 +257,6 @@ public class OrdersServiceImpl extends CommonService implements OrdersService {
                                                                 Boolean delayed,
                                                                 String client,
                                                                 Pageable pageable) {
-
         Page<Order> orders = orderRepository
                 .findAllForServicemanByLicenseIdAndStatusAndOrderTypeAndDelayedAndClient(
                         SecurityContextHolder.getContext().getAuthentication().getName(),
@@ -279,13 +281,11 @@ public class OrdersServiceImpl extends CommonService implements OrdersService {
         boolean clientCondition = accessLevelServiceRepository.existsByAccessLevelNameAndAccount_Username(Roles.CLIENT, username);
         Optional<Conservation> conservation = orderRepository.findConservationAfterSpecifiedConservation(conservationId);
 
-        if (!clientCondition || (conservation.isPresent() && username.equals(conservation.get()
-                .getClient()
-                .getAccount()
-                .getUsername()))) {
-            return conservation.map(value -> new NextConservationDTO(value.getId())).orElse(null);
-        } else {
+        return conservation.map(order -> {
+            if (!clientCondition || username.equals(conservation.get().getClient().getAccount().getUsername())) {
+                return conservation.map(value -> new NextConservationDTO(value.getId())).orElse(null);
+            }
             throw ForbiddenException.createException();
-        }
+        }).orElse(null);
     }
 }

@@ -10,7 +10,6 @@ import pl.lodz.p.it.bakertech.validation.constraint.service.Order;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-//TODO - dodać więcej takich walidatorów
 public class OrderValidator implements ConstraintValidator<Order, CreateOrderDTO> {
     @Override
     public void initialize(Order constraintAnnotation) {

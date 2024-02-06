@@ -7,6 +7,7 @@ import {
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import BasicButton from "../buttons/BasicButton";
+import React from "react";
 
 export interface FeedbackProps {
   isOpen: boolean;

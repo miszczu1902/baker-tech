@@ -14,6 +14,6 @@ import java.time.LocalDateTime;
 @Table(name = "warranty_repair")
 @DiscriminatorValue("WARRANTY_REPAIR")
 public class WarrantyRepair extends Order {
-    @Column(name = "last_date_of_device_service", nullable = false)
+    @Column(name = "last_date_of_device_service")
     private LocalDateTime lastDateOfDeviceService;
 }

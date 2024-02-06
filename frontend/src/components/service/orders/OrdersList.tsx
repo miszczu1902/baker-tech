@@ -255,7 +255,6 @@ const OrdersList = () => {
         onChangeAlert={handleParentIsOpenAlertState}
         requestData={getOrdersData()}
         afterSuccessHandling={success}
-        message={undefined}
       />
     </div>
   );

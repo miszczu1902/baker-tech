@@ -44,6 +44,6 @@ public class ETagGenerator {
                 .sorted()
                 .collect(Collectors.joining(","));
 
-        return "\"%s\"".formatted(BCrypt.hashpw(result, secret));
+        return "W/\"%s\"".formatted(BCrypt.hashpw(result, secret));
     }
 }

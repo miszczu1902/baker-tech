@@ -84,10 +84,10 @@ public class RegistrationServiceImpl extends CommonService implements Registrati
 
     @Override
     @PreAuthorize("hasAnyRole(@Roles.GUEST, @Roles.ADMINISTRATOR)")
-    public String registerAccount(final RegisterAccountDTO account) {
-        final Account accountToRegistration = accountAndAccessLevelMapper.accountEntityFromRegisterAccountDTO(account);
+    public Long registerAccount(final RegisterAccountDTO account) {
+        Account accountToRegistration = accountAndAccessLevelMapper.accountEntityFromRegisterAccountDTO(account);
         accountToRegistration.getPersonalData().setId(accountToRegistration);
-        accountRepository.saveAndFlush(accountToRegistration);
+        accountToRegistration = accountRepository.saveAndFlush(accountToRegistration);
 
         final String confirmationToken = prepareAccountConfirmationToken();
         accountConfirmationTokenRepository.saveAndFlush(
@@ -111,7 +111,7 @@ public class RegistrationServiceImpl extends CommonService implements Registrati
                         account.getUsername(),
                         password));
             }
-            return account.getUsername();
+            return accountToRegistration.getId();
         }
         throw AppException.createKeycloakException();
     }

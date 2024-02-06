@@ -1,10 +1,11 @@
 import {
+  LOGOUT,
   SET_AVAILABLE_ROLES,
   SET_CURRENT_ROLE,
   SET_CURRENT_USER,
   SET_ETAG,
   SET_LANGUAGE,
-  SET_TOKEN,
+  SET_TOKEN
 } from "./actions";
 import { Roles } from "../../security/Roles";
 import { Languages } from "../../types/Languages";
@@ -26,7 +27,9 @@ export const setAvailableRoles = (availableRoles: Roles[]) => {
 };
 
 export const setCurrentUser = (currentUser: string | undefined) => {
-  localStorage.setItem("currentUser", Roles.GUEST);
+  if (typeof currentUser === "string") {
+    localStorage.setItem("currentUser", currentUser);
+  }
   return {
     type: SET_CURRENT_USER,
     payload: currentUser,
@@ -44,6 +47,8 @@ export const setLanguage = (language: Languages) => {
 export const setToken = (token: string | undefined) => {
   if (typeof token === "string") {
     localStorage.setItem("token", token);
+  } else {
+    localStorage.removeItem("token");
   }
   return {
     type: SET_TOKEN,
@@ -58,5 +63,13 @@ export const setETag = (etag: string | undefined) => {
   return {
     type: SET_ETAG,
     payload: etag,
+  };
+};
+
+export const setLogout = (data: any) => {
+  localStorage.clear();
+  return {
+    type: LOGOUT,
+    payload: data,
   };
 };

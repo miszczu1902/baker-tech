@@ -12,17 +12,17 @@ import java.time.format.DateTimeFormatter;
 public class BakerTechConfig {
     public static DateTimeFormatter DATE_TIME_FORMATTER;
     public static ZoneId TIMEZONE;
-    public static String API_URI;
+    public static String APP_URI;
     public static final MathContext ROUNDING_PRECISION = new MathContext(2);
 
     @Autowired
     public BakerTechConfig(
             @Value("${bakertech.datetime.format}") String dateTimeFormatter,
             @Value("${bakertech.timezone}") String timezone,
-            @Value("${bakertech.api.uri}") String authUri
+            @Value("${bakertech.frontend.url}") String authUri
     ) {
         DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern(dateTimeFormatter);
         TIMEZONE = ZoneId.of(timezone);
-        API_URI = authUri;
+        APP_URI = authUri;
     }
 }

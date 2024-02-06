@@ -89,20 +89,27 @@ public class OrdersServiceImpl extends CommonService implements OrdersService {
                                             String client,
                                             Pageable pageable) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        boolean clientCondition = Optional.ofNullable(client).isPresent() &&
-                accessLevelServiceRepository.existsByAccessLevelNameAndAccount_Username(Roles.CLIENT, client)
-                && client.equals(username);
-
-        if ((accessLevelServiceRepository.existsByAccessLevelNameAndAccount_Username(Roles.SERVICEMAN, username)
-                || accessLevelServiceRepository.existsByAccessLevelNameAndAccount_Username(Roles.ADMINISTRATOR, username)) || clientCondition) {
-            Page<Order> orders = orderRepository
-                    .findAllByLicenseIdAndStatusAndOrderTypeAndDelayedAndClient(
-                            licenseId,
-                            status,
-                            orderType,
-                            delayed,
-                            clientCondition ? username : client,
-                            pageable);
+        boolean responseCondition = Roles.getAuthenticatedRoles()
+                .stream()
+                .anyMatch(role -> role.equals(Roles.CLIENT)
+                        ? (Optional.ofNullable(client).isPresent() && client.equals(username))
+                        : accessLevelServiceRepository.existsByAccessLevelNameAndAccount_Username(role, username)
+                );
+        if (responseCondition) {
+            Page<Order> orders;
+            if (accessLevelServiceRepository.existsByAccessLevelNameAndAccount_Username(Roles.CLIENT, username)
+                    && (Optional.ofNullable(client).isPresent() && client.equals(username))) {
+                orders = orderRepository.findAllForClient(status, orderType, delayed, client, pageable);
+            } else {
+                orders = orderRepository
+                        .findAllByLicenseIdAndStatusAndOrderTypeAndDelayedAndClient(
+                                licenseId,
+                                status,
+                                orderType,
+                                delayed,
+                                client,
+                                pageable);
+            }
             return new PageImpl<>(orders.get()
                     .map(orderMapper::orderEntityToOrderListData)
                     .toList(),
@@ -191,15 +198,19 @@ public class OrdersServiceImpl extends CommonService implements OrdersService {
                                         .multiply(forSettlement.duration(), ROUNDING_PRECISION));
                         Optional.ofNullable(forSettlement.devices())
                                 .ifPresent(devices -> {
-                                    if (order.getOrderType() == OrderType.WARRANTY_REPAIR && devices.size() != 1) {
-                                        throw CannotAssignMoreDeviceToWarrantyRepairException.createException();
-                                    }
-
-                                    boolean allDevicesHasWarranty = devices.stream().allMatch(deviceRepository::existsByIdAndWarrantyEndedIsFalse);
-                                    if (allDevicesHasWarranty) {
-                                        orderData.getDevices().addAll(deviceRepository.findAllById(devices));
+                                    if (order.getOrderType() == OrderType.WARRANTY_REPAIR) {
+                                        if (devices.size() != 1) {
+                                            throw CannotAssignMoreDeviceToWarrantyRepairException.createException();
+                                        }
+                                        boolean allDevicesHasWarranty = devices.stream().allMatch(deviceRepository::existsByIdAndWarrantyEndedIsFalse);
+                                        if (allDevicesHasWarranty) {
+                                            orderData.getDevices().addAll(deviceRepository.findAllById(devices));
+                                        } else {
+                                            throw CannotAssignNonWarrantyDeviceToWarrantyRepairException.createException();
+                                        }
                                     } else {
-                                        throw CannotAssignNonWarrantyDeviceToWarrantyRepairException.createException();
+                                        devices.forEach(deviceId -> orderData.getDevices()
+                                                .add(deviceRepository.findById(deviceId).orElseThrow()));
                                     }
                                 });
                         if (order instanceof Conservation) {

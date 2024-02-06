@@ -23,7 +23,7 @@ import pl.lodz.p.it.bakertech.validation.etag.ETagGenerator;
 
 import java.net.URI;
 
-import static pl.lodz.p.it.bakertech.config.BakerTechConfig.API_URI;
+import static pl.lodz.p.it.bakertech.config.BakerTechConfig.APP_URI;
 
 @RestController
 @RequestMapping("/orders")
@@ -63,7 +63,7 @@ public class OrderController {
     @PreAuthorize("hasAnyRole(@Roles.SERVICEMAN, @Roles.CLIENT)")
     public ResponseEntity<Void> createOrder(@Valid @RequestBody final CreateOrderDTO createOrder) {
         return ResponseEntity.created(
-                URI.create("%s/orders/%s".formatted(API_URI, ordersService.createOrder(createOrder)))
+                URI.create("%s/orders/%s".formatted(APP_URI, ordersService.createOrder(createOrder)))
         ).build();
     }
 

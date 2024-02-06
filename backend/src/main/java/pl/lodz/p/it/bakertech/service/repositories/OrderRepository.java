@@ -30,18 +30,29 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     boolean existsByIdAndServiceman_AccessLevelNameAndServiceman_Account_Username(Long id, String accessLevelName, String username);
 
-    @Query("SELECT o FROM Order o WHERE" +
-            "(:licenseId IS NULL OR o.serviceman.licenseId = :licenseId) AND " +
+    @Query("SELECT o FROM Order o LEFT JOIN o.serviceman WHERE" +
+            "((CAST(:status as string) = 'OPEN' AND o.serviceman IS NULL) OR :licenseId IS NULL OR o.serviceman.licenseId = :licenseId) AND " +
             "(:status IS NULL OR o.status = :status) AND " +
             "(:orderType IS NULL OR o.orderType = :orderType) AND " +
             "(:delayed IS NULL OR o.delayed = :delayed) AND " +
-            "(:client IS NULL OR o.client.account.username LIKE %:client%)")
+            "(:client IS NULL OR o.client.account.username = :client)")
     Page<Order> findAllByLicenseIdAndStatusAndOrderTypeAndDelayedAndClient(@Param("licenseId") Long licenseId,
                                                                            @Param("status") OrderStatus status,
                                                                            @Param("orderType") OrderType orderType,
                                                                            @Param("delayed") Boolean delayed,
                                                                            @Param("client") String client,
                                                                            Pageable pageable);
+
+    @Query("SELECT o FROM Order o LEFT JOIN o.serviceman WHERE" +
+            "(:status IS NULL OR o.status = :status) AND " +
+            "(:orderType IS NULL OR o.orderType = :orderType) AND " +
+            "(:delayed IS NULL OR o.delayed = :delayed) AND " +
+            "(:client IS NULL OR o.client.account.username = :client)")
+    Page<Order> findAllForClient(@Param("status") OrderStatus status,
+                                 @Param("orderType") OrderType orderType,
+                                 @Param("delayed") Boolean delayed,
+                                 @Param("client") String client,
+                                 Pageable pageable);
 
     @Query("SELECT o FROM Order o WHERE" +
             "(:username IS NULL OR o.serviceman.account.username = :username) AND " +

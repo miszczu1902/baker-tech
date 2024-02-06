@@ -5,19 +5,15 @@ import { useSelector } from "react-redux";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useTranslation } from "react-i18next";
 import { RootState } from "../../../redux/store";
-import LogoutButton from "../LogoutButton";
 import BackArrow from "../../buttons/BackArrow";
 import LanguageChoice from "../LanguageChoice";
 import { Roles } from "../../../security/Roles";
-import AccessLevelSwitch from "./AccessLevelSwitch";
 import Breadcrumb from "../Breadcrumb";
+import LogoutButton from "../LogoutButton";
 
 const Sidebar = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const currentUser = useSelector(
-    (state: RootState) => state.currentUser,
-  ).currentUser;
   const currentRole = useSelector(
     (state: RootState) => state.currentUser,
   ).currentRole;
@@ -74,8 +70,6 @@ const Sidebar = () => {
           </List>
         </div>
         <Breadcrumb />
-        <p className="sidebar-text">{currentUser}</p>
-        <AccessLevelSwitch />
         <LogoutButton />
       </Drawer>
       <div className="sidebar-content">

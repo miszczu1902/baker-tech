@@ -101,8 +101,8 @@ public class DeviceServiceImpl extends CommonService implements DeviceService {
 
     @Override
     @PreAuthorize("hasAnyRole(@Roles.ADMINISTRATOR, @Roles.SERVICEMAN)")
-    public Long addDeviceToService(final AddDeviceDTO deviceToAdd) {
-        return deviceRepository.saveAndFlush(deviceMapper.addDeviceToDeviceEntity(deviceToAdd)).getId();
+    public void addDeviceToService(final AddDeviceDTO deviceToAdd) {
+        deviceRepository.saveAndFlush(deviceMapper.addDeviceToDeviceEntity(deviceToAdd));
     }
 
     @Override

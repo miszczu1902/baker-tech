@@ -8,7 +8,7 @@ import { Provider } from "react-redux";
 import store from "./redux/store";
 import keycloak from "./keycloak/keycloak";
 import { ReactKeycloakProvider } from "@react-keycloak/web";
-import { catchEvent, setKeycloakCurrentUser } from "./keycloak/keycloakService";
+import {catchEvent, setKeycloakCurrentUser} from "./keycloak/keycloakService";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement,
@@ -19,6 +19,7 @@ root.render(
     authClient={keycloak}
     autoRefreshToken={true}
     onEvent={catchEvent}
+    onTokens={setKeycloakCurrentUser}
   >
     <Provider store={store}>
       <RouterProvider router={router} />

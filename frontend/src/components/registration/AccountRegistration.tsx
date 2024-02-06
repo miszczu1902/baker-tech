@@ -18,23 +18,18 @@ import { ALERT_AUTOHIDE } from "../../utils/consts";
 import Logo from "../icons/Logo";
 import NotificationHandler from "../response/NotificationHandler";
 import { delay } from "lodash";
-import {
-  setFirstPageRegistrationStatus,
-  setSecondPageRegistrationStatus,
-  setThirdPageRegistrationStatus
-} from "../../redux/actions/validationActions";
 
 const AccountRegistration = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const registrationData = useSelector(
-    (state: RootState) => state.registration,
+    (state: RootState) => state.registration
   );
   const currentRole = useSelector(
-    (state: RootState) => state.currentUser,
+    (state: RootState) => state.currentUser
   ).currentRole;
   const validPages = useSelector(
-    (state: RootState) => state.registrationValidations,
+    (state: RootState) => state.registrationValidations
   ) as RegistrationValidationPages;
   const dispatch = useDispatch();
   const amountOfPages = currentRole === Roles.GUEST ? 3 : (2 as number);
@@ -60,19 +55,14 @@ const AccountRegistration = () => {
         currentRole === Roles.GUEST
           ? ApiEndpoints.CLIENT_REGISTRATION_ENDPOINT
           : ApiEndpoints.ACCOUNT_REGISTRATION_ENDPOINT,
-      data: registrationData,
+      data: registrationData
     };
   };
 
   const success = () => {
-    dispatch(setFirstPageRegistrationStatus(undefined));
-    dispatch(setSecondPageRegistrationStatus(undefined));
-    dispatch(setThirdPageRegistrationStatus(undefined));
-    delay(() => {
-      currentRole === Roles.GUEST
-        ? navigate("/registration-passed")
-        : navigate("/accounts");
-    }, ALERT_AUTOHIDE);
+    if (currentRole === Roles.GUEST) {
+      navigate("/registration-passed");
+    }
   };
 
   const handleParentIsOpenState = (newState: boolean) => {
@@ -133,8 +123,8 @@ const AccountRegistration = () => {
               content={
                 currentPage === amountOfPages &&
                 ((amountOfPages === (2 as number) &&
-                  validPages.firstPage &&
-                  validPages.secondPage) ||
+                    validPages.firstPage &&
+                    validPages.secondPage) ||
                   (amountOfPages === 3 &&
                     validPages.firstPage &&
                     validPages.secondPage &&
@@ -159,7 +149,6 @@ const AccountRegistration = () => {
         onChangeAlert={handleParentIsOpenAlertState}
         requestData={getRequestData()}
         afterSuccessHandling={success}
-        message={"confirmation.confirmation.success"}
       />
     </div>
   );

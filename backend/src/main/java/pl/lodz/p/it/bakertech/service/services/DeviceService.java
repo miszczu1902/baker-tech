@@ -13,7 +13,7 @@ public interface DeviceService {
 
     DeviceListDataDTO getDevice(Long id);
 
-    Long addDeviceToService(AddDeviceDTO deviceToAdd);
+    void addDeviceToService(AddDeviceDTO deviceToAdd);
 
     void markEndedWarrantyForDevice(Long deviceId, String ifMatch);
 }

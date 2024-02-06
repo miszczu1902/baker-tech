@@ -39,7 +39,7 @@ const RegistrationPassed = () => {
     if (currentRole === Roles.GUEST && confirmationToken !== undefined) {
       fetchData();
     }
-  }, [confirmationToken]);
+  }, []);
 
   return (
     <div className="register-after">

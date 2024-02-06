@@ -10,7 +10,7 @@ export enum AlertType {
 
 export interface AlertProps {
   type?: AlertType;
-  content?: string;
+  content: any;
   open: boolean;
   onClose: () => void;
 }

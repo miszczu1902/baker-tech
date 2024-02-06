@@ -36,7 +36,8 @@
     "client": "Client dashboard",
     "queue": "Order's queue",
     "orders": "Orders",
-    "settings": "Settings"
+    "settings": "Settings",
+    "order": "Create order"
   },
   "tables": {
     "search": "Search",
@@ -62,7 +63,9 @@
     "disagree": "Close",
     "title": "Confirm operation execution",
     "confirmMessage": "Are you sure to confirm operation?",
-    "modification": "Data modification success"
+    "modification": "Data modification success",
+    "created": "Creation successful",
+    "success": "Request completed successfully"
   },
   "containers": {
     "back": "Go to previous page"
@@ -95,22 +98,6 @@
       "totalCost": "Invalid total cost value",
       "confirmationToken": "Invalid confirmation token"
     },
-    "cannot": {
-      "change": {
-        "statusSelf": "Cannot change account status yourself",
-        "accessLevelsSelf": "Cannot modify access levels yourself",
-        "oneAccessLevel": "Cannot remove access level when account has only one level assigned",
-        "warranty": "Cannot change warranty",
-        "order": "Cannot change order"
-      },
-      "assign": {
-        "nonWarrantyDevice": "Cannot assign non warranty device to warranty repair",
-        "moreWarrantyDevice": "Cannot assign nore than omne device to warranty repair"
-      },
-      "settle": {
-        "order": "Cannot settle order"
-      }
-    },
     "placeholder": {
       "username": "Incorrect username - 5 - 32 digits",
       "password": "Incorrect password - min. 8 digits, at least one normal and strong letter, special digit, number",
@@ -137,6 +124,22 @@
     },
     "violation": "The request contains restriction violations"
   },
+  "cannot": {
+    "change": {
+      "statusSelf": "Cannot change account status yourself",
+      "accessLevelsSelf": "Cannot modify access levels yourself",
+      "oneAccessLevel": "Cannot remove access level when account has only one level assigned",
+      "warranty": "Cannot change warranty",
+      "order": "Cannot change order"
+    },
+    "assign": {
+      "nonWarrantyDevice": "Cannot assign non warranty device to warranty repair",
+      "moreWarrantyDevice": "Cannot assign more than one device to warranty repair"
+    },
+    "settle": {
+      "order": "Cannot settle order"
+    }
+  },
   "object": {
     "notFound": "Object not found",
     "notUnique": "Object not unique"
@@ -146,7 +149,8 @@
     "unauthorized": "Login failed",
     "forbidden": "No permission to resource",
     "notFound": "Resource not found",
-    "badRequest": "Sent request was incorrect"
+    "badRequest": "Sent request was incorrect",
+    "contentChanged": "Content of page was changed before request"
   },
   "registration": {
     "register": "Register",
@@ -254,7 +258,7 @@
     "assignedToServiceman": "Assigned to me",
     "warrantyEnded": "Ended warranty",
     "warrantyNotEnded": "Not Ended warranty",
-    "continue" : "Continue conservation*",
+    "continue": "Continue conservation*",
     "devices": "Select devices*",
     "devicesList": "Devices"
   },
@@ -278,5 +282,19 @@
       "warrantyDevices": "Number of devices serviced under warranty",
       "executedOrders": "Number of completed orders for the client"
     }
+  },
+  "months": {
+    "1": "January",
+    "2": "February",
+    "3": "March",
+    "4": "April",
+    "5": "May",
+    "6": "June",
+    "7": "July",
+    "8": "August",
+    "9": "September",
+    "10": "October",
+    "11": "November",
+    "12": "December"
   }
 }

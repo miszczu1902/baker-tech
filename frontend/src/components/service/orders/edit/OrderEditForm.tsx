@@ -123,6 +123,8 @@ const OrderEditForm: React.FC<OrderDetailsDisplayProps> = ({
                 />
                 <ListSelectContainer
                   toCreation={false}
+                  deviceForConservation={false}
+                  deviceForSelect={true}
                   isOpen={isOpenConfig}
                   onConfirm={() => {
                     setIsOpenConfig(false);

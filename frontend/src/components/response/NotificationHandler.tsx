@@ -3,9 +3,8 @@ import BasicAlert, { AlertType } from "../feedback/BasicAlert";
 import React, { useEffect, useState } from "react";
 import { RequestData } from "../../api/RequestData";
 import { RequestService } from "../../api/RequestService";
-import { ErrorResponseData } from "../../api/ErrorResponseData";
 import { useTranslation } from "react-i18next";
-import { logout } from "../../keycloak/keycloakService";
+import { ErrorResponseData } from "../../api/ErrorResponseData";
 
 export interface NotificationHandlerProps {
   isOpenConfirm: boolean;
@@ -18,14 +17,13 @@ export interface NotificationHandlerProps {
 }
 
 const NotificationHandler: React.FC<NotificationHandlerProps> = ({
-                                                                   isOpenConfirm,
-                                                                   onChangeConfirm,
-                                                                   isOpenAlert,
-                                                                   onChangeAlert,
-                                                                   message,
-                                                                   requestData,
-                                                                   afterSuccessHandling
-                                                                 }) => {
+  isOpenConfirm,
+  onChangeConfirm,
+  isOpenAlert,
+  onChangeAlert,
+  requestData,
+  afterSuccessHandling,
+}) => {
   const { t } = useTranslation();
   const requestService = RequestService.getInstance();
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -33,13 +31,14 @@ const NotificationHandler: React.FC<NotificationHandlerProps> = ({
   const [responseType, setResponseType] = useState<AlertType>();
   const [errorResponseData, setErrorResponseData] =
     useState<ErrorResponseData>();
-  const [msg, setMsg] = useState<string>(message as string);
+  const [msg, setMsg] = useState<string>();
 
   const handleSubmit = () => {
     requestService
       .sendRequestAndGetResponse(requestData as RequestData)
       .then(success => {
         setResponseType(AlertType.SUCCESS);
+        setMsg("alerts.success");
         if (afterSuccessHandling) {
           afterSuccessHandling(success);
         }
@@ -47,7 +46,7 @@ const NotificationHandler: React.FC<NotificationHandlerProps> = ({
       .catch((error) => {
         setResponseType(AlertType.ERROR);
         setErrorResponseData(error);
-        setMsg(errorResponseData?.message as string);
+        setMsg(error?.message as string);
       })
       .finally(() => {
         handleLocalIsOpenState();
@@ -70,7 +69,7 @@ const NotificationHandler: React.FC<NotificationHandlerProps> = ({
   useEffect(() => {
     setIsOpen(isOpenConfirm ? isOpenConfirm : false);
     setAlertOpen(isOpenAlert);
-  }, [isOpenConfirm, isOpenAlert]);
+  }, [isOpenConfirm, isOpenAlert, msg]);
 
   return (
     <div>
@@ -83,7 +82,7 @@ const NotificationHandler: React.FC<NotificationHandlerProps> = ({
         type={responseType}
         open={alertOpen}
         onClose={handleLocalIsOpenAlertState}
-        content={t(msg)}
+        content={msg}
       />
     </div>
   );

@@ -11,7 +11,7 @@ import pl.lodz.p.it.bakertech.accounts.services.RegistrationService;
 
 import java.net.URI;
 
-import static pl.lodz.p.it.bakertech.config.BakerTechConfig.API_URI;
+import static pl.lodz.p.it.bakertech.config.BakerTechConfig.APP_URI;
 
 @RestController
 @RequestMapping("/auth")
@@ -25,7 +25,7 @@ public class RegistrationController {
                                                @RequestHeader("Accept-Language") final String language) {
         client.setLanguage(language);
         return ResponseEntity.created(
-                URI.create("%s/%s".formatted(API_URI, registrationService.registerAccount(client)))
+                URI.create("%s/%s".formatted(APP_URI, registrationService.registerAccount(client)))
         ).build();
     }
 
@@ -35,7 +35,7 @@ public class RegistrationController {
                                                    @RequestHeader("Accept-Language") final String language) {
         serviceman.setLanguage(language);
         return ResponseEntity.created(
-                URI.create("%s/accounts/%s".formatted(API_URI, registrationService.registerAccount(serviceman)))
+                URI.create("%s/accounts/%s".formatted(APP_URI, registrationService.registerAccount(serviceman)))
         ).build();
     }
 

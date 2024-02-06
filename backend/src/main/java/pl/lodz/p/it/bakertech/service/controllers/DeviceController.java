@@ -17,7 +17,7 @@ import pl.lodz.p.it.bakertech.validation.etag.ETagGenerator;
 
 import java.net.URI;
 
-import static pl.lodz.p.it.bakertech.config.BakerTechConfig.API_URI;
+import static pl.lodz.p.it.bakertech.config.BakerTechConfig.APP_URI;
 
 @RestController
 @RequestMapping("/devices")
@@ -53,9 +53,8 @@ public class DeviceController {
     @PostMapping
     @PreAuthorize("hasAnyRole(@Roles.ADMINISTRATOR, @Roles.SERVICEMAN)")
     public ResponseEntity<Page<DeviceListDataDTO>> addDeviceToService(@Valid @RequestBody final AddDeviceDTO addDevice) {
-        return ResponseEntity.created(
-                URI.create("%s/devices/%s".formatted(API_URI, deviceService.addDeviceToService(addDevice)))
-        ).build();
+        deviceService.addDeviceToService(addDevice);
+        return ResponseEntity.created(URI.create("%s/devices".formatted(APP_URI))).build();
     }
 
     @PostMapping("/{id}/mark-ended-warranty")

@@ -21,7 +21,8 @@ import pl.lodz.p.it.bakertech.reports.repositories.projections.PercentageOrdersP
 public interface ServicemanReportsRepository extends JpaRepository<Order, Long> {
     @Query("SELECT AVG(o.orderData.duration) FROM Order o " +
             "WHERE o.serviceman.account.username = :username AND " +
-            "(:month IS NULL OR MONTH(o.dateOfOrderExecution) = :month OR :year IS NULL OR YEAR(o.dateOfOrderExecution) = :year)")
+            "(:month IS NULL OR MONTH(o.dateOfOrderExecution) = :month) AND " +
+            "(:year IS NULL OR YEAR(o.dateOfOrderExecution) = :year)")
     Double getAverageOrderTimeExecutionForServiceman(@Param("month") Integer month,
                                                      @Param("year") Integer year,
                                                      @Param("username") String username);

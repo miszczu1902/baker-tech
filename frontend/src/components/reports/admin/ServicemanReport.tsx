@@ -58,7 +58,7 @@ const ServicemanReport = () => {
       .then(success)
       .catch(() => {
         dispatch(setOpenConfirm(false));
-        dispatch(setOpenAlert(true));
+        dispatch(setOpenAlert(false));
       });
   }, [date, currentPage, totalPages]);
 

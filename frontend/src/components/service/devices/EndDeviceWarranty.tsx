@@ -72,7 +72,6 @@ const EndDeviceWarranty: React.FC<EndDeviceWarrantyProps> = ({ id }) => {
         isOpenAlert={isOpenAlert}
         onChangeAlert={handleParentIsOpenAlertState}
         requestData={endWarrantyRequestData()}
-        message={"alerts.modification"}
         afterSuccessHandling={redirectToList}
       />
     </div>

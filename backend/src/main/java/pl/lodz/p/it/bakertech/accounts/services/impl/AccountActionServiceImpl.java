@@ -96,6 +96,7 @@ public class AccountActionServiceImpl extends CommonService implements AccountAc
                                     accountToUpdate.getAccessLevels().addAll(accessLevelsToManage);
                                 } else {
                                     accountToUpdate.getAccessLevels().removeAll(accessLevelsToManage);
+                                    accessLevelRepository.deleteAll(accessLevelsToManage);
                                 }
                                 accountRepository.saveAndFlush(accountToUpdate);
 

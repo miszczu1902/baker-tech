@@ -68,3 +68,4 @@ document/**
 
 **/db/init_keycloak.sql
 frontend/.env
+backend/build_and_push.sh

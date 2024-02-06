@@ -7,23 +7,28 @@ import { useNavigate, useParams } from "react-router-dom";
 import { RequestService } from "../../../../api/RequestService";
 import { RequestData, RequestMethod } from "../../../../api/RequestData";
 import { ApiEndpoints } from "../../../../api/ApiEndpoints";
-import { setOpenAlert, setOpenConfirm } from "../../../../redux/actions/notificationActions";
+import {
+  setOpenAlert,
+  setOpenConfirm,
+} from "../../../../redux/actions/notificationActions";
 import { NextConservation } from "../../../../types/service/orders/NextConservation";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
 import ListSelectContainer from "../../../containers/ListSelectContainer";
+import { OrderStatus } from "../../../../types/service/orders/OrderStatus";
 
 export interface OrderDetailsDisplayProps {
   orderDetails?: OrderDetails;
 }
 
 const OrderDetailsDisplay: React.FC<OrderDetailsDisplayProps> = ({
-                                                                   orderDetails
-                                                                 }) => {
+  orderDetails,
+}) => {
   const { id } = useParams();
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const orderInEdition = useSelector((state: RootState) => state.orderState).orderInEdition as boolean;
+  const orderInEdition = useSelector((state: RootState) => state.orderState)
+    .orderInEdition as boolean;
   const dispatch = useDispatch();
   const requestService = RequestService.getInstance();
   const [isOpenConfig, setIsOpenConfig] = useState<boolean>(false);
@@ -32,20 +37,21 @@ const OrderDetailsDisplay: React.FC<OrderDetailsDisplayProps> = ({
   const getNextConservationRequestData = (): RequestData => {
     return {
       method: RequestMethod.GET,
-      endpoint: ApiEndpoints.GET_NEXT_CONSERVATION.replace(":id", id as string)
+      endpoint: ApiEndpoints.GET_NEXT_CONSERVATION.replace(":id", id as string),
     };
   };
 
   useEffect(() => {
-    requestService
-      .sendRequestAndGetResponse<NextConservation>(
-        getNextConservationRequestData()
-      )
-      .then(response => setNextConservation(response))
-      .catch(() => {
-        dispatch(setOpenConfirm(false));
-        dispatch(setOpenAlert(true));
-      });
+    if (
+      orderDetails?.orderType === OrderType.CONSERVATION &&
+      orderDetails?.status === OrderStatus.CLOSED
+    ) {
+      requestService
+        .sendRequestAndGetResponse<NextConservation>(
+          getNextConservationRequestData(),
+        )
+        .then((response) => setNextConservation(response));
+    }
   }, [orderInEdition, id]);
 
   return (
@@ -91,7 +97,7 @@ const OrderDetailsDisplay: React.FC<OrderDetailsDisplayProps> = ({
                   content={t("buttons.display")}
                   onClick={() =>
                     navigate(
-                      `/orders/${orderDetails?.conservation?.lastConservation}`
+                      `/orders/${orderDetails?.conservation?.lastConservation}`,
                     )
                   }
                 />
@@ -103,7 +109,8 @@ const OrderDetailsDisplay: React.FC<OrderDetailsDisplayProps> = ({
             {nextConservation
               ? `${t("orders.nextConservation")}: `
               : orderDetails?.orderType === OrderType.CONSERVATION &&
-              `${t("orders.dateOfNextDeviceConservation")}: `}
+                orderDetails.status === OrderStatus.CLOSED &&
+                `${t("orders.dateOfNextDeviceConservation")}: `}
             {nextConservation ? (
               <BasicButton
                 content={t("buttons.display")}
@@ -114,7 +121,7 @@ const OrderDetailsDisplay: React.FC<OrderDetailsDisplayProps> = ({
             ) : (
               orderDetails?.orderType === OrderType.CONSERVATION &&
               orderDetails?.conservation?.dateOfNextDeviceConservation.split(
-                "T"
+                "T",
               )[0]
             )}
           </b>
@@ -126,13 +133,18 @@ const OrderDetailsDisplay: React.FC<OrderDetailsDisplayProps> = ({
             orderDetails?.warrantyRepair?.lastDateOfDeviceService.split("T")[0]}
         </p>
         <p>
-          <b>{`${t("orders.devicesList")}: `}
+          <b>
+            {`${t("orders.devicesList")}: `}
             <BasicButton
               content={t("buttons.display")}
               onClick={() => setIsOpenConfig(true)}
             />
             <ListSelectContainer
               toCreation={false}
+              deviceForConservation={
+                orderDetails?.orderType === OrderType.CONSERVATION
+              }
+              deviceForSelect={false}
               isOpen={isOpenConfig}
               onConfirm={() => {
                 setIsOpenConfig(false);

@@ -12,8 +12,6 @@ import {
   FormControlLabel,
 } from "@mui/material";
 import { OrderType } from "../../../types/service/orders/OrderType";
-import { delay } from "lodash";
-import { ALERT_AUTOHIDE } from "../../../utils/consts";
 import BasicButton from "../../buttons/BasicButton";
 import ContainerRow, { InputType } from "../../containers/ContainerRow";
 import {
@@ -23,17 +21,21 @@ import {
 import { useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
 import { Roles } from "../../../security/Roles";
-import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { DatePicker, LocalizationProvider, plPL } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { Dayjs } from "dayjs";
+import dayjs from "dayjs";
 import ListSelectContainer from "../../containers/ListSelectContainer";
 import NotificationHandler from "../../response/NotificationHandler";
+import { Languages } from "../../../types/Languages";
+import "dayjs/locale/pl";
 
 const CreateOrder = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const currentRole = useSelector((state: RootState) => state.currentUser)
     .currentRole as Roles;
+  const language = useSelector((state: RootState) => state.currentUser)
+    .language as Languages;
   const currentUser = useSelector(
     (state: RootState) => state.currentUser.currentUser,
   );
@@ -143,6 +145,8 @@ const CreateOrder = () => {
             />
             <ListSelectContainer
               toCreation={true}
+              deviceForConservation={false}
+              deviceForSelect={true}
               isOpen={isOpenConfig}
               onConfirm={() => setIsOpenConfig(false)}
               onClose={() => {
@@ -153,14 +157,20 @@ const CreateOrder = () => {
           </div>
         )}
         <div className="data-edit-row with-padding center">
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            {orderType === OrderType.CONSERVATION && (
+          {orderType === OrderType.CONSERVATION && (
+            <LocalizationProvider
+              dateAdapter={AdapterDayjs}
+              adapterLocale={language === Languages.pl ? "pl" : "en"}
+              localeText={
+                plPL.components.MuiLocalizationProvider.defaultProps.localeText
+              }
+            >
               <DatePicker
                 className="tiny"
                 label={`${t("orders.dateOfNextDeviceConservation")}*`}
-                format="MM-DD-YYYY"
+                format="DD-MM-YYYY"
                 name="next"
-                onChange={(value: Dayjs | null, context) =>
+                onChange={(value: dayjs.Dayjs | null) =>
                   setCreateOrder({
                     ...createOrder,
                     nextOrderData: {
@@ -169,14 +179,22 @@ const CreateOrder = () => {
                   })
                 }
               />
-            )}
-            {orderType === OrderType.WARRANTY_REPAIR && (
+            </LocalizationProvider>
+          )}
+          {orderType === OrderType.WARRANTY_REPAIR && (
+            <LocalizationProvider
+              dateAdapter={AdapterDayjs}
+              adapterLocale={language === Languages.pl ? "pl" : "en"}
+              localeText={
+                plPL.components.MuiLocalizationProvider.defaultProps.localeText
+              }
+            >
               <DatePicker
                 className="tiny"
                 label={`${t("orders.lastDateOfDeviceService")}*`}
-                format="MM-DD-YYYY"
+                format="DD-MM-YYYY"
                 name="last"
-                onChange={(value: Dayjs | null, context) =>
+                onChange={(value: dayjs.Dayjs | null) =>
                   setCreateOrder({
                     ...createOrder,
                     nextOrderData: {
@@ -185,8 +203,8 @@ const CreateOrder = () => {
                   })
                 }
               />
-            )}
-          </LocalizationProvider>
+            </LocalizationProvider>
+          )}
         </div>
         <div>
           <BasicButton
@@ -206,12 +224,8 @@ const CreateOrder = () => {
           requestData={getRequestData()}
           afterSuccessHandling={() => {
             handleParentIsOpenAlertState(true);
-            setCreateOrder({
-              orderType: orderType,
-            } as CreateOrderType);
-            delay(() => navigate("/orders"), ALERT_AUTOHIDE / 3);
+            setCreateOrder({});
           }}
-          message={"alerts.modification"}
         />
       </FormControl>
     </div>

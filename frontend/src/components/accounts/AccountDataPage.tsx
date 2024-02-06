@@ -193,7 +193,6 @@ const AccountDataPage: React.FC<AccountDataPageParams> = ({
         onChangeConfirm={handleParentIsOpenState}
         isOpenAlert={isOpenAlert}
         onChangeAlert={handleParentIsOpenAlertState}
-        message={"alerts.modification"}
         requestData={
           modifyAccessLevelsOpen
             ? getGrantOrRevokeLevelRequest()

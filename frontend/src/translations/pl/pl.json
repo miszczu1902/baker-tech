@@ -14,7 +14,7 @@
     "servicemen": "Serwisanci",
     "clients": "Klienci",
     "reports": "Raporty",
-    "queue": "Kolejka zgłoszeń",
+    "queue": "Kolejka zleceń",
     "orders": "Zlecenia",
     "order": "Utwórz zlecenie",
     "devices": "Urządzenia",
@@ -36,7 +36,8 @@
     "client": "Panel klienta",
     "queue": "Kolejka zgłoszeń",
     "orders": "Zlecenia",
-    "settings": "Ustawienia"
+    "settings": "Ustawienia",
+    "order": "Utwórz zlecenie"
   },
   "tables": {
     "search": "Szukaj",
@@ -62,7 +63,9 @@
     "disagree": "Zamknij",
     "title": "Potwierdź wykonanie operacji",
     "confirmMessage": "Czy na pewno chcesz zatwierdzić operację?",
-    "modification": "Udało się zmodyfikować dane"
+    "modification": "Udało się zmodyfikować dane",
+    "created": "Utworzenie obiektu powiodło się",
+    "success": "Żądanie zakończone sukcesem"
   },
   "containers": {
     "back": "Powrót do poprzedniej strony"
@@ -95,22 +98,6 @@
       "totalCost": "Niepoprawna wartość kosztu jednostkowego",
       "confirmationToken": "Niepoprawny żeton potwierdzenia"
     },
-    "cannot": {
-      "change": {
-        "statusSelf": "Nie można zmienić stanu konta samemu sobie",
-        "accessLevelsSelf": "Nie można zmienić poziomów dostępu samemu sobie",
-        "oneAccessLevel": "Nie można usunąć jedynego poziomu dostępu przypisanego do konta",
-        "warranty": "Nie można zmienić statusu gwarancji",
-        "order": "Nie udało się zmodyfikować zlecenia"
-      },
-      "assign": {
-        "nonWarrantyDevice": "Nie można przypisać urządzenia bez gwarancji do zlecenia gwarancyjnego",
-        "moreWarrantyDevice": "Do zlecenia gwarancyjnego można przypisać tylko jedno urządzenie"
-      },
-      "settle": {
-        "order": "Nie można rozliczyć zlecenia"
-      }
-    },
     "placeholder": {
       "username": "Niepoprawna nazwa użytkownika - od 5 do 32 znaków",
       "password": "Hasło nie spełnia wymagań - 8 znaków, duża i mała litera, cyfra, znak specjalny",
@@ -137,6 +124,22 @@
     },
     "violation": "Żądanie zawiera naruszenia ograniczeń"
   },
+  "cannot": {
+    "change": {
+      "statusSelf": "Nie można zmienić stanu konta samemu sobie",
+      "accessLevelsSelf": "Nie można zmienić poziomów dostępu samemu sobie",
+      "oneAccessLevel": "Nie można usunąć jedynego poziomu dostępu przypisanego do konta",
+      "warranty": "Nie można zmienić statusu gwarancji",
+      "order": "Nie udało się zmodyfikować zlecenia"
+    },
+    "assign": {
+      "nonWarrantyDevice": "Nie można przypisać urządzenia bez gwarancji do zlecenia gwarancyjnego",
+      "moreWarrantyDevice": "Do zlecenia gwarancyjnego można przypisać tylko jedno urządzenie"
+    },
+    "settle": {
+      "order": "Nie można rozliczyć zlecenia"
+    }
+  },
   "object": {
     "notFound": "Nie znaleziono obiektu",
     "notUnique": "Próba utworzenia nieunikalnego obiektu"
@@ -146,7 +149,8 @@
     "unauthorized": "Logowanie nie powiodło się",
     "forbidden": "Brak uprawnień do zasobu",
     "notFound": "Nie znaleziono zasobu",
-    "badRequest": "Wysłane żądanie jest nieprawidłowe"
+    "badRequest": "Wysłane żądanie jest nieprawidłowe",
+    "contentChanged": "Zawartość strony uległa zmianie przed wysłaniem żądania"
   },
   "registration": {
     "register": "Zarejestruj",
@@ -254,29 +258,43 @@
     "assignedToServiceman": "Przypisane do mnie",
     "warrantyEnded": "Zakończona gwarancja",
     "warrantyNotEnded": "Obowiązująca gwarancja",
-    "continue" : "Kontynuuj konserwację*",
+    "continue": "Kontynuuj konserwację*",
     "devices": "Wybierz urządzenia*",
     "devicesList": "Urządzenia"
   },
   "reports": {
     "admin": {
       "percentage": "Procentowy rozkład zleceń ze względu na rodzaj [%]",
-      "ordersStatuses": "Ilość zrealizowanych zleceń ze względu na status oraz opóźnienia w realizacji",
-      "orders": "Ilość zleceń zrealizowanych przez serwisantów"
+      "ordersStatuses": "Liczba zrealizowanych zleceń ze względu na status oraz opóźnienia w realizacji",
+      "orders": "Liczba zleceń zrealizowanych przez serwisantów"
     },
     "year": "Rok",
     "month": "Miesiąc",
     "serviceman": {
       "reportTitle": "Statystyki pracy serwisanta",
       "avgTime": "Średni czas poświęcony na realizację zlecenia [h]",
-      "exec": "Ilość zrealizowanych zleceń",
-      "type": "Najczęściej naprawiany rodzaj urządzeń oraz ilość naprawionych urządzeń danego typu"
+      "exec": "Liczba zrealizowanych zleceń",
+      "type": "Najczęściej naprawiany rodzaj urządzeń oraz Liczba naprawionych urządzeń danego typu"
     },
     "client": {
       "reportTitle": "Statystyki usług realizowanych dla klienta",
       "devices": "Lista serwisowanych urządzeń",
-      "warrantyDevices": "Ilość serwisowanych urządzeń na gwarancji",
-      "executedOrders": "Ilość zrealizowanych zleceń dla klienta"
+      "warrantyDevices": "Liczba serwisowanych urządzeń na gwarancji",
+      "executedOrders": "Liczba zrealizowanych zleceń dla klienta"
     }
+  },
+  "months": {
+    "1": "Styczeń",
+    "2": "Luty",
+    "3": "Marzec",
+    "4": "Kwiecień",
+    "5": "Maj",
+    "6": "Czerwiec",
+    "7": "Lipiec",
+    "8": "Sierpień",
+    "9": "Wrzesień",
+    "10": "Październik",
+    "11": "Listopad",
+    "12": "Grudzień"
   }
 }

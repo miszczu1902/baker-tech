@@ -77,6 +77,14 @@ body {
   float: left;
 }
 
+.default-navbar-items {
+  font-weight: bolder;
+  text-align: left;
+  color: $primary-color;
+  float: left;
+  display: inline !important;
+}
+
 .logo {
   scale: 0.7 !important;
   vertical-align: middle;

@@ -6,18 +6,23 @@ import {
 } from "@mui/material";
 import React from "react";
 import _ from "lodash";
+import { useTranslation } from "react-i18next";
 
 interface ContainerSelectProps {
   onChange: (arg: any) => void;
   values: string[];
   renderValue: string;
+  textLabels?: boolean;
 }
 
 const ContainerSelect: React.FC<ContainerSelectProps> = ({
   onChange,
   values,
   renderValue,
+  textLabels
 }) => {
+  const { t } = useTranslation();
+
   return (
     <FormControl className="data-select-item">
       <Select
@@ -32,7 +37,7 @@ const ContainerSelect: React.FC<ContainerSelectProps> = ({
           values.map((itemValue) => (
             <MenuItem key={itemValue} value={itemValue}>
               <Checkbox checked={itemValue === renderValue} />
-              {itemValue}
+              {textLabels ? t(`months.${itemValue}`) : itemValue}
             </MenuItem>
           ))}
       </Select>

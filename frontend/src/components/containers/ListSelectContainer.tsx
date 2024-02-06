@@ -8,12 +8,16 @@ import AccountsList from "../accounts/AccountsList";
 
 interface ListSelectContainerProps extends FeedbackProps {
   toCreation: boolean;
+  deviceForConservation: boolean;
+  deviceForSelect: boolean;
 }
 
 const ListSelectContainer: React.FC<ListSelectContainerProps> = ({
   toCreation,
   isOpen,
   onClose,
+  deviceForConservation,
+  deviceForSelect,
 }) => {
   const { t } = useTranslation();
 
@@ -28,7 +32,11 @@ const ListSelectContainer: React.FC<ListSelectContainerProps> = ({
         {toCreation ? (
           <AccountsList isSubSelectList={true} />
         ) : (
-          <DevicesList isSubSelectList={true} />
+          <DevicesList
+            isSubSelectList={true}
+            deviceForConservation={deviceForConservation}
+            deviceForSelect={deviceForSelect}
+          />
         )}
       </DialogContent>
       <DialogActions>

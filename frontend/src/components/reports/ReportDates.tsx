@@ -68,7 +68,7 @@ const ReportDates = () => {
       })
       .catch(() => {
         dispatch(setOpenConfirm(false));
-        dispatch(setOpenAlert(true));
+        dispatch(setOpenAlert(false));
       });
   }, [date]);
 
@@ -93,6 +93,7 @@ const ReportDates = () => {
             values={availableMonths}
             onChange={handleMonthChange}
             renderValue={date.month}
+            textLabels={true}
           />
         </Box>
       </Box>

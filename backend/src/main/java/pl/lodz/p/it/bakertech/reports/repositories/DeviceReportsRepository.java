@@ -43,7 +43,8 @@ public interface DeviceReportsRepository extends JpaRepository<Device, Long> {
             "JOIN od.devices d " +
             "WHERE o.client.account.username = :username " +
             "AND (:year IS NULL OR YEAR(o.dateOfOrderExecution) = :year) " +
-            "AND (:month IS NULL OR MONTH(o.dateOfOrderExecution) = :month)")
+            "AND (:month IS NULL OR MONTH(o.dateOfOrderExecution) = :month) " +
+            "GROUP BY d.brand, d.category, d.deviceName, d.serialNumber")
     Page<ServicedDevicesProjection> getDevicesServicedForClient(@Param("month") Integer month,
                                                                 @Param("year") Integer year,
                                                                 @Param("username") String username,

@@ -1,15 +1,11 @@
 import { RequestData } from "./RequestData";
-import axios, {
-  AxiosError,
-  AxiosRequestConfig,
-  InternalAxiosRequestConfig,
-  AxiosResponse,
-} from "axios";
+import axios, { AxiosError, AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from "axios";
 import { ErrorResponseData } from "./ErrorResponseData";
-import { API_URL, DEFAULT_TIMEOUT } from "../utils/consts";
+import { ALERT_AUTOHIDE, API_URL, DEFAULT_TIMEOUT } from "../utils/consts";
 import store from "../redux/store";
 import { Roles } from "../security/Roles";
 import { setETag } from "../redux/actions/authActions";
+import { delay } from "lodash";
 
 class RequestService {
   private axiosInstance = axios.create({
@@ -75,6 +71,9 @@ class RequestService {
     };
     return this.axiosInstance.request<T>(config).then((response) => {
       store.dispatch(setETag(response.headers["etag"]));
+      if (store.getState().currentUser.currentRole !== Roles.GUEST && response.status === 201) {
+        delay(() => window.location.href = response.headers["location"], ALERT_AUTOHIDE / 5);
+      }
       return response.data;
     });
   }

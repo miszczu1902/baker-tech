@@ -18,6 +18,7 @@ import pl.lodz.p.it.bakertech.utils.DateUtility;
 import pl.lodz.p.it.bakertech.validation.Messages;
 
 import static io.restassured.RestAssured.given;
+import static pl.lodz.p.it.bakertech.config.BakerTechConfig.APP_URI;
 import static pl.lodz.p.it.bakertech.integration.util.TestAccount.*;
 import static pl.lodz.p.it.bakertech.integration.util.TestOrder.*;
 
@@ -52,7 +53,7 @@ public class OrdersModificationDataTests extends BakerTechIntegrationTestConfig 
         String id = response.getHeaders()
                 .get("Location")
                 .getValue()
-                .replace("http://localhost:8080/api/orders/", "");
+                .replace("%s/api/orders/".formatted(APP_URI), "");
 
         response = given()
                 .header(keycloakJwtToken(CARL_JOHNSON.username(), CARL_JOHNSON.password()))

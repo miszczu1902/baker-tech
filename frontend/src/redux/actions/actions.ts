@@ -4,6 +4,7 @@ export const SET_CURRENT_USER = "SET_CURRENT_USER";
 export const SET_LANGUAGE = "SET_LANGUAGE";
 export const SET_TOKEN = "SET_TOKEN";
 export const SET_ETAG = "SET_ETAG";
+export const LOGOUT = "LOGOUT";
 
 export const SET_OPEN_CONFIRM = 'SET_OPEN_CONFIRM';
 export const SET_OPEN_ALERT = 'SET_OPEN_ALERT';

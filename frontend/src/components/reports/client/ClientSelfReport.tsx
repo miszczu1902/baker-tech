@@ -57,7 +57,7 @@ const ClientSelfReport = () => {
       .then(successWarrantyDevices)
       .catch(() => {
         dispatch(setOpenConfirm(false));
-        dispatch(setOpenAlert(true));
+        dispatch(setOpenAlert(false));
       });
     requestService
       .sendRequestAndGetResponse<NumberValue>(getExecutedOrdersRequest())

@@ -7,13 +7,14 @@ import {
   setAvailableRoles,
   setCurrentRole,
   setCurrentUser,
+  setLogout,
   setToken,
 } from "../redux/actions/authActions";
 import {
   AuthClientError,
   AuthClientEvent,
 } from "@react-keycloak/core/lib/types";
-import keycloak from "./keycloak";
+import { APP_URL } from "../utils/consts";
 
 export const login = (keycloak: Keycloak) => {
   keycloak.login().catch(() => {
@@ -22,17 +23,15 @@ export const login = (keycloak: Keycloak) => {
 };
 
 export const logout = async (keycloak: Keycloak) => {
-  keycloak.logout().then(() => {});
-  setUserDataOnNewToken(Roles.GUEST, undefined, undefined);
-  store.dispatch(setAvailableRoles([Roles.GUEST]));
-  window.location.href = "/";
+  keycloak.logout({ redirectUri: APP_URL }).then(() => {});
+  logoutAction();
 };
 
 export const setKeycloakCurrentUser = (token: any) => {
   if (token !== undefined) {
     let currentRole = store.getState().currentUser.currentRole;
     const roles = store.getState().currentUser.availableRoles;
-    const decodedToken = jwtDecode(token) as KeycloakTokenParsed;
+    const decodedToken = jwtDecode(token.token) as KeycloakTokenParsed;
     const availableRoles = _.intersection(
       decodedToken.realm_access?.roles as string[],
       Object.values(Roles),
@@ -58,14 +57,15 @@ export const setKeycloakCurrentUser = (token: any) => {
           }
         }
       }
-      store.dispatch(setAvailableRoles(availableRoles as Roles[]));
     }
-    setUserDataOnNewToken(currentRole, token, decodedToken);
+    setUserDataOnNewToken(
+      currentRole,
+      token,
+      decodedToken,
+      availableRoles as Roles[],
+    );
   } else {
-    store.dispatch(setCurrentRole(Roles.GUEST));
-    store.dispatch(setAvailableRoles([Roles.GUEST]));
-    store.dispatch(setCurrentUser(""));
-    store.dispatch(setToken(undefined));
+    logoutAction();
   }
 };
 
@@ -73,11 +73,13 @@ export const setUserDataOnNewToken = (
   role: Roles,
   token: any,
   decodedToken: KeycloakTokenParsed | undefined,
+  availableRoles: Roles[],
 ) => {
   const currentRole = store.getState().currentUser.currentRole;
   store.dispatch(setCurrentRole(role !== currentRole ? role : currentRole));
   store.dispatch(setCurrentUser(decodedToken?.preferred_username));
-  store.dispatch(setToken(token));
+  store.dispatch(setToken(token === undefined ? null : token.token));
+  store.dispatch(setAvailableRoles(availableRoles as Roles[]));
 };
 
 export const catchEvent = (
@@ -85,9 +87,14 @@ export const catchEvent = (
   error?: AuthClientError,
 ) => {
   switch (eventType) {
-    case "onAuthRefreshSuccess":
-    case "onAuthSuccess":
-      setKeycloakCurrentUser(keycloak.token);
+    case "onAuthLogout":
+      logoutAction();
       break;
   }
+};
+
+const logoutAction = () => {
+  localStorage.clear();
+  store.dispatch(setLogout("logout"));
+  setUserDataOnNewToken(Roles.GUEST, undefined, undefined, [Roles.GUEST]);
 };

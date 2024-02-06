@@ -42,7 +42,7 @@ const PercentageReport: React.FC<PercentageReportProps> = ({ path }) => {
       .then((response) => setPieChartData(response))
       .catch(() => {
         dispatch(setOpenConfirm(false));
-        dispatch(setOpenAlert(true));
+        dispatch(setOpenAlert(false));
       });
   }, [date]);
 

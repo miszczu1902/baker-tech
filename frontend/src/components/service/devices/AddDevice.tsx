@@ -1,9 +1,6 @@
 import { useTranslation } from "react-i18next";
 import React, { useEffect, useState } from "react";
-import {
-  validateDeviceDataField,
-  validateSerialNumber,
-} from "../../../utils/regexpValidator";
+import { validateDeviceDataField, validateSerialNumber } from "../../../utils/regexpValidator";
 import ContainerRow, { InputType } from "../../containers/ContainerRow";
 import { AddDeviceData } from "../../../types/service/devices/AddDeviceData";
 import NotificationHandler from "../../response/NotificationHandler";
@@ -12,14 +9,10 @@ import { ApiEndpoints } from "../../../api/ApiEndpoints";
 import BasicButton from "../../buttons/BasicButton";
 import { Checkbox, FormControl, FormControlLabel } from "@mui/material";
 import { DeviceCategory } from "../../../types/service/devices/DeviceCategory";
-import { ALERT_AUTOHIDE } from "../../../utils/consts";
 import { useNavigate } from "react-router-dom";
-import { delay } from "lodash";
 
 const AddDevice = () => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
-  const [device, setDevice] = useState<AddDeviceData>({});
   const [validDeviceName, setValidDeviceName] = useState<boolean>(false);
   const [validBrand, setValidBrand] = useState<boolean>(false);
   const [validSerialNumber, setValidSerialNumber] = useState<boolean>(false);
@@ -30,6 +23,10 @@ const AddDevice = () => {
   const [isOpenConfig, setIsOpenConfig] = useState<boolean>(false);
   const [isOpenAlert, setIsOpenAlert] = useState<boolean>(false);
   const [validAllData, setValidAllData] = useState<boolean>(false);
+  const [device, setDevice] = useState<AddDeviceData>({
+    warrantyEnded: warrantyEnded,
+    category: deviceCategory,
+  });
 
   const getRequestData = (): RequestData => {
     return {
@@ -102,8 +99,12 @@ const AddDevice = () => {
 
   const success = (arg: any) => {
     handleParentIsOpenAlertState(true);
-    setDevice({});
-    delay(() => navigate("/devices"), ALERT_AUTOHIDE);
+    setValidDeviceName(false);
+    setValidBrand(false);
+    setValidSerialNumber(false);
+    setDeviceCategory(DeviceCategory.MECHANICAL);
+    setValidDeviceName(false);
+    setWarrantyEnded(false);
   };
 
   useEffect(() => {
@@ -202,7 +203,6 @@ const AddDevice = () => {
           onChangeAlert={handleParentIsOpenAlertState}
           requestData={getRequestData()}
           afterSuccessHandling={success}
-          message={"alerts.modification"}
         />
       </FormControl>
     </div>

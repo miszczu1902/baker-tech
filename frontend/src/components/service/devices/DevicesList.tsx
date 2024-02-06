@@ -27,19 +27,21 @@ import { ListProps } from "../../containers/ListProps";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
 import { setDevicesForOrder } from "../../../redux/actions/editOrderActions";
-import {
-  setOpenAlert,
-  setOpenConfirm,
-} from "../../../redux/actions/notificationActions";
 
-const DevicesList: React.FC<ListProps> = ({ isSubSelectList }) => {
+interface DevicesListProps extends ListProps {
+  deviceForConservation: boolean;
+  deviceForSelect: boolean;
+}
+
+const DevicesList: React.FC<DevicesListProps> = ({
+  isSubSelectList,
+  deviceForConservation,
+  deviceForSelect,
+}) => {
   const { id } = useParams();
   const { t } = useTranslation();
   const requestService = RequestService.getInstance();
   const navigate = useNavigate();
-  const currentRole = useSelector(
-    (state: RootState) => state.currentUser,
-  ).currentRole;
   const devicesForOrder = useSelector((state: RootState) => state.editOrder)
     .forSettlement?.devices as number[];
   const dispatch = useDispatch();
@@ -54,7 +56,6 @@ const DevicesList: React.FC<ListProps> = ({ isSubSelectList }) => {
   const [warrantyNotEnded, setWarrantyNotEnded] = useState<boolean>();
 
   const getDevicesData = (): RequestData => {
-    console.log(id);
     let queryParams: Record<string, string | number | boolean> = {
       size: DEFAULT_PAGE_SIZE,
       page: currentPage - 1,
@@ -82,10 +83,11 @@ const DevicesList: React.FC<ListProps> = ({ isSubSelectList }) => {
 
     return {
       method: RequestMethod.GET,
-      endpoint: id
-        ? ApiEndpoints.GET_DEVICES_FOR_ORDER.replace(":id", id.toString())
-        : ApiEndpoints.GET_ALL_DEVICES,
-      queryParams: id ? undefined : queryParams,
+      endpoint:
+        id && !deviceForSelect
+          ? ApiEndpoints.GET_DEVICES_FOR_ORDER.replace(":id", id.toString())
+          : ApiEndpoints.GET_ALL_DEVICES,
+      queryParams: queryParams,
     };
   };
 
@@ -130,11 +132,7 @@ const DevicesList: React.FC<ListProps> = ({ isSubSelectList }) => {
   useEffect(() => {
     requestService
       .sendRequestAndGetResponse<ListData<DeviceData>>(getDevicesData())
-      .then(success)
-      .catch(() => {
-        dispatch(setOpenConfirm(false));
-        dispatch(setOpenAlert(true));
-      });
+      .then(success);
   }, [
     deviceCategory,
     sortBy,
@@ -148,7 +146,11 @@ const DevicesList: React.FC<ListProps> = ({ isSubSelectList }) => {
 
   return (
     <div
-      className={isSubSelectList ? "list-container normal" : "list-container"}
+      className={
+        isSubSelectList || deviceForSelect || deviceForConservation
+          ? "list-container normal"
+          : "list-container"
+      }
     >
       <div className="list-header-bar">
         {id === undefined && (
@@ -162,10 +164,13 @@ const DevicesList: React.FC<ListProps> = ({ isSubSelectList }) => {
             value={filter}
           />
         )}
-        {id === undefined && (
-          <p>
-            {[DeviceCategory.MECHANICAL, DeviceCategory.ELECTROMECHANICAL].map(
-              (category) => (
+        {isSubSelectList === undefined ||
+          (deviceForSelect && (
+            <p>
+              {[
+                DeviceCategory.MECHANICAL,
+                DeviceCategory.ELECTROMECHANICAL,
+              ].map((category) => (
                 <FormControlLabel
                   key={category}
                   control={
@@ -177,32 +182,37 @@ const DevicesList: React.FC<ListProps> = ({ isSubSelectList }) => {
                   }
                   label={t(`devices.${category.toLowerCase()}`)}
                 />
-              ),
-            )}
-            <FormControlLabel
-              key={warrantyEnded?.toString()}
-              control={
-                <Checkbox
-                  key={warrantyEnded?.toString()}
-                  checked={warrantyEnded}
-                  onChange={(e) => handleWarrantyEnded(e, !warrantyEnded)}
-                />
-              }
-              label={t(`orders.warrantyEnded`)}
-            />
-            <FormControlLabel
-              key={warrantyNotEnded?.toString()}
-              control={
-                <Checkbox
-                  key={warrantyNotEnded?.toString()}
-                  checked={warrantyNotEnded}
-                  onChange={(e) => handleWarrantyNotEnded(e, !warrantyNotEnded)}
-                />
-              }
-              label={t(`orders.warrantyNotEnded`)}
-            />
-          </p>
-        )}
+              ))}
+              <FormControlLabel
+                key={warrantyEnded?.toString()}
+                control={
+                  <Checkbox
+                    key={warrantyEnded?.toString()}
+                    checked={warrantyEnded}
+                    onChange={(e) => {
+                      handleWarrantyEnded(e, !warrantyEnded);
+                      handleWarrantyNotEnded(e, false);
+                    }}
+                  />
+                }
+                label={t(`orders.warrantyEnded`)}
+              />
+              <FormControlLabel
+                key={warrantyNotEnded?.toString()}
+                control={
+                  <Checkbox
+                    key={warrantyNotEnded?.toString()}
+                    checked={warrantyNotEnded}
+                    onChange={(e) => {
+                      handleWarrantyNotEnded(e, !warrantyNotEnded);
+                      handleWarrantyEnded(e, false);
+                    }}
+                  />
+                }
+                label={t(`orders.warrantyNotEnded`)}
+              />
+            </p>
+          ))}
       </div>
       <Table className="list-content">
         <TableHead>
@@ -231,7 +241,7 @@ const DevicesList: React.FC<ListProps> = ({ isSubSelectList }) => {
             >
               {t("devices.serialNumber")}
             </TableCell>
-            {!isSubSelectList && (
+            {isSubSelectList === undefined && (
               <TableCell
                 className="list-header"
                 onClick={(event) => handleSortBy(event, "warrantyEnded")}
@@ -246,12 +256,15 @@ const DevicesList: React.FC<ListProps> = ({ isSubSelectList }) => {
             <TableRow
               key={device.id}
               className={
-                isSubSelectList && devicesForOrder?.includes(device.id)
+                (!deviceForConservation ||
+                  isSubSelectList ||
+                  deviceForSelect) &&
+                devicesForOrder?.includes(device.id)
                   ? "list-row selected-row"
                   : "list-row"
               }
               onClick={() => {
-                if (isSubSelectList && id === undefined) {
+                if (isSubSelectList && deviceForSelect) {
                   dispatch(
                     setDevicesForOrder(
                       !devicesForOrder?.includes(device.id)
@@ -268,7 +281,7 @@ const DevicesList: React.FC<ListProps> = ({ isSubSelectList }) => {
                 {t(`devices.${device.category.toLowerCase()}`)}
               </TableCell>
               <TableCell>{device.serialNumber}</TableCell>
-              {!isSubSelectList && id === undefined && (
+              {isSubSelectList === undefined && (
                 <TableCell>
                   {device.warrantyEnded && t("devices.ended")}
                   {!device.warrantyEnded && (
@@ -309,7 +322,6 @@ const DevicesList: React.FC<ListProps> = ({ isSubSelectList }) => {
         onChangeAlert={handleParentIsOpenAlertState}
         requestData={getDevicesData()}
         afterSuccessHandling={success}
-        message={undefined}
       />
     </div>
   );

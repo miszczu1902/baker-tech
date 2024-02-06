@@ -96,7 +96,6 @@ const OrderActions: React.FC<OrderDetailsDisplayProps> = ({ orderDetails }) => {
         onChangeAlert={handleParentIsOpenAlertState}
         requestData={editOrderData()}
         afterSuccessHandling={() => handleParentIsOpenAlertState(true)}
-        message={"alerts.modification"}
       />
     </Box>
   );

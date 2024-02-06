@@ -21,7 +21,8 @@ i18n
   .use(HttpApi)
   .init({
     resources,
-    fallbackLng: Languages.pl,
+    fallbackLng: navigator.language || Languages.pl.toString(),
+    lng: navigator.language || Languages.pl.toString(),
     detection: {
       order: ["localStorage", "cookie", "htmlTag", "path", "subdomain"],
       caches: ["localStorage", "cookie"],

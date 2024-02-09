@@ -11,11 +11,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import { Roles } from "../../security/Roles";
 import { AccessLevelsToModification } from "../../types/accounts/AccessLevelsToModification";
-import NotificationHandler from "../response/NotificationHandler";
 import {
   setOpenAlert,
   setOpenConfirm,
 } from "../../redux/actions/notificationActions";
+import { APP_URL } from "../../utils/consts";
+import { Languages } from "../../types/Languages";
+import BasicButton from "../buttons/BasicButton";
+import NotificationHandler from "../response/NotificationHandler";
 
 interface AccountDataPageParams {
   request: RequestData;
@@ -29,6 +32,8 @@ const AccountDataPage: React.FC<AccountDataPageParams> = ({
   const requestService = RequestService.getInstance();
   const currentUser = useSelector((state: RootState) => state.currentUser)
     .currentUser as string;
+  const language = useSelector((state: RootState) => state.currentUser)
+    .language as Languages;
   const dispatch = useDispatch();
   const { id } = useParams();
   const { t } = useTranslation();
@@ -39,6 +44,7 @@ const AccountDataPage: React.FC<AccountDataPageParams> = ({
     useState<boolean>(false);
   const [changeStatusOpen, setChangeStatusOpen] = useState(false);
   const [modifyAccessLevelsOpen, setModifyAccessLevelsOpen] = useState(false);
+  const [resetPassword, setResetPassword] = useState(false);
   const [accountData, setAccountData] = useState<AccountData>();
   const [accessLevelToMod, setAccessLevelToMod] =
     useState<AccessLevelsToModification>();
@@ -59,6 +65,17 @@ const AccountDataPage: React.FC<AccountDataPageParams> = ({
             )
           : undefined,
       data: accessLevelToMod,
+    };
+  };
+
+  const getResetPasswordData = (): RequestData => {
+    let headers: Record<string, string> = {
+      "Accept-Language": language.toString(),
+    };
+    return {
+      method: RequestMethod.POST,
+      endpoint: ApiEndpoints.RESET_PASSWORD.replace(":id", id as string),
+      headers: headers,
     };
   };
 
@@ -104,6 +121,20 @@ const AccountDataPage: React.FC<AccountDataPageParams> = ({
         <p>{accountData?.username}</p>
         <h3>{t("accounts.email")}</h3>
         <p>{accountData?.email}</p>
+        {accountData?.username !== currentUser && (
+          <p>
+            <BasicButton
+              content={t("buttons.reset")}
+              onClick={() => {
+                handleParentIsOpenState(true);
+                handleParentIsOpenAlertState(false);
+                setChangeStatusOpen(false);
+                setModifyAccessLevelsOpen(false);
+                setResetPassword(true);
+              }}
+            />
+          </p>
+        )}
         <h3>{t("accounts.firstname")}</h3>
         <p>
           {`${accountData?.personalData?.firstname} ${accountData?.personalData?.lastname}`}
@@ -142,6 +173,7 @@ const AccountDataPage: React.FC<AccountDataPageParams> = ({
                 handleParentIsOpenAlertState(false);
                 setChangeStatusOpen(true);
                 setModifyAccessLevelsOpen(false);
+                setResetPassword(false);
               }
             }}
           />
@@ -168,6 +200,7 @@ const AccountDataPage: React.FC<AccountDataPageParams> = ({
                         handleParentIsOpenState(true);
                         handleParentIsOpenAlertState(false);
                         setChangeStatusOpen(false);
+                        setResetPassword(false);
                         setModifyAccessLevelsOpen(true);
                         setAccessLevelToMod({
                           accessLevels: [accessLevel],
@@ -198,7 +231,9 @@ const AccountDataPage: React.FC<AccountDataPageParams> = ({
             ? getGrantOrRevokeLevelRequest()
             : changeStatusOpen
               ? getChangeAccountStatusRequest()
-              : getAccountDataRequest()
+              : resetPassword
+                ? getResetPasswordData()
+                : getAccountDataRequest()
         }
         afterSuccessHandling={success}
       />

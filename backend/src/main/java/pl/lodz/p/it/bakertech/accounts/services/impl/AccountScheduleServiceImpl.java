@@ -4,6 +4,8 @@ import jakarta.ws.rs.core.Response;
 import org.keycloak.admin.client.Keycloak;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -14,6 +16,8 @@ import pl.lodz.p.it.bakertech.accounts.repositories.AccountRepository;
 import pl.lodz.p.it.bakertech.accounts.services.AccountScheduleService;
 import pl.lodz.p.it.bakertech.common.CommonService;
 import pl.lodz.p.it.bakertech.exceptions.AppException;
+import pl.lodz.p.it.bakertech.exceptions.KeycloakException;
+import pl.lodz.p.it.bakertech.exceptions.TransactionTimeoutException;
 import pl.lodz.p.it.bakertech.interceptors.schedule.ScheduledInterception;
 import pl.lodz.p.it.bakertech.model.accounts.Account;
 import pl.lodz.p.it.bakertech.model.accounts.AccountConfirmationToken;
@@ -33,6 +37,11 @@ import static pl.lodz.p.it.bakertech.utils.SchedulePeriods.PER_ONE_MINUTE;
         isolation = Isolation.READ_COMMITTED,
         rollbackFor = AppException.class,
         transactionManager = "accountsTransactionManager"
+)
+@Retryable(
+        retryFor = {TransactionTimeoutException.class, KeycloakException.class},
+        maxAttemptsExpression = "${bakertech.transaction.retry}",
+        backoff = @Backoff(delayExpression = "${bakertech.transaction.retry.delay}")
 )
 public class AccountScheduleServiceImpl extends CommonService implements AccountScheduleService {
     private final AccountRepository accountRepository;

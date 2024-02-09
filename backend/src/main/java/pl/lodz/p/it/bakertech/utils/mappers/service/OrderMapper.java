@@ -26,7 +26,9 @@ import java.util.stream.Collectors;
 public interface OrderMapper {
     @Mappings({
             @Mapping(target = "licenseId", source = "serviceman.licenseId"),
+            @Mapping(target = "servicemanId", source = "serviceman.account.id"),
             @Mapping(target = "client", source = "client.account.username"),
+            @Mapping(target = "clientId", source = "client.account.id"),
             @Mapping(target = "orderData.devices", ignore = true),
             @Mapping(target = "conservation", expression = "java(conservationEntityToConservationDTO(order))"),
             @Mapping(target = "warrantyRepair", expression = "java(warrantyRepairEntityToWarrantyRepairDTO(order))"),

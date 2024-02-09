@@ -60,11 +60,25 @@ const OrderDetailsDisplay: React.FC<OrderDetailsDisplayProps> = ({
         <b>{t("orders.id")}: </b>
         {orderDetails?.id}
       </p>
-      <p>
+      <p
+        className="navigate-account"
+        onClick={() => {
+          if (orderDetails?.clientId) {
+            window.location.href = `/accounts/${orderDetails?.clientId}`;
+          }
+        }}
+      >
         <b>{t("orders.client")}: </b>
         {orderDetails?.client}
       </p>
-      <p>
+      <p
+        className="navigate-account"
+        onClick={() => {
+          if (orderDetails?.servicemanId) {
+            window.location.href = `/accounts/${orderDetails?.servicemanId}`;
+          }
+        }}
+      >
         <b>{t("orders.serviceman")}: </b>
         {orderDetails?.licenseId}
       </p>
@@ -109,8 +123,7 @@ const OrderDetailsDisplay: React.FC<OrderDetailsDisplayProps> = ({
             {nextConservation
               ? `${t("orders.nextConservation")}: `
               : orderDetails?.orderType === OrderType.CONSERVATION &&
-                orderDetails.status === OrderStatus.CLOSED &&
-                `${t("orders.dateOfNextDeviceConservation")}: `}
+              `${t("orders.dateOfNextDeviceConservation")}: `}
             {nextConservation ? (
               <BasicButton
                 content={t("buttons.display")}
@@ -121,7 +134,7 @@ const OrderDetailsDisplay: React.FC<OrderDetailsDisplayProps> = ({
             ) : (
               orderDetails?.orderType === OrderType.CONSERVATION &&
               orderDetails?.conservation?.dateOfNextDeviceConservation.split(
-                "T",
+                "T"
               )[0]
             )}
           </b>

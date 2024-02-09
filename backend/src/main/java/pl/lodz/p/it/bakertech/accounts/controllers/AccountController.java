@@ -76,4 +76,12 @@ public class AccountController {
         accountActionService.manageAccessLevels(id, assignAccessLevel, false, ifMatch);
         return ResponseEntity.noContent().build();
     }
+
+    @PostMapping("/{id}/reset-password")
+    @PreAuthorize("hasRole(@Roles.ADMINISTRATOR)")
+    public ResponseEntity<Void> revokeAccessLevels(@PathVariable final Long id,
+                                                   @RequestHeader("Accept-Language") final String language) {
+        accountActionService.resetUserPassword(id, language);
+        return ResponseEntity.noContent().build();
+    }
 }

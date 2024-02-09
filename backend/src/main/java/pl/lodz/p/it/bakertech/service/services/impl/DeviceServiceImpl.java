@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import pl.lodz.p.it.bakertech.common.CommonService;
 import pl.lodz.p.it.bakertech.exceptions.AppException;
 import pl.lodz.p.it.bakertech.exceptions.ForbiddenException;
+import pl.lodz.p.it.bakertech.exceptions.TransactionTimeoutException;
 import pl.lodz.p.it.bakertech.model.service.devices.Device;
 import pl.lodz.p.it.bakertech.model.service.devices.DeviceCategory;
 import pl.lodz.p.it.bakertech.security.Roles;
@@ -37,6 +40,11 @@ import java.util.Collections;
         isolation = Isolation.READ_COMMITTED,
         rollbackFor = AppException.class,
         transactionManager = "businessTransactionManager"
+)
+@Retryable(
+        retryFor = TransactionTimeoutException.class,
+        maxAttemptsExpression = "${bakertech.transaction.retry}",
+        backoff = @Backoff(delayExpression = "${bakertech.transaction.retry.delay}")
 )
 public class DeviceServiceImpl extends CommonService implements DeviceService {
     private final DeviceRepository deviceRepository;

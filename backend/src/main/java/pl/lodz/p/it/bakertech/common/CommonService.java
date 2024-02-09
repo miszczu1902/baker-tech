@@ -6,9 +6,6 @@ import org.keycloak.admin.client.resource.RealmResource;
 import org.keycloak.admin.client.resource.UserResource;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.retry.annotation.Backoff;
-import org.springframework.retry.annotation.Retryable;
-import pl.lodz.p.it.bakertech.exceptions.TransactionTimeoutException;
 import pl.lodz.p.it.bakertech.interceptors.Interception;
 import pl.lodz.p.it.bakertech.interceptors.keycloak.KeycloakInterception;
 import pl.lodz.p.it.bakertech.utils.mappers.accounts.KeycloakMapper;
@@ -18,15 +15,13 @@ import pl.lodz.p.it.bakertech.validation.etag.ETagGenerator;
 @Slf4j
 @Interception
 @KeycloakInterception
-@Retryable(
-        retryFor = TransactionTimeoutException.class,
-        maxAttemptsExpression = "${bakertech.transaction.retry}",
-        backoff = @Backoff(delayExpression = "${bakertech.transaction.retry.delay}")
-)
 public abstract class CommonService {
     protected final RealmResource realmResource;
     protected final KeycloakMapper keycloakMapper;
     protected final ETagGenerator eTagGenerator;
+
+    @Value("${spring.security.oauth2.client.registration.keycloak.client-id}")
+    protected String clientId;
 
     protected CommonService(@Value("${bakertech.keycloak.realm}") String realmName,
                             Keycloak keycloak,

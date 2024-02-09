@@ -8,7 +8,9 @@ export interface OrderDetails {
   id: number;
   version: number;
   licenseId: string;
+  servicemanId: number;
   client: string;
+  clientId: number;
   status: OrderStatus;
   orderType: OrderType;
   orderData: OrderDataType;

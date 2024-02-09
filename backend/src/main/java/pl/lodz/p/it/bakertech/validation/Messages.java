@@ -40,6 +40,7 @@ public class Messages {
     public static final String invalidDatePeriod = "validation.invalid.datePeriod";
 
     /* Operations */
+    public static final String cannotResetPassword = "cannot.resetPassword";
     public static final String cannotChangeStatusSelf = "cannot.change.statusSelf";
     public static final String cannotChangeAccessLevelsSelf = "cannot.change.accessLevelsSelf";
     public static final String cannotAssignAccessLevels = "cannot.change.accessLevelsSelf";

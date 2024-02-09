@@ -56,7 +56,8 @@
     "mainPage": "Main page",
     "select": "Select",
     "edit": "Edit",
-    "display": "Display"
+    "display": "Display",
+    "reset": "Reset password"
   },
   "alerts": {
     "agree": "Confirm",
@@ -125,6 +126,7 @@
     "violation": "The request contains restriction violations"
   },
   "cannot": {
+    "resetPassword": "Cannot reset password for yourself",
     "change": {
       "statusSelf": "Cannot change account status yourself",
       "accessLevelsSelf": "Cannot modify access levels yourself",

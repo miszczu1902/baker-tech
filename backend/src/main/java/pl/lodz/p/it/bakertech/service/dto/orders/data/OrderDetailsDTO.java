@@ -7,8 +7,10 @@ import pl.lodz.p.it.bakertech.validation.etag.ETagField;
 public record OrderDetailsDTO(
         Long id,
         @ETagField Long version,
+        Long servicemanId,
         String licenseId,
         String client,
+        Long clientId,
         @ETagField OrderStatus status,
         Boolean delayed,
         Boolean inOrderQueue,

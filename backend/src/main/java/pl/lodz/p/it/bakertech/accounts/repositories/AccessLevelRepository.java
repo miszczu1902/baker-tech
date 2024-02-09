@@ -22,6 +22,8 @@ import java.util.Optional;
         transactionManager = "accountsTransactionManager"
 )
 public interface AccessLevelRepository extends JpaRepository<AccessLevel, Long> {
+    boolean existsByAccessLevelNameAndAccount_Id(String accessLevelName, Long id);
+
     @Query("SELECT a FROM AccessLevel a WHERE a.account.id = :accountId AND a.accessLevelName LIKE %:accessLevelName%")
     Optional<AccessLevel> findAccessLevelByAccountIdAndAccessLevelName(@Param("accountId") Long accountId,
                                                                        @Param("accessLevelName") String accessLevelName);

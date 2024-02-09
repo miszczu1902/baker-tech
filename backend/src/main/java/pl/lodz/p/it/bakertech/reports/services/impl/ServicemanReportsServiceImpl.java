@@ -3,6 +3,8 @@ package pl.lodz.p.it.bakertech.reports.services.impl;
 import org.keycloak.admin.client.Keycloak;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -12,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import pl.lodz.p.it.bakertech.common.CommonService;
 import pl.lodz.p.it.bakertech.exceptions.AppException;
 
+import pl.lodz.p.it.bakertech.exceptions.TransactionTimeoutException;
 import pl.lodz.p.it.bakertech.reports.dto.TextWithNumberReportDataDTO;
 import pl.lodz.p.it.bakertech.reports.dto.NumberValueDTO;
 import pl.lodz.p.it.bakertech.reports.dto.admin.PercentageOfOrdersDTO;
@@ -35,6 +38,11 @@ import static pl.lodz.p.it.bakertech.config.BakerTechConfig.ROUNDING_PRECISION;
         isolation = Isolation.READ_COMMITTED,
         rollbackFor = AppException.class,
         transactionManager = "businessTransactionManager"
+)
+@Retryable(
+        retryFor = TransactionTimeoutException.class,
+        maxAttemptsExpression = "${bakertech.transaction.retry}",
+        backoff = @Backoff(delayExpression = "${bakertech.transaction.retry.delay}")
 )
 @PreAuthorize("hasRole(@Roles.SERVICEMAN)")
 public class ServicemanReportsServiceImpl extends CommonService implements ServicemanReportsService {

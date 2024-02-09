@@ -36,3 +36,12 @@
   flex-direction: row !important;
   justify-content: space-between !important;
 }
+
+.navigate-account {
+  cursor: pointer;
+}
+
+.navigate-account:hover {
+  color: $primary-color !important;
+  font-weight: bold !important;
+}

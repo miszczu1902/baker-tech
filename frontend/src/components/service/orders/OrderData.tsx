@@ -91,7 +91,7 @@ const OrderData = () => {
     orderToEditionData.forSettlement,
     orderToEditionData.forClose,
     orderInEdition,
-    orderDetails,
+    orderDetails?.status,
     id
   ]);
 

@@ -5,6 +5,8 @@ import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -14,6 +16,9 @@ import pl.lodz.p.it.bakertech.accounts.dto.register.RegisterAccountDTO;
 import pl.lodz.p.it.bakertech.accounts.dto.register.client.RegisterClientDTO;
 import pl.lodz.p.it.bakertech.accounts.excpetions.RegistrationException;
 import pl.lodz.p.it.bakertech.accounts.listeners.events.RegistrationEvent;
+import pl.lodz.p.it.bakertech.exceptions.KeycloakException;
+import pl.lodz.p.it.bakertech.exceptions.ObjectNotUniqueException;
+import pl.lodz.p.it.bakertech.exceptions.TransactionTimeoutException;
 import pl.lodz.p.it.bakertech.utils.DateUtility;
 import pl.lodz.p.it.bakertech.utils.mappers.accounts.AccountAndAccessLevelMapper;
 import pl.lodz.p.it.bakertech.utils.mappers.accounts.KeycloakMapper;
@@ -37,6 +42,11 @@ import java.util.Optional;
         isolation = Isolation.READ_COMMITTED,
         rollbackFor = AppException.class,
         transactionManager = "accountsTransactionManager"
+)
+@Retryable(
+        retryFor = {TransactionTimeoutException.class, KeycloakException.class, ObjectNotUniqueException.class},
+        maxAttemptsExpression = "${bakertech.transaction.retry}",
+        backoff = @Backoff(delayExpression = "${bakertech.transaction.retry.delay}")
 )
 public class RegistrationServiceImpl extends CommonService implements RegistrationService {
     private final AccountRepository accountRepository;

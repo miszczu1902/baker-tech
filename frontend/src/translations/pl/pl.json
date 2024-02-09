@@ -56,7 +56,8 @@
     "mainPage": "Strona główna",
     "select": "Wybierz",
     "edit": "Edytuj",
-    "display": "Wyświetl"
+    "display": "Wyświetl",
+    "reset": "Resetuj hasło"
   },
   "alerts": {
     "agree": "Zatwierdź",
@@ -125,6 +126,7 @@
     "violation": "Żądanie zawiera naruszenia ograniczeń"
   },
   "cannot": {
+    "resetPassword": "Nie możesz samemu sobie zresetować hasła",
     "change": {
       "statusSelf": "Nie można zmienić stanu konta samemu sobie",
       "accessLevelsSelf": "Nie można zmienić poziomów dostępu samemu sobie",
@@ -272,7 +274,7 @@
     "month": "Miesiąc",
     "serviceman": {
       "reportTitle": "Statystyki pracy serwisanta",
-      "avgTime": "Średni czas poświęcony na realizację zlecenia [h]",
+      "avgTime": "Średni czas poświęcony na realizację zlecenia [godz.]",
       "exec": "Liczba zrealizowanych zleceń",
       "type": "Najczęściej naprawiany rodzaj urządzeń oraz Liczba naprawionych urządzeń danego typu"
     },

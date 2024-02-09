@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -14,6 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 import pl.lodz.p.it.bakertech.accounts.dto.accounts.account.AccountDataDTO;
 import pl.lodz.p.it.bakertech.accounts.dto.accounts.AccountDataListDTO;
 import pl.lodz.p.it.bakertech.accounts.repositories.AccessLevelRepository;
+import pl.lodz.p.it.bakertech.exceptions.KeycloakException;
+import pl.lodz.p.it.bakertech.exceptions.TransactionTimeoutException;
 import pl.lodz.p.it.bakertech.model.accounts.accessLevels.AccessLevel;
 import pl.lodz.p.it.bakertech.utils.mappers.accounts.AccountAndAccessLevelMapper;
 import pl.lodz.p.it.bakertech.utils.mappers.accounts.KeycloakMapper;
@@ -29,6 +33,11 @@ import pl.lodz.p.it.bakertech.validation.etag.ETagGenerator;
         isolation = Isolation.READ_COMMITTED,
         rollbackFor = AppException.class,
         transactionManager = "accountsTransactionManager"
+)
+@Retryable(
+        retryFor = {TransactionTimeoutException.class, KeycloakException.class},
+        maxAttemptsExpression = "${bakertech.transaction.retry}",
+        backoff = @Backoff(delayExpression = "${bakertech.transaction.retry.delay}")
 )
 public class AccountDataServiceImpl extends CommonService implements AccountDataService {
     private final AccessLevelRepository accessLevelRepository;

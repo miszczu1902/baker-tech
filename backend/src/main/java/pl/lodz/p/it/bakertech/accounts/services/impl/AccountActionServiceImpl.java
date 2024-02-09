@@ -4,6 +4,8 @@ import org.keycloak.admin.client.Keycloak;
 import org.keycloak.representations.idm.GroupRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -11,11 +13,11 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import pl.lodz.p.it.bakertech.accounts.dto.accounts.account.AccessLevelsDTO;
-import pl.lodz.p.it.bakertech.accounts.excpetions.CannotAssignAccessLevelsException;
-import pl.lodz.p.it.bakertech.accounts.excpetions.CannotChangeAccessLevelSelfException;
-import pl.lodz.p.it.bakertech.accounts.excpetions.CannotChangeStatusForSelfAccountException;
-import pl.lodz.p.it.bakertech.accounts.excpetions.CannotRemoveOnlyOneAssignedAccessLevelToAccountException;
+import pl.lodz.p.it.bakertech.accounts.excpetions.*;
 import pl.lodz.p.it.bakertech.accounts.repositories.AccessLevelRepository;
+import pl.lodz.p.it.bakertech.exceptions.KeycloakException;
+import pl.lodz.p.it.bakertech.exceptions.TransactionTimeoutException;
+import pl.lodz.p.it.bakertech.model.accounts.Account;
 import pl.lodz.p.it.bakertech.utils.mappers.accounts.KeycloakMapper;
 import pl.lodz.p.it.bakertech.accounts.repositories.AccountRepository;
 import pl.lodz.p.it.bakertech.accounts.services.AccountActionService;
@@ -28,6 +30,8 @@ import pl.lodz.p.it.bakertech.security.Roles;
 import pl.lodz.p.it.bakertech.validation.etag.ETagGenerator;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -37,6 +41,11 @@ import java.util.stream.Collectors;
         isolation = Isolation.READ_COMMITTED,
         rollbackFor = AppException.class,
         transactionManager = "accountsTransactionManager"
+)
+@Retryable(
+        retryFor = {TransactionTimeoutException.class, KeycloakException.class},
+        maxAttemptsExpression = "${bakertech.transaction.retry}",
+        backoff = @Backoff(delayExpression = "${bakertech.transaction.retry.delay}")
 )
 @PreAuthorize("hasRole(@Roles.ADMINISTRATOR)")
 public class AccountActionServiceImpl extends CommonService implements AccountActionService {
@@ -144,5 +153,23 @@ public class AccountActionServiceImpl extends CommonService implements AccountAc
                         throw AppException.createContentWasChangedException();
                     }
                 });
+    }
+
+    @Override
+    public void resetUserPassword(final Long id, final String language) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Account account = accountRepository.findById(id).orElseThrow();
+        if (accessLevelRepository.existsByAccessLevelNameAndAccount_Id(Roles.ADMINISTRATOR, id) &&
+                account.getUsername().equals(username)) {
+            throw CannotResetPasswordSelfException.createException();
+        }
+        UserRepresentation keycloakUser = getKeycloakUserByUsername(accountRepository.findById(id)
+                .orElseThrow()
+                .getUsername()
+        );
+        keycloakUser.setAttributes(Map.of("locale", List.of(language)));
+        realmResource.users()
+                .get(keycloakUser.getId())
+                .executeActionsEmail(List.of("UPDATE_PASSWORD"));
     }
 }

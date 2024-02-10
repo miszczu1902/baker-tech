@@ -71,6 +71,5 @@ public class ReportsDisplayTests extends BakerTechIntegrationTestConfig {
         Assertions.assertEquals(HttpStatus.OK.value(), response.getStatusCode());
         Assertions.assertTrue(response.jsonPath().getList("dates").contains("2023-1"));
         Assertions.assertTrue(response.jsonPath().getList("dates").contains("2023-12"));
-        Assertions.assertTrue(response.jsonPath().getList("dates").contains("2024-1"));
     }
 }

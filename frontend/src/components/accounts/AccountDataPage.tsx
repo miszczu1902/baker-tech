@@ -15,7 +15,6 @@ import {
   setOpenAlert,
   setOpenConfirm,
 } from "../../redux/actions/notificationActions";
-import { APP_URL } from "../../utils/consts";
 import { Languages } from "../../types/Languages";
 import BasicButton from "../buttons/BasicButton";
 import NotificationHandler from "../response/NotificationHandler";
@@ -32,6 +31,8 @@ const AccountDataPage: React.FC<AccountDataPageParams> = ({
   const requestService = RequestService.getInstance();
   const currentUser = useSelector((state: RootState) => state.currentUser)
     .currentUser as string;
+  const currentRole = useSelector((state: RootState) => state.currentUser)
+    .currentRole as Roles;
   const language = useSelector((state: RootState) => state.currentUser)
     .language as Languages;
   const dispatch = useDispatch();
@@ -109,9 +110,11 @@ const AccountDataPage: React.FC<AccountDataPageParams> = ({
         });
     }
   }, [
-    accountData,
-    accountData && accountData.accessLevels,
-    accountData && accountData.isActive,
+    accountData?.accessLevels,
+    accountData?.isActive,
+    currentUser,
+    currentRole,
+    id,
   ]);
 
   return (
@@ -121,20 +124,21 @@ const AccountDataPage: React.FC<AccountDataPageParams> = ({
         <p>{accountData?.username}</p>
         <h3>{t("accounts.email")}</h3>
         <p>{accountData?.email}</p>
-        {accountData?.username !== currentUser && (
-          <p>
-            <BasicButton
-              content={t("buttons.reset")}
-              onClick={() => {
-                handleParentIsOpenState(true);
-                handleParentIsOpenAlertState(false);
-                setChangeStatusOpen(false);
-                setModifyAccessLevelsOpen(false);
-                setResetPassword(true);
-              }}
-            />
-          </p>
-        )}
+        {currentRole === Roles.ADMINISTRATOR &&
+          accountData?.username !== currentUser && (
+            <p>
+              <BasicButton
+                content={t("buttons.reset")}
+                onClick={() => {
+                  handleParentIsOpenState(true);
+                  handleParentIsOpenAlertState(false);
+                  setChangeStatusOpen(false);
+                  setModifyAccessLevelsOpen(false);
+                  setResetPassword(true);
+                }}
+              />
+            </p>
+          )}
         <h3>{t("accounts.firstname")}</h3>
         <p>
           {`${accountData?.personalData?.firstname} ${accountData?.personalData?.lastname}`}

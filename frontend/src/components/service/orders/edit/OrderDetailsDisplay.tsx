@@ -7,15 +7,12 @@ import { useNavigate, useParams } from "react-router-dom";
 import { RequestService } from "../../../../api/RequestService";
 import { RequestData, RequestMethod } from "../../../../api/RequestData";
 import { ApiEndpoints } from "../../../../api/ApiEndpoints";
-import {
-  setOpenAlert,
-  setOpenConfirm,
-} from "../../../../redux/actions/notificationActions";
 import { NextConservation } from "../../../../types/service/orders/NextConservation";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
 import ListSelectContainer from "../../../containers/ListSelectContainer";
 import { OrderStatus } from "../../../../types/service/orders/OrderStatus";
+import { Roles } from "../../../../security/Roles";
 
 export interface OrderDetailsDisplayProps {
   orderDetails?: OrderDetails;
@@ -29,7 +26,8 @@ const OrderDetailsDisplay: React.FC<OrderDetailsDisplayProps> = ({
   const navigate = useNavigate();
   const orderInEdition = useSelector((state: RootState) => state.orderState)
     .orderInEdition as boolean;
-  const dispatch = useDispatch();
+  const currentRole = useSelector((state: RootState) => state.currentUser)
+    .currentRole as Roles;
   const requestService = RequestService.getInstance();
   const [isOpenConfig, setIsOpenConfig] = useState<boolean>(false);
   const [nextConservation, setNextConservation] = useState<NextConservation>();
@@ -52,7 +50,7 @@ const OrderDetailsDisplay: React.FC<OrderDetailsDisplayProps> = ({
         )
         .then((response) => setNextConservation(response));
     }
-  }, [orderInEdition, id]);
+  }, [orderInEdition, id, orderDetails?.id]);
 
   return (
     <div className="data-left-part">
@@ -63,7 +61,10 @@ const OrderDetailsDisplay: React.FC<OrderDetailsDisplayProps> = ({
       <p
         className="navigate-account"
         onClick={() => {
-          if (orderDetails?.clientId) {
+          if (
+            [Roles.ADMINISTRATOR, Roles.SERVICEMAN].includes(currentRole) &&
+            orderDetails?.clientId
+          ) {
             window.location.href = `/accounts/${orderDetails?.clientId}`;
           }
         }}
@@ -74,7 +75,10 @@ const OrderDetailsDisplay: React.FC<OrderDetailsDisplayProps> = ({
       <p
         className="navigate-account"
         onClick={() => {
-          if (orderDetails?.servicemanId) {
+          if (
+            [Roles.ADMINISTRATOR, Roles.SERVICEMAN].includes(currentRole) &&
+            orderDetails?.servicemanId
+          ) {
             window.location.href = `/accounts/${orderDetails?.servicemanId}`;
           }
         }}
@@ -123,18 +127,20 @@ const OrderDetailsDisplay: React.FC<OrderDetailsDisplayProps> = ({
             {nextConservation
               ? `${t("orders.nextConservation")}: `
               : orderDetails?.orderType === OrderType.CONSERVATION &&
-              `${t("orders.dateOfNextDeviceConservation")}: `}
+                `${t("orders.dateOfNextDeviceConservation")}: `}
             {nextConservation ? (
               <BasicButton
                 content={t("buttons.display")}
-                onClick={() =>
-                  navigate(`/orders/${nextConservation?.nextConservation}`)
-                }
+                onClick={() => {
+                  if (nextConservation !== undefined) {
+                    navigate(`/orders/${nextConservation?.nextConservation}`);
+                  }
+                }}
               />
             ) : (
               orderDetails?.orderType === OrderType.CONSERVATION &&
               orderDetails?.conservation?.dateOfNextDeviceConservation.split(
-                "T"
+                "T",
               )[0]
             )}
           </b>

@@ -93,7 +93,7 @@
       "deviceName": "Niepoprawna nazwa urządzenia",
       "serialNumber": "Niepoprawny numer seryjny",
       "unitCost": "Niepoprawny koszt jednostkowy",
-      "cutoff": "Nieprawidłowy okres daty granicznej",
+      "cutoff": "Nieprawidłowa wartość parametru",
       "reportTitle": "Niepoprawny tytuł raportu",
       "brandName": "Niepoprawna nazwa marki",
       "totalCost": "Niepoprawna wartość kosztu jednostkowego",
@@ -218,7 +218,7 @@
   "admin": {
     "title": "Parametry serwisu",
     "edit": "Edytuj",
-    "cut_off_date_period": "Okres daty granicznej [dni]",
+    "cut_off_date_period": "Okres realizacji zlecenia [dni]",
     "unit_cost_of_working_hour": "Koszt roboczogodziny [PLN]",
     "editParamValue": "Edytuj wartość parametru",
     "editParamValuePlaceholder": "Podaj tutaj wartość parametru (większą niż 0)",

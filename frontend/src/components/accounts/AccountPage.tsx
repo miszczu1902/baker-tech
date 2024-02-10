@@ -17,7 +17,7 @@ const AccountPage = () => {
     endpoint: `${ApiEndpoints.GET_ALL_ACCOUNTS_ENDPOINT}/${id ? id : "self"}`,
   };
 
-  useEffect(() => {}, [window.location.pathname]);
+  useEffect(() => {}, [currentRole, id, window.location.pathname]);
 
   return (
     <AccountDataPage

@@ -246,7 +246,7 @@ public class OrdersServiceImpl extends CommonService implements OrdersService {
             }
             orderRepository.saveAndFlush(order);
         } else {
-            throw AppException.createContentWasChangedException();
+            throw AppException.createOptimisticLockException();
         }
     }
 
@@ -264,7 +264,7 @@ public class OrdersServiceImpl extends CommonService implements OrdersService {
             order.setInOrderQueue(false);
             orderRepository.saveAndFlush(order);
         } else {
-            throw AppException.createContentWasChangedException();
+            throw AppException.createOptimisticLockException();
         }
 
     }

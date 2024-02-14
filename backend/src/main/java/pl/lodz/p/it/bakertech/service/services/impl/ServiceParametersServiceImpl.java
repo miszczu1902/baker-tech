@@ -78,7 +78,7 @@ public class ServiceParametersServiceImpl extends CommonService implements Servi
             serviceParameterData.setValue(serviceParameters.value());
             serviceParametersRepository.saveAndFlush(serviceParameterData);
         } else {
-            throw AppException.createContentWasChangedException();
+            throw AppException.createOptimisticLockException();
         }
     }
 }

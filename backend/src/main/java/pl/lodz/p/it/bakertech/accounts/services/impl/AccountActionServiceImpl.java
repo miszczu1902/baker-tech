@@ -72,7 +72,7 @@ public class AccountActionServiceImpl extends CommonService implements AccountAc
         accountRepository.findById(id)
                 .ifPresent(accountToUpdate -> {
                     if (!ifMatch.equals(eTagGenerator.generateETagValue(accountToUpdate))) {
-                        throw AppException.createContentWasChangedException();
+                        throw AppException.createOptimisticLockException();
                     } else if (accountToUpdate.getAccessLevels().size() == 1 && !isGrant) {
                         throw CannotRemoveOnlyOneAssignedAccessLevelToAccountException.createException();
                     } else if (accountToUpdate.getAccessLevels().size() == 2 && isGrant) {
@@ -150,7 +150,7 @@ public class AccountActionServiceImpl extends CommonService implements AccountAc
                             throw CannotChangeStatusForSelfAccountException.createException();
                         }
                     } else {
-                        throw AppException.createContentWasChangedException();
+                        throw AppException.createOptimisticLockException();
                     }
                 });
     }

@@ -28,8 +28,6 @@ import pl.lodz.p.it.bakertech.validation.etag.ETagGenerator;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static pl.lodz.p.it.bakertech.utils.SchedulePeriods.PER_ONE_MINUTE;
-
 @Service
 @ScheduledInterception
 @Transactional(
@@ -60,7 +58,7 @@ public class AccountScheduleServiceImpl extends CommonService implements Account
     }
 
     @Override
-    @Scheduled(fixedRateString = PER_ONE_MINUTE)
+    @Scheduled(fixedRateString = "PT1M")
     public void recognizeInactivatedAccounts() {
         List<AccountConfirmationToken> unconfirmedAccounts = accountConfirmationTokenRepository.findAll();
         if (!unconfirmedAccounts.isEmpty()) {

@@ -216,7 +216,7 @@
     "no": "Ważna gwarancja"
   },
   "admin": {
-    "title": "Parametry serwisu",
+    "title": "Parametry systemu",
     "edit": "Edytuj",
     "cut_off_date_period": "Okres realizacji zlecenia [dni]",
     "unit_cost_of_working_hour": "Koszt roboczogodziny [PLN]",

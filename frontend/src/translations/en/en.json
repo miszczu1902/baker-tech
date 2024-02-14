@@ -216,7 +216,7 @@
     "no": "Valid warranty"
   },
   "admin": {
-    "title": "Service's parameters",
+    "title": "System's parameters",
     "edit": "Edit",
     "cut_off_date_period": "Cut off date period [days]",
     "unit_cost_of_working_hour": "Unit cost of working hour [PLN]",

@@ -1,6 +1,7 @@
 package pl.lodz.p.it.bakertech.exceptions;
 
 import lombok.Getter;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.web.server.ResponseStatusException;
@@ -27,8 +28,9 @@ public class AppException extends ResponseStatusException {
     public static AppException createEtagException(final Throwable cause) {
         return new ETagException(HttpStatus.INTERNAL_SERVER_ERROR, Messages.internalServerError, cause);
     }
-    public static AppException createContentWasChangedException() {
-        return new ContentWasChangedException(HttpStatus.CONFLICT, Messages.contentChanged, new RuntimeException());
+
+    public static AppException createOptimisticLockException() {
+        return new OptimisticLockException(HttpStatus.CONFLICT, Messages.contentChanged, new OptimisticLockingFailureException(Messages.contentChanged));
     }
 
     public static AppException createOptimisticLockException(final Throwable cause) {

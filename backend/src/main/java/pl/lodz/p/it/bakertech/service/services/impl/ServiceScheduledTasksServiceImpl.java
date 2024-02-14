@@ -31,8 +31,6 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Set;
 
-import static pl.lodz.p.it.bakertech.utils.SchedulePeriods.*;
-
 @Service
 @ScheduledInterception
 @Transactional(
@@ -64,7 +62,7 @@ public class ServiceScheduledTasksServiceImpl extends CommonService implements S
     }
 
     @Override
-    @Scheduled(cron = ONE_PER_DAY_ON_MIDNIGHT)
+    @Scheduled(cron = "0 0 0 * * *")
     public void updateOrdersFromOrdersQueue() {
         Set<Order> orders = orderRepository.findAllByInOrderQueueIsTrue();
         if (!orders.isEmpty()) {
@@ -85,7 +83,7 @@ public class ServiceScheduledTasksServiceImpl extends CommonService implements S
     }
 
     @Override
-    @Scheduled(cron = ONE_PER_DAY_ON_1AM)
+    @Scheduled(cron = "0 0 1 * * *")
     public void generateNextConservationOrders() {
         Set<Conservation> conservations = conservationRepository.findAllByReportNextAutomaticallyIsTrueAndStatusEquals(OrderStatus.CLOSED);
         if (!conservations.isEmpty()) {

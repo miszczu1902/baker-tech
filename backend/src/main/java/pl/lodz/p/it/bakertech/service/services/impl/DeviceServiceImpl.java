@@ -124,7 +124,7 @@ public class DeviceServiceImpl extends CommonService implements DeviceService {
             device.setWarrantyEnded(true);
             deviceRepository.saveAndFlush(device);
         } else {
-            throw AppException.createContentWasChangedException();
+            throw AppException.createOptimisticLockException();
         }
     }
 }

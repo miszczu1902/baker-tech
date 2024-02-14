@@ -10,11 +10,11 @@ import pl.lodz.p.it.bakertech.common.CommonMailSender;
 import java.util.Locale;
 
 @Component
-public class RegistrationListener extends CommonMailSender<RegistrationEvent> {
-    protected RegistrationListener(JavaMailSender mailSender,
-                                   @Value("${spring.mail.username}") String sendFrom,
-                                   @Value("${bakertech.frontend.url}") String appUrl,
-                                   MessageSource messageSource) {
+public class EmailListener extends CommonMailSender<RegistrationEvent> {
+    protected EmailListener(JavaMailSender mailSender,
+                            @Value("${spring.mail.username}") String sendFrom,
+                            @Value("${bakertech.frontend.url}") String appUrl,
+                            MessageSource messageSource) {
         super(mailSender, sendFrom, appUrl, messageSource);
     }
 
